@@ -34,7 +34,7 @@ using StringTools;
 // TO DO: Redo the menu creation system for not being as dumb
 class OptionsState extends MusicBeatState
 {
-	var options:Array<String> = ['Preferences', 'Notes', 'Mobile Controls', 'About'];
+	var options:Array<String> = ['Mobile Controls','Preferences', 'Notes'];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
@@ -688,7 +688,7 @@ class PreferencesSubstate extends MusicBeatSubstate
 	static var options:Array<String> = [
 		'GRAPHICS',
 		'Low Quality',
-		'Anti-Aliasing',
+		//'Anti-Aliasing', //disabled just in case
 		'Persistent Cached Data',
 		#if !html5
 		'Framerate', //Apparently 120FPS isn't correctly supported on Browser? Probably it has some V-Sync shit enabled by default, idk

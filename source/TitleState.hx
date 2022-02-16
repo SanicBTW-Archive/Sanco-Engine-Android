@@ -27,6 +27,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.app.Application;
 import openfl.Assets;
+import com.player03.android6.Permissions;
 
 using StringTools;
 
@@ -52,6 +53,17 @@ class TitleState extends MusicBeatState
 	{
 		#if android
 	    FlxG.android.preventDefaultKeys = [BACK];
+
+		if(!Permissions.hasPermission(Permissions.READ_EXTERNAL_STORAGE) && !Permissions.hasPermission(Permissions.WRITE_EXTERNAL_STORAGE)){
+			Permissions.requestPermissions([Permissions.READ_EXTERNAL_STORAGE, Permissions.WRITE_EXTERNAL_STORAGE]);
+			if(!sys.FileSystem.exists(Main.RequiredPath)){
+				sys.FileSystem.createDirectory(Main.RequiredPath);
+			}
+		} else {
+			if(!sys.FileSystem.exists(Main.RequiredPath)){
+				sys.FileSystem.createDirectory(Main.RequiredPath);
+			}
+		}
 	    #end
 	    
 		#if (polymod && !html5)
@@ -108,12 +120,7 @@ class TitleState extends MusicBeatState
 		#elseif CHARTING
 		MusicBeatState.switchState(new ChartingState());
 		#else
-		if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
-			FlxTransitionableState.skipNextTransIn = true;
-			FlxTransitionableState.skipNextTransOut = true;
-			MusicBeatState.switchState(new FlashingState());
-		} else {
-			#if desktop
+		#if desktop
 			DiscordClient.initialize();
 			Application.current.onExit.add (function (exitCode) {
 				DiscordClient.shutdown();
@@ -123,7 +130,6 @@ class TitleState extends MusicBeatState
 			{
 				startIntro();
 			});
-		}
 		#end
 	}
 

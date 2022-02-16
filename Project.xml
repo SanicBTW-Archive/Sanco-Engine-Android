@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Psych Engine Android 0.3.3" file="PsychEngine" packageName="com.shadowmario.psychengine" package="com.shadowmario.psychengine" main="Main" version="0.2.7" company="shadowmario" />
+	<app title="Psych Engine Android" file="PsychEngine" packageName="com.sanicbtw.psychengine" package="com.sanicbtw.psychengine" main="Main" version="0.2.7" company="sanicbtw" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
@@ -103,7 +103,7 @@
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
 	<!-- <template path='mods' /> -->
 	
-	<!-- assets path="CHANGELOG.md" rename='changelog.txt' --/>
+	<!-- assets path="CHANGELOG.md" rename='changelog.txt' -->
 
 	<!-- NOTE FOR FUTURE SELF SINCE FONTS ARE ALWAYS FUCKY 
 		TO FIX ONE OF THEM, I CONVERTED IT TO OTF. DUNNO IF YOU NEED TO
@@ -133,6 +133,7 @@
 
 	<!--In case you want to use nape with flixel-->
 	<!--<haxelib name="nape-haxe4" />-->
+	<haxelib name="android6permissions"/>
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 

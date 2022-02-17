@@ -265,11 +265,13 @@ class Paths
 	}
 
 	inline static public function androidVoices(song:String){
-		return androidIntDir('songs/${song.toLowerCase()}/Voices.$SOUND_EXT');
+		var songKey:String = '${song.toLowerCase().replace(' ', '-')}/Voices.$SOUND_EXT';
+		return androidIntDir('songs/$songKey');
 	}
 
 	inline static public function androidInst(song:String){
-		return androidIntDir('songs/${song.toLowerCase()}/Inst.$SOUND_EXT');
+		var songKey:String = '${song.toLowerCase().replace(' ', '-')}/Inst.$SOUND_EXT';
+		return androidIntDir('songs/$songKey');
 	}
 	#end
 }

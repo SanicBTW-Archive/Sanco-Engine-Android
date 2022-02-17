@@ -1338,12 +1338,13 @@ class PlayState extends MusicBeatState
 
 		curSong = songData.song;
 
-		if (SONG.needsVoices)
+		if (SONG.needsVoices) {
 			if(ClientPrefs.UseInternalStorage == true){
 				vocals = new FlxSound().loadEmbedded(Paths.androidVoices(PlayState.SONG.song));
 			} else {
 				vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
 			}
+		}
 		else
 			vocals = new FlxSound();
 

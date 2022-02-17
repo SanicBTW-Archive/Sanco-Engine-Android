@@ -12,7 +12,7 @@ class Utils
 {
     #if android
     
-    static var storagePath:String = lime.system.System.applicationStorageDirectory;
+    static var storagePath:String = lime.system.System.userDirectory;
     
     /*
                                  WARNING

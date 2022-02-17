@@ -231,4 +231,13 @@ class Paths
 		return mods('images/' + key + '.xml');
 	}
 	#end
+
+	#if android
+	inline static public function androidStorage(key:String){
+		return '${Main.RequiredPath}/$key';
+	}
+	inline static public function androidTxt(key:String) {
+		return androidStorage('data/${key}.txt');
+	}
+	#end
 }

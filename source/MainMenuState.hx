@@ -147,6 +147,8 @@ class MainMenuState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
+		FlxG.log.warn(Paths.androidStorage("data"));
+		FlxG.log.warn(Paths.androidTxt("freeplaySonglist"));
 		if (FlxG.sound.music.volume < 0.8)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;

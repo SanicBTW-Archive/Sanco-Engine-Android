@@ -233,12 +233,12 @@ class Paths
 	#end
 
 	#if android
-	inline static public function android(key:String){
-		return lime.system.System.userDirectory + key;
+	inline static public function androidDir(key:String){
+		return lime.system.System.userDirectory + 'sanicbtw_psychfiles/' + key;
 	}
 
 	inline static public function androidTxt(key:String){
-		return android('data/$key.txt');
+		return androidDir('data/$key.txt');
 	}
 	#end
 }

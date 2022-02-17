@@ -272,10 +272,18 @@ class FreeplayState extends MusicBeatState
 		{
 			var songLowercase:String = songs[curSelected].songName.toLowerCase();
 			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
-			if(!OpenFlAssets.exists(Paths.json(songLowercase + '/' + poop))) {
-				poop = songLowercase;
-				curDifficulty = 1;
-				trace('Couldnt find file');
+			if(ClientPrefs.UseInternalStorage == true){
+				if(!OpenFlAssets.exists(Paths.androidJson(songLowercase + '/' + poop))){
+					poop = songLowercase;
+					curDifficulty = 1;
+					trace("Couldn't find file");
+				}	
+			} else {
+				if(!OpenFlAssets.exists(Paths.json(songLowercase + '/' + poop))) {
+					poop = songLowercase;
+					curDifficulty = 1;
+					trace('Couldnt find file');
+				}	
 			}
 			trace(poop);
 

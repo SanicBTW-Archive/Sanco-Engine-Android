@@ -1070,6 +1070,8 @@ class PreferencesSubstate extends MusicBeatSubstate
 						daValue = ClientPrefs.imagesPersist;
 					case 'Hide Song Length':
 						daValue = ClientPrefs.hideTime;
+					case 'Use Internal Storage':
+						daValue = ClientPrefs.UseInternalStorage;
 				}
 				checkbox.daValue = daValue;
 			}

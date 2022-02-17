@@ -66,7 +66,7 @@ class Song
 			#end
 		} else {
 			if(ClientPrefs.UseInternalStorage == true){
-				rawJson = Assets.getText(Paths.androidJson(folder.toLowerCase() + '/' + jsonInput.toLowerCase())).trim();
+				rawJson = sys.io.File.getContent(Paths.androidJson(folder.toLowerCase() + '/' + jsonInput.toLowerCase())).trim();
 			} else {
 				rawJson = Assets.getText(Paths.json(folder.toLowerCase() + '/' + jsonInput.toLowerCase())).trim();
 			}

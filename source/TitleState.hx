@@ -56,6 +56,7 @@ class TitleState extends MusicBeatState
 
 		if(!Permissions.hasPermission(Permissions.READ_EXTERNAL_STORAGE) && !Permissions.hasPermission(Permissions.WRITE_EXTERNAL_STORAGE)){
 			Permissions.requestPermissions([Permissions.READ_EXTERNAL_STORAGE, Permissions.WRITE_EXTERNAL_STORAGE]);
+			MusicBeatState.resetState();
 		} else {
 			if(!sys.FileSystem.exists(Main.RequiredPath)){
 				sys.FileSystem.createDirectory(Main.RequiredPath);

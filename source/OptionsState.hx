@@ -26,7 +26,6 @@ import flixel.graphics.FlxGraphic;
 import Controls;
 
 import options.CustomControlsState;
-import options.AboutState;
 import ui.FlxVirtualPad;
 
 using StringTools;
@@ -104,9 +103,6 @@ class OptionsState extends MusicBeatState
 
 				case 'Mobile Controls':
 					MusicBeatState.switchState(new options.CustomControlsState());
-
-				case 'About':
-					MusicBeatState.switchState(new options.AboutState());
 			}
 		}
 	}
@@ -678,7 +674,8 @@ class PreferencesSubstate extends MusicBeatSubstate
 	private static var curSelected:Int = 0;
 	static var unselectableOptions:Array<String> = [
 		'GRAPHICS',
-		'GAMEPLAY'
+		'GAMEPLAY',
+		'Engine Options'
 	];
 	static var noCheckbox:Array<String> = [
 		'Framerate',
@@ -706,6 +703,8 @@ class PreferencesSubstate extends MusicBeatSubstate
 		#if !mobile
 		,'FPS Counter'
 		#end
+		,'Engine Options',
+		'Use Internal Storage'
 	];
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
@@ -891,6 +890,8 @@ class PreferencesSubstate extends MusicBeatSubstate
 
 					case 'Hide Song Length':
 						ClientPrefs.hideTime = !ClientPrefs.hideTime;
+					case 'Use Internal Storage':
+						ClientPrefs.UseInternalStorage = !ClientPrefs.UseInternalStorage;
 				}
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				reloadValues();
@@ -984,6 +985,8 @@ class PreferencesSubstate extends MusicBeatSubstate
 				daText = "If checked, hides most HUD elements.";
 			case 'Hide Song Length':
 				daText = "If checked, the bar showing how much time is left\nwill be hidden.";
+			case 'Use Internal Storage':
+				daText = "If checked, it will load songs from the internal storage\ninstead of the game assets\nGo to sanicbtw_psychfiles to modify the files";
 		}
 		descText.text = daText;
 

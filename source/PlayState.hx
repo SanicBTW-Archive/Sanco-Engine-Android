@@ -698,6 +698,7 @@ class PlayState extends MusicBeatState
 		}
 
 		var lowercaseSong:String = SONG.song.toLowerCase();
+		//todo: add support for internal storage
 		var file:String = Paths.txt(lowercaseSong + '/' + lowercaseSong + 'Dialogue');
 		if (OpenFlAssets.exists(file)) {
 			dialogue = CoolUtil.coolTextFile(file);
@@ -1338,12 +1339,20 @@ class PlayState extends MusicBeatState
 		curSong = songData.song;
 
 		if (SONG.needsVoices)
-			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+			if(ClientPrefs.UseInternalStorage == true){
+				vocals = new FlxSound().loadEmbedded(Paths.androidVoices(PlayState.SONG.song));
+			} else {
+				vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+			}
 		else
 			vocals = new FlxSound();
 
 		FlxG.sound.list.add(vocals);
-		FlxG.sound.list.add(new FlxSound().loadEmbedded(Paths.inst(PlayState.SONG.song)));
+		if(ClientPrefs.UseInternalStorage == true){
+			FlxG.sound.list.add(new FlxSound().loadEmbedded(Paths.androidInst(PlayState.SONG.song)));
+		} else {
+			FlxG.sound.list.add(new FlxSound().loadEmbedded(Paths.inst(PlayState.SONG.song)));
+		}
 
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
@@ -1358,7 +1367,14 @@ class PlayState extends MusicBeatState
 		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
 
 		var songName:String = SONG.song.toLowerCase();
-		var file:String = Paths.json(songName + '/events');
+
+		var file:String = "";
+		if(ClientPrefs.UseInternalStorage == true){
+			file = Paths.androidJson(songName + '/events');
+		} else {
+			file = Paths.json(songName + '/events');
+		}
+
 		#if sys
 		if (sys.FileSystem.exists(file)) {
 		#else

@@ -233,11 +233,6 @@ class Paths
 	#end
 
 	#if android
-	inline static public function androidStorage(key:String){
-		return '${Main.RequiredPath}/$key';
-	}
-	inline static public function androidTxt(key:String) {
-		return androidStorage('data/${key}.txt');
-	}
+	//pending todo: use this instead of using the full path and shit
 	#end
 }

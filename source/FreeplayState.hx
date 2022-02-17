@@ -59,17 +59,20 @@ class FreeplayState extends MusicBeatState
 	{
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
-		var initSonglist = CoolUtil.coolTextFile(Paths.androidTxt('freeplaySonglist'));
-		for (i in 0...initSonglist.length)
-		{
-			var songArray:Array<String> = initSonglist[i].split(":");
-			addSong(songArray[0], 0, songArray[1]);
-			songs[songs.length-1].color = Std.parseInt(songArray[2]);
-		}
-		var colorsList = CoolUtil.coolTextFile(Paths.txt('freeplayColors'));
-		for (i in 0...colorsList.length)
-		{
-			coolColors.push(Std.parseInt(colorsList[i]));
+		if(sys.FileSystem.exists(StorageVariables.DataRPath)){
+			var initSonglist = CoolUtil.coolTextFile(StorageVariables.FPLPath);
+			for (i in 0...initSonglist.length)
+			{
+				var songArray:Array<String> = initSonglist[i].split(":");
+				addSong(songArray[0], 0, songArray[1]);
+				songs[songs.length-1].color = Std.parseInt(songArray[2]);
+			}
+			/*
+			var colorsList = CoolUtil.coolTextFile(Paths.txt('freeplayColors'));
+			for (i in 0...colorsList.length)
+			{
+				coolColors.push(Std.parseInt(colorsList[i]));
+			}*/
 		}
 
 		/* 

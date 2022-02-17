@@ -23,7 +23,7 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	public static var psychEngineVersion:String = '0.3.2 / 0.1'; //This is also used for Discord RPC
+	public static var psychEngineVersion:String = '0.3.2 / 0.2'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -147,8 +147,6 @@ class MainMenuState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
-		FlxG.log.warn(Paths.androidStorage("data"));
-		FlxG.log.warn(Paths.androidTxt("freeplaySonglist"));
 		if (FlxG.sound.music.volume < 0.8)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;

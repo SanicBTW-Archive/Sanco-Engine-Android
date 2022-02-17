@@ -59,8 +59,7 @@ class FreeplayState extends MusicBeatState
 	{
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
-		var jaja = haxe.io.Path.join([StorageVariables.DataRPath, 'freeplaySonglist.txt']);
-		var initSonglist = CoolUtil.coolTextFile(jaja);
+		var initSonglist = CoolUtil.coolTextFile(Paths.androidTxt("freeplaySonglist"));
 		for (i in 0...initSonglist.length)
 		{
 			var songArray:Array<String> = initSonglist[i].split(":");

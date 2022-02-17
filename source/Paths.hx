@@ -233,6 +233,12 @@ class Paths
 	#end
 
 	#if android
-	//pending todo: use this instead of using the full path and shit
+	inline static public function android(key:String){
+		return lime.system.System.userDirectory + key;
+	}
+
+	inline static public function androidTxt(key:String){
+		return android('data/$key.txt');
+	}
 	#end
 }

@@ -93,26 +93,24 @@ class Character extends FlxSprite
 
 			default:
 				var characterPath:String = 'characters/' + curCharacter + '.json';
-				#if MODS_ALLOWED
-				var path:String = Paths.mods(characterPath);
-				if (!Utils.existsCheck(path)) {
+
+				var path:String;
+				if(ClientPrefs.UseInternalStorage){
+					path = Paths.androidIntDir(characterPath);
+				} else {
 					path = Paths.getPreloadPath(characterPath);
 				}
-
 				if (!Utils.existsCheck(path))
-				#else
-				var path:String = Paths.getPreloadPath(characterPath);
-				if (!Utils.existsCheck(path))
-				#end
 				{
 					path = Paths.getPreloadPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 				}
 
-				#if windows
-				var rawJson = File.getContent(path);
-				#else
-				var rawJson = Assets.getText(path);
-				#end
+				var rawJson;
+				if(ClientPrefs.UseInternalStorage){
+					rawJson = File.getContent(path);
+				} else {
+					rawJson = Assets.getText(path);
+				}
 
 				var json:CharacterFile = cast Json.parse(rawJson);
 				if(Assets.exists(Paths.getPath('images/' + json.image + '.txt', TEXT))) {

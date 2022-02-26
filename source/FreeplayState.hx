@@ -254,7 +254,7 @@ class FreeplayState extends MusicBeatState
 		{
 			destroyFreeplayVocals();
 			var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
-			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
+			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase(), songs[curSelected].source);
 			if (PlayState.SONG.needsVoices)
 				vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
 			else
@@ -272,6 +272,7 @@ class FreeplayState extends MusicBeatState
 		{
 			var songLowercase:String = songs[curSelected].songName.toLowerCase();
 			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
+			var lol = songs[curSelected].source;
 			if(ClientPrefs.UseInternalStorage == true){
 				if(!OpenFlAssets.exists(Paths.androidJson(songLowercase + '/' + poop))){
 					poop = songLowercase;
@@ -287,7 +288,7 @@ class FreeplayState extends MusicBeatState
 			}
 			trace(poop);
 
-			PlayState.SONG = Song.loadFromJson(poop, songLowercase);
+			PlayState.SONG = Song.loadFromJson(poop, songLowercase, lol);
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = curDifficulty;
 
@@ -296,6 +297,7 @@ class FreeplayState extends MusicBeatState
 			if(colorTween != null) {
 				colorTween.cancel();
 			}
+			PlayState.ssource = lol;
 			LoadingState.loadAndSwitchState(new PlayState());
 
 			FlxG.sound.music.volume = 0;

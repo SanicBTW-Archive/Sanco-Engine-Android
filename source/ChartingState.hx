@@ -51,6 +51,7 @@ using StringTools;
 
 class ChartingState extends MusicBeatState
 {
+	public static var ssource:StorageVariables.Sources;
 	private static var noteTypeList:Array<String> =
 	[
 		'',
@@ -351,7 +352,7 @@ class ChartingState extends MusicBeatState
 			if (OpenFlAssets.exists(file))
 			#end
 			{
-				PlayState.SONG = Song.loadFromJson('events', songName);
+				PlayState.SONG = Song.loadFromJson('events', songName, ssource);
 				MusicBeatState.resetState();
 			}
 		});
@@ -1720,7 +1721,7 @@ class ChartingState extends MusicBeatState
 
 	function loadJson(song:String):Void
 	{
-		PlayState.SONG = Song.loadFromJson(song.toLowerCase(), song.toLowerCase());
+		PlayState.SONG = Song.loadFromJson(song.toLowerCase(), song.toLowerCase(), ssource);
 		MusicBeatState.resetState();
 	}
 

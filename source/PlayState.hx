@@ -232,6 +232,8 @@ class PlayState extends MusicBeatState
 	public var backgroundGroup:FlxTypedGroup<FlxSprite>;
 	public var foregroundGroup:FlxTypedGroup<FlxSprite>;
 
+	public static var ssource:StorageVariables.Sources;
+
 	override public function create()
 	{
 		if (FlxG.sound.music != null)
@@ -257,7 +259,7 @@ class PlayState extends MusicBeatState
 		persistentDraw = true;
 
 		if (SONG == null)
-			SONG = Song.loadFromJson('tutorial');
+			SONG = Song.loadFromJson('tutorial', ssource);
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
@@ -1373,7 +1375,7 @@ class PlayState extends MusicBeatState
 		#else
 		if (OpenFlAssets.exists(file)) {
 		#end
-			var eventsData:Array<SwagSection> = Song.loadFromJson('events', songName).notes;
+			var eventsData:Array<SwagSection> = Song.loadFromJson('events', songName, ssource).notes;
 			for (section in eventsData)
 			{
 				for (songNotes in section.sectionNotes)
@@ -1911,6 +1913,7 @@ class PlayState extends MusicBeatState
 						FlxG.sound.music.pause();
 						vocals.pause();
 					}
+					PauseSubState.ssource = ssource;
 					openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 				}
 			
@@ -1924,6 +1927,7 @@ class PlayState extends MusicBeatState
 		{
 			persistentUpdate = false;
 			paused = true;
+			ChartingState.ssource = ssource;
 			MusicBeatState.switchState(new ChartingState());
 
 			#if desktop
@@ -2793,7 +2797,7 @@ class PlayState extends MusicBeatState
 				prevCamFollow = camFollow;
 				prevCamFollowPos = camFollowPos;
 
-				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0]);
+				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0], ssource);
 				FlxG.sound.music.stop();
 
 				if(winterHorrorlandNext) {

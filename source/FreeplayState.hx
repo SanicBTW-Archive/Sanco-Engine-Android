@@ -117,11 +117,6 @@ class FreeplayState extends MusicBeatState
 			iconArray.push(icon);
 			add(icon);
 
-			var lol = songs[i].source.getName();
-			var sourceText:Alphabet = new Alphabet(10, (70 * i) + 30, lol, true, false);
-			sourceText.targetY = i;
-			add(sourceText);
-
 			// songText.x += 40;
 			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
 			// songText.screenCenter(X);

@@ -63,7 +63,7 @@ class FreeplayState extends MusicBeatState
 		for (i in 0...initSonglist.length)
 		{
 			var songArray:Array<String> = initSonglist[i].split(":");
-			addSong(songArray[0], 0, songArray[1]);
+			addSong(songArray[0], 0, songArray[1], INTERNAL);
 			songs[songs.length-1].color = Std.parseInt(songArray[2]);
 		}	
 		/*
@@ -90,7 +90,7 @@ class FreeplayState extends MusicBeatState
 			#if !debug
 			if (StoryMenuState.weekUnlocked[i])
 			#end
-				addWeek(WeekData.songsNames[i], i, songsHeads[i-1]);
+				addWeek(WeekData.songsNames[i], i, songsHeads[i-1], ASSETS);
 		}
 
 		// LOAD MUSIC
@@ -116,6 +116,10 @@ class FreeplayState extends MusicBeatState
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
 			add(icon);
+
+			var lol = songs[i].source.getName();
+			var sourceText:Alphabet = new Alphabet(0, (0), lol, true, false);
+			add(sourceText);
 
 			// songText.x += 40;
 			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
@@ -181,12 +185,12 @@ class FreeplayState extends MusicBeatState
 		super.closeSubState();
 	}
 
-	public function addSong(songName:String, weekNum:Int, songCharacter:String)
+	public function addSong(songName:String, weekNum:Int, songCharacter:String, source:StorageVariables.Sources)
 	{
-		songs.push(new SongMetadata(songName, weekNum, songCharacter));
+		songs.push(new SongMetadata(songName, weekNum, songCharacter, source));
 	}
 
-	public function addWeek(songs:Array<String>, weekNum:Int, ?songCharacters:Array<String>)
+	public function addWeek(songs:Array<String>, weekNum:Int, ?songCharacters:Array<String>, source:StorageVariables.Sources)
 	{
 		if (songCharacters == null)
 			songCharacters = ['bf'];
@@ -194,7 +198,7 @@ class FreeplayState extends MusicBeatState
 		var num:Int = 0;
 		for (song in songs)
 		{
-			addSong(song, weekNum, songCharacters[num]);
+			addSong(song, weekNum, songCharacters[num], source);
 
 			if (songCharacters.length != 1)
 				num++;
@@ -410,8 +414,9 @@ class SongMetadata
 	public var week:Int = 0;
 	public var songCharacter:String = "";
 	public var color:Int = -7179779;
+	public var source:StorageVariables.Sources = StorageVariables.Sources.ASSETS;
 
-	public function new(song:String, week:Int, songCharacter:String)
+	public function new(song:String, week:Int, songCharacter:String, source:StorageVariables.Sources)
 	{
 		this.songName = song;
 		this.week = week;
@@ -419,5 +424,6 @@ class SongMetadata
 		if(week < FreeplayState.coolColors.length) {
 			this.color = FreeplayState.coolColors[week];
 		}
+		this.source = source;
 	}
 }

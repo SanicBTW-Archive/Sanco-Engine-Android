@@ -9,6 +9,7 @@ import haxe.io.Path;
 //this method will be deprecated once i find a good way to do it lol (expect to be on 0.3 or 0.4)
 class StorageVariables
 {
+    
 	public static var RequiredPath:String = Path.join([System.userDirectory, 'sanicbtw_psychfiles']);
 	public static var DataPath:String = Path.join([RequiredPath, 'data']);
     public static var ImagesPath:String = Path.join([RequiredPath, 'images']);
@@ -20,4 +21,9 @@ class StorageVariables
         if(!FileSystem.exists(ImagesPath)){FileSystem.createDirectory(ImagesPath);}
         if(!FileSystem.exists(CharactersPath)){FileSystem.createDirectory(CharactersPath);}
     }
+}
+
+enum Sources{
+    ASSETS;
+    INTERNAL;
 }

@@ -33,7 +33,7 @@ using StringTools;
 // TO DO: Redo the menu creation system for not being as dumb
 class OptionsState extends MusicBeatState
 {
-	var options:Array<String> = ['Mobile Controls','Preferences', 'Notes'];
+	var options:Array<String> = [];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
@@ -42,6 +42,12 @@ class OptionsState extends MusicBeatState
 		#if desktop
 		DiscordClient.changePresence("Options Menu", null);
 		#end
+
+		if(ClientPrefs.useHitSounds){
+			options = ['Mobile Controls','Preferences', 'Notes', 'Hit Sounds'];
+		} else {
+			options = ['Mobile Controls','Preferences', 'Notes'];
+		}
 
 		menuBG = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		menuBG.color = 0xFFea71fd;
@@ -103,6 +109,9 @@ class OptionsState extends MusicBeatState
 
 				case 'Mobile Controls':
 					MusicBeatState.switchState(new options.CustomControlsState());
+
+				case 'Hit Sounds':
+					MusicBeatState.switchState(new options.HitSoundState());
 			}
 		}
 	}
@@ -703,7 +712,8 @@ class PreferencesSubstate extends MusicBeatSubstate
 		#if !mobile
 		,'FPS Counter'
 		#end
-		,'Engine Options'
+		,'Engine Options',
+		'Use Hit Sounds'
 	];
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
@@ -889,6 +899,10 @@ class PreferencesSubstate extends MusicBeatSubstate
 
 					case 'Hide Song Length':
 						ClientPrefs.hideTime = !ClientPrefs.hideTime;
+
+					//jaja
+					case 'Use Hit Sounds':
+						ClientPrefs.useHitSounds = !ClientPrefs.useHitSounds;
 				}
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 				reloadValues();
@@ -982,6 +996,8 @@ class PreferencesSubstate extends MusicBeatSubstate
 				daText = "If checked, hides most HUD elements.";
 			case 'Hide Song Length':
 				daText = "If checked, the bar showing how much time is left\nwill be hidden.";
+			case 'Use Hit Sounds':
+				daText = "The name says it all, a new option will be available in the other menu once this is checked";
 		}
 		descText.text = daText;
 
@@ -1065,6 +1081,8 @@ class PreferencesSubstate extends MusicBeatSubstate
 						daValue = ClientPrefs.imagesPersist;
 					case 'Hide Song Length':
 						daValue = ClientPrefs.hideTime;
+					case 'Use Hit Sounds':
+						daValue = ClientPrefs.useHitSounds;
 				}
 				checkbox.daValue = daValue;
 			}

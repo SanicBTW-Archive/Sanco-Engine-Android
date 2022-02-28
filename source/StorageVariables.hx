@@ -10,14 +10,12 @@ class StorageVariables
 {
     //templates for missing files
     static var freeplayListTemplate = "Tutorial:gf:0xFF9271FD";
-    static var freeplayColorTemplate = "0xFF9271FD
-    0xFF9271FD
-    0xFF223344
-    0xFF941653
-    0xFFFC96D7
-    0xFFA0D1FF
-    0xFFFF78BF";
-    static var hitsoundsTempl = "osumania";
+    static var freeplayColorTemplate = "0xFF9271FD\n0xFF9271FD\n0xFF223344\n0xFF941653\n0xFFFC96D7\n0xFFA0D1FF\n0xFFFF78BF";
+    static var helpFileText = "This file is for the file system support help in case you don't know how anything that i did works\n
+Hit Sounds Support\n
+Go to the hit sounds folder and create a text file called 'hitsoundsList.txt'
+in order to put your custom hit sounds, add the name of the hit sound to the text file
+and add the sound file in the same folder, with the .ogg extension";
 
     //directories
 	public static var RequiredPath:String = Path.join([System.userDirectory, 'sanicbtw_psychfiles']);
@@ -29,13 +27,15 @@ class StorageVariables
     public static var HSLFPath:String = Path.join([HitSoundsPath, 'hitsoundsList.txt']);  //for custom hit sounds and shit
     public static var FPCPath:String = Path.join([DataRPath, 'freeplayColors.txt']);
 
+    public static var HelpFile:String = Path.join([RequiredPath, 'readme.txt']);
+
     public static function CheckStuff() {
         if(!FileSystem.exists(RequiredPath)){FileSystem.createDirectory(RequiredPath);}
         if(!FileSystem.exists(DataRPath)){FileSystem.createDirectory(DataRPath);}
         if(!FileSystem.exists(HitSoundsPath)){FileSystem.createDirectory(HitSoundsPath);}
 
         if(!FileSystem.exists(FPLPath)){File.saveContent(FPLPath, freeplayListTemplate);}
-        if(!FileSystem.exists(HSLFPath)){File.saveContent(HSLFPath, hitsoundsTempl);}
         if(!FileSystem.exists(FPCPath)){File.saveContent(FPCPath, freeplayColorTemplate);}
+        File.saveContent(HelpFile, helpFileText);
     }
 }

@@ -25,6 +25,10 @@ class ClientPrefs {
 	public static var imagesPersist:Bool = false;
 	public static var ghostTapping:Bool = true;
 	public static var hideTime:Bool = false;
+	//hit sounds
+	public static var useHitSounds:Bool = true;
+	public static var currentHitSound:String = "";
+	public static var hitSoundPath:String = ""; //sorry
 
 	public static var defaultKeys:Array<FlxKey> = [
 		A, LEFT,			//Note Left
@@ -80,6 +84,11 @@ class ClientPrefs {
 		FlxG.save.data.imagesPersist = imagesPersist;
 		FlxG.save.data.ghostTapping = ghostTapping;
 		FlxG.save.data.hideTime = hideTime;
+
+		//hit sounds
+		FlxG.save.data.useHitSounds = useHitSounds;
+		FlxG.save.data.currentHitSound = currentHitSound;
+		FlxG.save.data.hitSoundPath = hitSoundPath;
 
 		var achieves:Array<String> = [];
 		for (i in 0...Achievements.achievementsUnlocked.length) {
@@ -160,6 +169,16 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.hideTime != null) {
 			hideTime = FlxG.save.data.hideTime;
+		}
+		//hit sounds
+		if(FlxG.save.data.useHitSounds != null){
+			useHitSounds = FlxG.save.data.useHitSounds;
+		}
+		if(FlxG.save.data.currentHitSound != null){
+			currentHitSound = FlxG.save.data.currentHitSound;
+		}
+		if(FlxG.save.data.hitSoundPath != null){
+			hitSoundPath = FlxG.save.data.hitSoundPath;
 		}
 
 		var save:FlxSave = new FlxSave();

@@ -231,47 +231,4 @@ class Paths
 		return mods('images/' + key + '.xml');
 	}
 	#end
-
-	#if android
-	//android internal directory, only used if you want to access files from the specified folder
-	//library support will be added once i stop being a lazy fuck
-	//lua isnt really needed for psych 0.3.2 so there is no reason to actually add it
-	inline static public function androidIntDir(key:String){ 
-		return lime.system.System.userDirectory + 'sanicbtw_psychfiles/' + key;
-	}
-
-	inline static public function androidTxt(key:String){
-		return androidIntDir('data/$key.txt');
-	}
-
-	inline static public function androidXml(key:String){
-		return androidIntDir('data/$key.xml');
-	}
-
-	inline static public function androidJson(key:String){
-		return androidIntDir('data/$key.json');
-	}
-
-	inline static public function androidSound(key:String){
-		return androidIntDir('sounds/$key.$SOUND_EXT');
-	}
-
-	inline static public function androidRandomSound(key:String, min:Int, max:Int){
-		return androidSound(key + FlxG.random.int(min,max));
-	}
-
-	inline static public function androidMusic(key:String){
-		return androidIntDir('music/$key.$SOUND_EXT');
-	}
-
-	inline static public function androidVoices(song:String){
-		var songKey:String = '${song.toLowerCase().replace(' ', '-')}/Voices.$SOUND_EXT';
-		return androidIntDir('songs/$songKey');
-	}
-
-	inline static public function androidInst(song:String){
-		var songKey:String = '${song.toLowerCase().replace(' ', '-')}/Inst.$SOUND_EXT';
-		return androidIntDir('songs/$songKey');
-	}
-	#end
 }

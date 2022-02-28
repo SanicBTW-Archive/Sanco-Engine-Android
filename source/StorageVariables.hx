@@ -11,19 +11,11 @@ class StorageVariables
 {
     
 	public static var RequiredPath:String = Path.join([System.userDirectory, 'sanicbtw_psychfiles']);
-	public static var DataPath:String = Path.join([RequiredPath, 'data']);
-    public static var ImagesPath:String = Path.join([RequiredPath, 'images']);
-    public static var CharactersPath:String = Path.join([RequiredPath, 'characters']);
+    public static var ExportsPath:String = Path.join([RequiredPath, 'exports']);
 
     public static function CheckStuff() {
         if(!FileSystem.exists(RequiredPath)){FileSystem.createDirectory(RequiredPath);}
-        if(!FileSystem.exists(DataPath)){FileSystem.createDirectory(DataPath);}
-        if(!FileSystem.exists(ImagesPath)){FileSystem.createDirectory(ImagesPath);}
-        if(!FileSystem.exists(CharactersPath)){FileSystem.createDirectory(CharactersPath);}
-    }
-}
+        if(!FileSystem.exists(ExportsPath)){FileSystem.createDirectory(ExportsPath);}
 
-enum Sources{
-    ASSETS;
-    INTERNAL;
+    }
 }

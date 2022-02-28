@@ -47,26 +47,18 @@ class Song
 	}
 
 	//TODO: IMPROVE OR FIX THIS FUCKING PART OF THE CODEEEE
-	public static function loadFromJson(jsonInput:String, ?folder:String, source:StorageVariables.Sources):SwagSong
+	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
 	{
 		var rawJson;
 		if(jsonInput == 'events') { //Makes the game not crash while trying to load an events chart, doesn't work on HTML tho
 			#if sys
-			if(ClientPrefs.UseInternalStorage == true || source == INTERNAL){
-				rawJson = sys.io.File.getContent(Paths.androidJson(folder.toLowerCase() + '/events')).trim();
-			} else {
-				rawJson = sys.io.File.getContent(Paths.json(folder.toLowerCase() + '/events')).trim();
-			}
+			rawJson = sys.io.File.getContent(Paths.json(folder.toLowerCase() + '/events')).trim();
 			#else
 			rawJson = Assets.getText(Paths.json(folder.toLowerCase() + '/events')).trim();
 
 			#end
 		} else {
-			if(ClientPrefs.UseInternalStorage == true || source == INTERNAL){
-				rawJson = sys.io.File.getContent(Paths.androidJson(folder.toLowerCase() + '/' + jsonInput.toLowerCase())).trim();
-			} else {
-				rawJson = Assets.getText(Paths.json(folder.toLowerCase() + '/' + jsonInput.toLowerCase())).trim();
-			}
+			rawJson = Assets.getText(Paths.json(folder.toLowerCase() + '/' + jsonInput.toLowerCase())).trim();
 		}
 
 		while (!rawJson.endsWith("}"))

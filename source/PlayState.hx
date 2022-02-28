@@ -232,8 +232,6 @@ class PlayState extends MusicBeatState
 	public var backgroundGroup:FlxTypedGroup<FlxSprite>;
 	public var foregroundGroup:FlxTypedGroup<FlxSprite>;
 
-	public static var ssource:StorageVariables.Sources;
-
 	override public function create()
 	{
 		if (FlxG.sound.music != null)
@@ -259,7 +257,7 @@ class PlayState extends MusicBeatState
 		persistentDraw = true;
 
 		if (SONG == null)
-			SONG = Song.loadFromJson('tutorial', ssource);
+			SONG = Song.loadFromJson('tutorial');
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
@@ -1364,18 +1362,14 @@ class PlayState extends MusicBeatState
 		var songName:String = SONG.song.toLowerCase();
 
 		var file:String = "";
-		if(ClientPrefs.UseInternalStorage == true){
-			file = Paths.androidJson(songName + '/events');
-		} else {
-			file = Paths.json(songName + '/events');
-		}
+		file = Paths.json(songName + '/events');
 
 		#if sys
 		if (sys.FileSystem.exists(file)) {
 		#else
 		if (OpenFlAssets.exists(file)) {
 		#end
-			var eventsData:Array<SwagSection> = Song.loadFromJson('events', songName, ssource).notes;
+			var eventsData:Array<SwagSection> = Song.loadFromJson('events', songName).notes;
 			for (section in eventsData)
 			{
 				for (songNotes in section.sectionNotes)
@@ -1913,7 +1907,6 @@ class PlayState extends MusicBeatState
 						FlxG.sound.music.pause();
 						vocals.pause();
 					}
-					PauseSubState.ssource = ssource;
 					openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 				}
 			
@@ -1927,7 +1920,6 @@ class PlayState extends MusicBeatState
 		{
 			persistentUpdate = false;
 			paused = true;
-			ChartingState.ssource = ssource;
 			MusicBeatState.switchState(new ChartingState());
 
 			#if desktop
@@ -2797,7 +2789,7 @@ class PlayState extends MusicBeatState
 				prevCamFollow = camFollow;
 				prevCamFollowPos = camFollowPos;
 
-				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0], ssource);
+				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0]);
 				FlxG.sound.music.stop();
 
 				if(winterHorrorlandNext) {

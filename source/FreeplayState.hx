@@ -59,11 +59,11 @@ class FreeplayState extends MusicBeatState
 	{
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
-		var initSonglist = CoolUtil.coolTextFile(Paths.androidTxt("freeplaySonglist"));
+		var initSonglist = CoolUtil.coolTextFile(Paths.txt("freeplaySonglist"));
 		for (i in 0...initSonglist.length)
 		{
 			var songArray:Array<String> = initSonglist[i].split(":");
-			addSong(songArray[0], 0, songArray[1], INTERNAL);
+			addSong(songArray[0], 0, songArray[1]);
 			songs[songs.length-1].color = Std.parseInt(songArray[2]);
 		}	
 		/*
@@ -90,7 +90,7 @@ class FreeplayState extends MusicBeatState
 			#if !debug
 			if (StoryMenuState.weekUnlocked[i])
 			#end
-				addWeek(WeekData.songsNames[i], i, songsHeads[i-1], ASSETS);
+				addWeek(WeekData.songsNames[i], i, songsHeads[i-1]);
 		}
 
 		// LOAD MUSIC
@@ -105,7 +105,7 @@ class FreeplayState extends MusicBeatState
 
 		for (i in 0...songs.length)
 		{
-			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName + " " + songs[i].source, true, false);
+			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
 			songText.isMenuItem = true;
 			songText.targetY = i;
 			grpSongs.add(songText);
@@ -181,12 +181,12 @@ class FreeplayState extends MusicBeatState
 		super.closeSubState();
 	}
 
-	public function addSong(songName:String, weekNum:Int, songCharacter:String, source:StorageVariables.Sources)
+	public function addSong(songName:String, weekNum:Int, songCharacter:String)
 	{
-		songs.push(new SongMetadata(songName, weekNum, songCharacter, source));
+		songs.push(new SongMetadata(songName, weekNum, songCharacter));
 	}
 
-	public function addWeek(songs:Array<String>, weekNum:Int, ?songCharacters:Array<String>, source:StorageVariables.Sources)
+	public function addWeek(songs:Array<String>, weekNum:Int, ?songCharacters:Array<String>)
 	{
 		if (songCharacters == null)
 			songCharacters = ['bf'];
@@ -194,7 +194,7 @@ class FreeplayState extends MusicBeatState
 		var num:Int = 0;
 		for (song in songs)
 		{
-			addSong(song, weekNum, songCharacters[num], source);
+			addSong(song, weekNum, songCharacters[num]);
 
 			if (songCharacters.length != 1)
 				num++;
@@ -254,7 +254,7 @@ class FreeplayState extends MusicBeatState
 		{
 			destroyFreeplayVocals();
 			var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
-			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase(), songs[curSelected].source);
+			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 			if (PlayState.SONG.needsVoices)
 				vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
 			else
@@ -272,23 +272,14 @@ class FreeplayState extends MusicBeatState
 		{
 			var songLowercase:String = songs[curSelected].songName.toLowerCase();
 			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
-			var lol = songs[curSelected].source;
-			if(ClientPrefs.UseInternalStorage == true){
-				if(!OpenFlAssets.exists(Paths.androidJson(songLowercase + '/' + poop))){
-					poop = songLowercase;
-					curDifficulty = 1;
-					trace("Couldn't find file");
-				}	
-			} else {
-				if(!OpenFlAssets.exists(Paths.json(songLowercase + '/' + poop))) {
-					poop = songLowercase;
-					curDifficulty = 1;
-					trace('Couldnt find file');
-				}	
+			if(!OpenFlAssets.exists(Paths.json(songLowercase + '/' + poop))) {
+				poop = songLowercase;
+				curDifficulty = 1;
+				trace('Couldnt find file');
 			}
 			trace(poop);
 
-			PlayState.SONG = Song.loadFromJson(poop, songLowercase, lol);
+			PlayState.SONG = Song.loadFromJson(poop, songLowercase);
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = curDifficulty;
 
@@ -297,7 +288,6 @@ class FreeplayState extends MusicBeatState
 			if(colorTween != null) {
 				colorTween.cancel();
 			}
-			PlayState.ssource = lol;
 			LoadingState.loadAndSwitchState(new PlayState());
 
 			FlxG.sound.music.volume = 0;
@@ -412,9 +402,8 @@ class SongMetadata
 	public var week:Int = 0;
 	public var songCharacter:String = "";
 	public var color:Int = -7179779;
-	public var source:StorageVariables.Sources = StorageVariables.Sources.ASSETS;
 
-	public function new(song:String, week:Int, songCharacter:String, source:StorageVariables.Sources)
+	public function new(song:String, week:Int, songCharacter:String)
 	{
 		this.songName = song;
 		this.week = week;
@@ -422,6 +411,5 @@ class SongMetadata
 		if(week < FreeplayState.coolColors.length) {
 			this.color = FreeplayState.coolColors[week];
 		}
-		this.source = source;
 	}
 }

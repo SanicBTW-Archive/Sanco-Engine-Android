@@ -36,11 +36,8 @@ class CoolUtil
 	{
 		#if windows
 		var daList:Array<String> = File.getContent(path).trim().split('\n');
-		#elseif !android
-		var daList:Array<String> = Assets.getText(path).trim().split('\n');
-		#else
-		var daList:Array<String> = File.getContent(path).trim().split('\n');
 		#end
+		var daList:Array<String> = Assets.getText(path).trim().split('\n');
 
 		for (i in 0...daList.length)
 		{

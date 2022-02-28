@@ -18,7 +18,7 @@ in order to put your custom hit sounds, add the name of the hit sound to the tex
 and add the sound file in the same folder, with the .ogg extension";
 
     //directories
-	public static var RequiredPath:String = Path.join([System.userDirectory, 'sanicbtw_psychfiles']);
+	public static var RequiredPath:String = Path.join([System.userDirectory, 'sanicbtw_sancoenginefiles']);
 	public static var DataRPath:String = Path.join([RequiredPath, 'data']);
     public static var HitSoundsPath:String = Path.join([RequiredPath, 'hitsounds']);
 

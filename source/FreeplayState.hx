@@ -66,12 +66,11 @@ class FreeplayState extends MusicBeatState
 			addSong(songArray[0], 0, songArray[1]);
 			songs[songs.length-1].color = Std.parseInt(songArray[2]);
 		}	
-		/*
-		var colorsList = CoolUtil.coolTextFile(Paths.txt('freeplayColors'));
+		var colorsList = CoolUtil.coolTextFile(StorageVariables.FPCPath);
 		for (i in 0...colorsList.length)
 		{
 			coolColors.push(Std.parseInt(colorsList[i]));
-		}*/
+		}
 
 		/* 
 			if (FlxG.sound.music != null)

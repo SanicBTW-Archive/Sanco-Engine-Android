@@ -21,6 +21,7 @@ class HitSoundState extends MusicBeatState
     private var grpHitSounds:FlxTypedGroup<Alphabet>;
     var curSelected:Int = 0;
     var CheckText:FlxText;
+    var leText:String = "Current hit sound: " + ClientPrefs.currentHitSound;
 
     override function create()
     {
@@ -46,7 +47,7 @@ class HitSoundState extends MusicBeatState
             }
         } else if (!FileSystem.exists(StorageVariables.HSLFPath)){
             //useless
-            CheckText.text = "No hit sounds were found\nmaybe the necessary file isn't existing\nCheck your internal storage and check the help file";
+            leText = "No hit sounds were found\nmaybe the necessary file isn't existing\nCheck your internal storage and check the help file";
         }
 
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
@@ -68,6 +69,15 @@ class HitSoundState extends MusicBeatState
 		add(checkTxtBG);
 
         add(CheckText);
+
+        var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
+		textBG.alpha = 0.6;
+		add(textBG);
+
+        var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, 18);
+		text.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT);
+		text.scrollFactor.set();
+		add(text);
 
         changeSelection();
 

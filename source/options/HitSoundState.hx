@@ -13,7 +13,7 @@ import flixel.FlxG;
 
 class HitSoundState extends MusicBeatState
 {
-    var soundExt = "mp3";
+    var soundExt = "ogg";
     var avHitS:Array<String> = [];
     var avHitSP:Array<String> = [];
     var checkArr:Array<String> = [];
@@ -33,16 +33,16 @@ class HitSoundState extends MusicBeatState
                 avHitS.push(initHitSoundsList[i]);
                 var hitSName:String = avHitS[i] + "." + soundExt;
                 var possibleFilePath:String = Path.join([StorageVariables.HitSoundsPath, hitSName]);
-                FlxG.log.warn("Pushing possible hit sound path");
+                trace("Pushing possible hit sound path");
                 avHitSP.push(possibleFilePath.toLowerCase());
                 if(FileSystem.exists(avHitSP[i])){
-                    FlxG.log.warn("File exists");
+                    trace("File exists");
                     checkArr.push("Exists");
                 } else {
-                    FlxG.log.warn("File doesn't exists, check the directory please");
+                    trace("File doesn't exists, check the directory please");
                     checkArr.push("Check the directory");
                 }
-                FlxG.log.warn(avHitSP[i]);
+                trace(avHitSP[i]);
             }
         } else if (!FileSystem.exists(StorageVariables.HSLFPath)){
             //useless

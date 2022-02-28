@@ -3341,6 +3341,8 @@ class PlayState extends MusicBeatState
 				note.kill();
 				notes.remove(note, true);
 				note.destroy();
+				if(ClientPrefs.useHitSounds && ClientPrefs.currentHitSound != null && ClientPrefs.hitSoundPath != null)
+					FlxG.sound.stream(ClientPrefs.hitSoundPath, 1, false, null, true);
 			}
 		}
 	}

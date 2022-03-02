@@ -97,6 +97,7 @@ class ExtMusicState extends MusicBeatState
     override function update(elapsed:Float)
     {
         if(controls.BACK){
+            FlxG.sound.music.resume();
             FlxG.switchState(new MainMenuState());
         }
 
@@ -111,13 +112,6 @@ class ExtMusicState extends MusicBeatState
             
             play();
 
-            //inst = new FlxSound().loadStream(songsInstPaths[curSelected], true, false);
-            //inst.loadStream(songsInstPaths[curSelected], true, false);
-            //vocals.loadStream(songsVoicesPaths[curSelected], true, false);
-            //inst.play();
-            //vocals.play();
-            //FlxG.sound.stream(songsVoicesPaths[curSelected], 1, false, null, false, null, null );
-            //FlxG.sound.stream(songsInstPaths[curSelected], 1, false, null, false, null, null );
         }
 
         super.update(elapsed);
@@ -136,15 +130,7 @@ class ExtMusicState extends MusicBeatState
 
         var bullShit:Int = 0;
 
-        FlxG.sound.destroy();
         play();
-        //inst.loadStream(songsInstPaths[curSelected], true, false);
-        //vocals.loadStream(songsVoicesPaths[curSelected], true, false);
-        //inst.play();
-        //vocals.play();
-
-        //FlxG.sound.stream(songsVoicesPaths[curSelected], 1, false, null, false, null, null );
-        //FlxG.sound.stream(songsInstPaths[curSelected], 1, false, null, false, null, null);
 
         for (item in grpSongs.members){
             item.targetY = bullShit - curSelected;
@@ -161,6 +147,9 @@ class ExtMusicState extends MusicBeatState
     }
 
     function play(){
+        FlxG.sound.destroy();
+
+        /* method 1, doesnt works / doesnt play anything, does it need to be .mp3???
         if(songCheck[curSelected] == "Voice and Inst"){
             vocals = new FlxSound().loadStream(songsVoicesPaths[curSelected]);
         } 
@@ -169,5 +158,18 @@ class ExtMusicState extends MusicBeatState
 
         FlxG.sound.list.add(vocals);
         FlxG.sound.list.add(new FlxSound().loadStream(songsInstPaths[curSelected]));
+        */
+
+        /* method 2, doesnt works / doesnt play anything, does it need to be .mp3???
+        vocals = new FlxSound().loadStream(songsVoicesPaths[curSelected]);
+        vocals.play();
+        inst = new FlxSound().loadStream(songsInstPaths[curSelected]);
+        inst.play();
+        */
+
+        //method 3, works but plays the thing out of sync, depends on the order
+        FlxG.sound.stream(songsVoicesPaths[curSelected], 1, false, null, false, null, null );
+        FlxG.sound.stream(songsInstPaths[curSelected], 1, false, null, false, null, null);
+
     }
 }

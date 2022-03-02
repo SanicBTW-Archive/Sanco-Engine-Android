@@ -22,6 +22,9 @@ class ExtMusicState extends MusicBeatState
     var songCheck:Array<String> = [];
     var text:FlxText;
 
+    var inst:FlxSound;
+    var vocals:FlxSound;
+
     override function create()
     {
         var initSongList = CoolUtil.coolTextFile(StorageVariables.CustomSF);
@@ -105,8 +108,16 @@ class ExtMusicState extends MusicBeatState
         if(controls.ACCEPT){
             trace("trying to play");
             FlxG.sound.destroy();
-            FlxG.sound.stream(songsInstPaths[curSelected], 1, false, null, false, null, null );
-            FlxG.sound.stream(songsVoicesPaths[curSelected], 1, false, null, false, null, null );
+            
+            play();
+
+            //inst = new FlxSound().loadStream(songsInstPaths[curSelected], true, false);
+            //inst.loadStream(songsInstPaths[curSelected], true, false);
+            //vocals.loadStream(songsVoicesPaths[curSelected], true, false);
+            //inst.play();
+            //vocals.play();
+            //FlxG.sound.stream(songsVoicesPaths[curSelected], 1, false, null, false, null, null );
+            //FlxG.sound.stream(songsInstPaths[curSelected], 1, false, null, false, null, null );
         }
 
         super.update(elapsed);
@@ -126,8 +137,14 @@ class ExtMusicState extends MusicBeatState
         var bullShit:Int = 0;
 
         FlxG.sound.destroy();
-        FlxG.sound.stream(songsInstPaths[curSelected], 1, false, null, false, null, null);
-        FlxG.sound.stream(songsVoicesPaths[curSelected], 1, false, null, false, null, null );
+        play();
+        //inst.loadStream(songsInstPaths[curSelected], true, false);
+        //vocals.loadStream(songsVoicesPaths[curSelected], true, false);
+        //inst.play();
+        //vocals.play();
+
+        //FlxG.sound.stream(songsVoicesPaths[curSelected], 1, false, null, false, null, null );
+        //FlxG.sound.stream(songsInstPaths[curSelected], 1, false, null, false, null, null);
 
         for (item in grpSongs.members){
             item.targetY = bullShit - curSelected;
@@ -141,5 +158,16 @@ class ExtMusicState extends MusicBeatState
 
         checkText.text = songCheck[curSelected];
         text.text = songsInstPaths[curSelected];
+    }
+
+    function play(){
+        if(songCheck[curSelected] == "Voice and Inst"){
+            vocals = new FlxSound().loadStream(songsVoicesPaths[curSelected]);
+        } 
+        else
+            vocals = new FlxSound();
+
+        FlxG.sound.list.add(vocals);
+        FlxG.sound.list.add(new FlxSound().loadStream(songsInstPaths[curSelected]));
     }
 }

@@ -44,9 +44,9 @@ class OptionsState extends MusicBeatState
 		#end
 
 		if(ClientPrefs.useHitSounds){
-			options = ['Mobile Controls','Preferences', 'Notes', 'Hit Sounds'];
+			options = ['Mobile Controls','Preferences', 'Notes', 'External Music Test', 'Hit Sounds'];
 		} else {
-			options = ['Mobile Controls','Preferences', 'Notes'];
+			options = ['Mobile Controls','Preferences', 'Notes', 'External Music Test'];
 		}
 
 		menuBG = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -112,6 +112,8 @@ class OptionsState extends MusicBeatState
 
 				case 'Hit Sounds':
 					MusicBeatState.switchState(new options.HitSoundState());
+				case 'External Music Test':
+					MusicBeatState.switchState(new test.ExtMusicState());
 			}
 		}
 	}

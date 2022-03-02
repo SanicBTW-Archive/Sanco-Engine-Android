@@ -47,7 +47,7 @@ class HitSoundState extends MusicBeatState
             }
         } else if (!FileSystem.exists(StorageVariables.HSLFPath)){
             //useless
-            leText = "No hit sounds were found\nmaybe the necessary file isn't existing\nCheck your internal storage and check the help file";
+            leText = "No hit sounds were found maybe the necessary file isn't existing, check your internal storage and check the help file";
         }
 
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));

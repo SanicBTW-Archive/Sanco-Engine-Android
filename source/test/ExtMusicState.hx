@@ -14,6 +14,7 @@ class ExtMusicState extends MusicBeatState
 {
     var songs:Array<String> = [];
     var songsInstPaths:Array<String> = [];
+    var songsVoicesPaths:Array<String> = [];
     private var grpSongs:FlxTypedGroup<Alphabet>;
     var curSelected:Int = 0;
     var leText:String;
@@ -28,17 +29,25 @@ class ExtMusicState extends MusicBeatState
         {
             songs.push(initSongList[i]);
             var theInstName:String = "Inst." + Paths.SOUND_EXT;
+            var theVoiceName:String = "Voices." + Paths.SOUND_EXT;
             var possibleInstPath:String = Path.join([StorageVariables.SongsRPath, initSongList[i], theInstName]);
+            var possibleVoicePath:String = Path.join([StorageVariables.SongsRPath, initSongList[i], theVoiceName]);
             trace("Pushing possible inst path");
             songsInstPaths.push(possibleInstPath);
-            if(FileSystem.exists(songsInstPaths[i])){
-                trace("Existing");
-                songCheck.push("Exists");
+            trace("Pushing possible voice path");
+            songsVoicesPaths.push(possibleVoicePath);
+            if(FileSystem.exists(songsInstPaths[i]) && FileSystem.exists(songsVoicesPaths[i])){
+                trace("Existing voice and inst");
+                songCheck.push("Voice and Inst");
+            } else if (FileSystem.exists(songsInstPaths[i]) && !FileSystem.exists(songsVoicesPaths[i])) {
+                trace("Existing inst");
+                songCheck.push("Only Inst");
             } else {
                 trace("fuck");
-                songCheck.push("Doesn't exist");
+                songCheck.push("None");
             }
             trace(songsInstPaths[i]);
+            trace(songsVoicesPaths[i]);
         }
 
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
@@ -97,8 +106,7 @@ class ExtMusicState extends MusicBeatState
             trace("trying to play");
             FlxG.sound.destroy();
             FlxG.sound.stream(songsInstPaths[curSelected], 1, false, null, false, null, null );
-            //FlxG.sound.music.loadStream(songsInstPaths[curSelected], false, false, null, lol);
-            //FlxG.sound.music.play();
+            FlxG.sound.stream(songsVoicesPaths[curSelected], 1, false, null, false, null, null );
         }
 
         super.update(elapsed);
@@ -119,6 +127,7 @@ class ExtMusicState extends MusicBeatState
 
         FlxG.sound.destroy();
         FlxG.sound.stream(songsInstPaths[curSelected], 1, false, null, false, null, null);
+        FlxG.sound.stream(songsVoicesPaths[curSelected], 1, false, null, false, null, null );
 
         for (item in grpSongs.members){
             item.targetY = bullShit - curSelected;

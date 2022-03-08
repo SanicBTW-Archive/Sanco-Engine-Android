@@ -44,9 +44,9 @@ class OptionsState extends MusicBeatState
 		#end
 
 		if(ClientPrefs.useHitSounds){
-			options = ['Mobile Controls','Preferences', 'Notes', 'External Music Test', 'Hit Sounds'];
+			options = ['Mobile Controls','Preferences', 'Notes', 'Hit Sounds'];
 		} else {
-			options = ['Mobile Controls','Preferences', 'Notes', 'External Music Test'];
+			options = ['Mobile Controls','Preferences', 'Notes'];
 		}
 
 		menuBG = new FlxSprite().loadGraphic(Paths.image('menuDesat'));

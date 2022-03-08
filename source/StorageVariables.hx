@@ -8,8 +8,6 @@ import haxe.io.Path;
 
 class StorageVariables
 {
-    //for the next version the R in the paths will be deleted cuz they look ugly lol
-
     //templates for missing files
     static var freeplayListTemplate = "Tutorial:gf:0xFF9271FD";
     static var freeplayColorTemplate = "0xFF9271FD\n0xFF9271FD\n0xFF223344\n0xFF941653\n0xFFFC96D7\n0xFFA0D1FF\n0xFFFF78BF";
@@ -21,25 +19,31 @@ and add the sound file in the same folder, with the .ogg extension"; //YO this i
 
     //directories
 	public static var RequiredPath:String = Path.join([System.userDirectory, 'sancoengine_files']);
-	public static var DataRPath:String = Path.join([RequiredPath, 'data']);
+	public static var DataPath:String = Path.join([RequiredPath, 'data']);
     public static var HitSoundsPath:String = Path.join([RequiredPath, 'hitsounds']);
-    public static var SongsRPath:String = Path.join([RequiredPath, 'songs']);
-    public static var LuaRPath:String = Path.join([RequiredPath, 'scripts']); //only folder is created, no support is given yet
+    public static var SongsPath:String = Path.join([RequiredPath, 'songs']);
+    public static var LuaPath:String = Path.join([RequiredPath, 'scripts']); //only folder is created, no support is given yet
+    public static var CharactersPath:String = Path.join([RequiredPath, 'characters']);
+    public static var CharDataPath:String = Path.join([CharactersPath, 'data']);
+    public static var CharImgPath:String = Path.join([CharactersPath, 'images']);
 
     //files
-    public static var FPLPath:String = Path.join([DataRPath, 'freeplaySonglist.txt']);
+    public static var FPLPath:String = Path.join([DataPath, 'freeplaySonglist.txt']);
     public static var HSLFPath:String = Path.join([HitSoundsPath, 'hitsoundsList.txt']);  //for custom hit sounds and shit
-    public static var FPCPath:String = Path.join([DataRPath, 'freeplayColors.txt']);
-    public static var CustomSF:String = Path.join([DataRPath, 'customsongs.txt']); // only a placeholder for the external music state thingy
+    public static var FPCPath:String = Path.join([DataPath, 'freeplayColors.txt']);
+    public static var CustomSF:String = Path.join([DataPath, 'customsongs.txt']); // only a placeholder for the external music state thingy
 
     public static var HelpFile:String = Path.join([RequiredPath, 'readme.txt']);
 
     public static function CheckStuff() {
         if(!FileSystem.exists(RequiredPath)){FileSystem.createDirectory(RequiredPath);}
-        if(!FileSystem.exists(DataRPath)){FileSystem.createDirectory(DataRPath);}
+        if(!FileSystem.exists(DataPath)){FileSystem.createDirectory(DataPath);}
         if(!FileSystem.exists(HitSoundsPath)){FileSystem.createDirectory(HitSoundsPath);}
-        if(!FileSystem.exists(SongsRPath)){FileSystem.createDirectory(SongsRPath);}
-        if(!FileSystem.exists(LuaRPath)){FileSystem.createDirectory(LuaRPath);}
+        if(!FileSystem.exists(SongsPath)){FileSystem.createDirectory(SongsPath);}
+        if(!FileSystem.exists(LuaPath)){FileSystem.createDirectory(LuaPath);}
+        if(!FileSystem.exists(CharactersPath)){FileSystem.createDirectory(CharactersPath);}
+        if(!FileSystem.exists(CharDataPath)){FileSystem.createDirectory(CharDataPath);}
+        if(!FileSystem.exists(CharImgPath)){FileSystem.createDirectory(CharImgPath);}
 
         if(!FileSystem.exists(FPLPath)){File.saveContent(FPLPath, freeplayListTemplate);}
         if(!FileSystem.exists(FPCPath)){File.saveContent(FPCPath, freeplayColorTemplate);}

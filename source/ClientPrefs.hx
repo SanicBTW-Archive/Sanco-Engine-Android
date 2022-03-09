@@ -29,6 +29,10 @@ class ClientPrefs {
 	public static var useHitSounds:Bool = true;
 	public static var currentHitSound:String = "";
 	public static var hitSoundPath:String = ""; //sorry
+	//debug
+	public static var experimentalStuff:Bool = false;
+	//internal storage
+	public static var internalStorageUseType:String = "Basic";
 
 	public static var defaultKeys:Array<FlxKey> = [
 		A, LEFT,			//Note Left
@@ -89,6 +93,12 @@ class ClientPrefs {
 		FlxG.save.data.useHitSounds = useHitSounds;
 		FlxG.save.data.currentHitSound = currentHitSound;
 		FlxG.save.data.hitSoundPath = hitSoundPath;
+
+		//debug
+		FlxG.save.data.experimentalStuff = experimentalStuff;
+
+		//internal storage
+		FlxG.save.data.internalStorageUseType = internalStorageUseType;
 
 		var achieves:Array<String> = [];
 		for (i in 0...Achievements.achievementsUnlocked.length) {
@@ -179,6 +189,14 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.hitSoundPath != null){
 			hitSoundPath = FlxG.save.data.hitSoundPath;
+		}
+		//debug
+		if(FlxG.save.data.experimentalStuff != null){
+			experimentalStuff = FlxG.save.data.experimentalStuff;
+		}
+		//internal storage
+		if(FlxG.save.data.internalStorageUseType != null){
+			internalStorageUseType = FlxG.save.data.internalStorageUseType;
 		}
 
 		var save:FlxSave = new FlxSave();

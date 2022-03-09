@@ -49,7 +49,9 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		bf.playAnim('firstDeath');
 
+		#if mobileC
 		addVirtualPad(NONE, A_B);
+		#end
 
 		var exclude:Array<Int> = [];
 

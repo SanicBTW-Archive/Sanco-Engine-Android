@@ -59,6 +59,7 @@ class FreeplayState extends MusicBeatState
 	{
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
+		#if sys
 		var initSonglist = CoolUtil.coolTextFile(StorageVariables.FPLPath);
 		for (i in 0...initSonglist.length)
 		{
@@ -71,7 +72,7 @@ class FreeplayState extends MusicBeatState
 		{
 			coolColors.push(Std.parseInt(colorsList[i]));
 		}
-
+		#end
 		/* 
 			if (FlxG.sound.music != null)
 			{
@@ -158,8 +159,9 @@ class FreeplayState extends MusicBeatState
 			trace(md);
 		 */
 
-		 addVirtualPad(FULL, A_B);
-
+		#if mobileC
+		addVirtualPad(FULL, A_B);
+		#end
 		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
 		textBG.alpha = 0.6;
 		add(textBG);

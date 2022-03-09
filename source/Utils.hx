@@ -10,8 +10,7 @@ import sys.io.File;
 
 class Utils
 {
-    #if android
-    
+	#if sys
     static var storagePath:String = lime.system.System.userDirectory;
     
     /*
@@ -49,7 +48,5 @@ class Utils
 
 		return storagePath + md5 + ext;
 	}
-	#else
-	trace('Utils.hx is unsupported not on android targets')
 	#end
 }

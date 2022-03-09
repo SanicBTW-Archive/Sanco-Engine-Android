@@ -81,7 +81,9 @@ class HitSoundState extends MusicBeatState
 
         changeSelection();
 
+        #if mobileC
         addVirtualPad(UP_DOWN, A_B);
+        #end
 
         FlxG.sound.music.stop();
         super.create();

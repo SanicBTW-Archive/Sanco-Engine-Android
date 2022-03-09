@@ -43,10 +43,13 @@ class OptionsState extends MusicBeatState
 		DiscordClient.changePresence("Options Menu", null);
 		#end
 
-		if(ClientPrefs.useHitSounds){
+		//spaghetti moment lol
+		if(ClientPrefs.useHitSounds && !ClientPrefs.experimentalStuff){
+			options = ['Mobile Controls','Preferences', 'Notes', 'External Music Test', 'Hit Sounds'];
+		} else if (ClientPrefs.useHitSounds) {
 			options = ['Mobile Controls','Preferences', 'Notes', 'Hit Sounds'];
 		} else {
-			options = ['Mobile Controls','Preferences', 'Notes'];
+			options = ['Mobile Controls','Preferences', 'Notes'];	
 		}
 
 		menuBG = new FlxSprite().loadGraphic(Paths.image('menuDesat'));

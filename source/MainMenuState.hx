@@ -23,7 +23,7 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	public static var EngineVersion:String = '0.1.2 Test Build, Rev 1'; //This is also used for Discord RPC
+	public static var EngineVersion:String = '0.1.2 Test Build, Rev 11'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -128,7 +128,9 @@ class MainMenuState extends MusicBeatState
 		}
 		#end
 
+		#if mobileC
 		addVirtualPad(UP_DOWN, A_B);
+		#end
 
 		super.create();
 	}
@@ -217,7 +219,8 @@ class MainMenuState extends MusicBeatState
 									case 'credits':
 										MusicBeatState.switchState(new CreditsState());
 									case 'options':
-										MusicBeatState.switchState(new OptionsState());
+										//MusicBeatState.switchState(new OptionsState()); old
+										MusicBeatState.switchState(new options.CustomOptionsState());
 								}
 							});
 						}

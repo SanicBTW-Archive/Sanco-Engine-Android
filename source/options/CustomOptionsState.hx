@@ -21,6 +21,10 @@ class CustomOptionsState extends MusicBeatState
     var hintText:String = "hello world";
     var curOptionState:FlxText;
     var stateText:String = "";
+    var displayState:String = "";
+    var states:Array<Dynamic> = [];
+    var initialized:Bool = false;
+    var whatChanged:Array<String> = [];
 
     override function create()
     {
@@ -67,6 +71,7 @@ class CustomOptionsState extends MusicBeatState
         addVirtualPad(FULL, A_B);
         #end
 
+        initialized = true;
         super.create();
     }
 
@@ -107,7 +112,7 @@ class CustomOptionsState extends MusicBeatState
             item.targetY = bullShit - curSelected;
             bullShit++;
 
-            item.alpha = 0.6;
+            item.alpha = 0.4;
 
             if(item.targetY == 0)
                 item.alpha = 1;
@@ -117,8 +122,6 @@ class CustomOptionsState extends MusicBeatState
 
     function changeOptState(option:String, change:Int = 0)
     {
-        var states:Array<Dynamic> = [];
-        var jaja:String = "";
         FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
         curStateSelc += change;
@@ -129,14 +132,11 @@ class CustomOptionsState extends MusicBeatState
                 states = addOptState(avOptions[0], [StorageVariables.IntStorageUseType.BASIC, StorageVariables.IntStorageUseType.FULL, StorageVariables.IntStorageUseType.NONE]);
                 scroll(states, HORIZONTAL);
                 trace(states[curStateSelc]);
-                jaja = "Hola";
             case 'Use Hit Sounds':
                 states = addOptState(avOptions[1], [true, false]);
                 scroll(states, HORIZONTAL);
                 trace(states[curStateSelc]);
-                jaja = "xd";
         }
-        curOptionState.text = jaja;
     }
 
     //optName: Option Name, the name of your option obviously lol
@@ -187,14 +187,65 @@ class CustomOptionsState extends MusicBeatState
                     curStateSelc = array.length - 1;
                 if(curStateSelc >= array.length)
                     curStateSelc = 0;
+                doTheFunny(STATES, false);
 
             case VERTICAL:
                 if (curSelected < 0)
                     curSelected = array.length - 1;
                 if(curSelected >= array.length)
                     curSelected = 0;
+                doTheFunny(OPTIONS, false);
         }
 
+    }
+
+    function currentState(optionName:String):String
+    {
+        var current:String = "";
+        switch(optionName)
+        {
+            case "Internal Storage Type":
+                switch(ClientPrefs.internalStorageUseType)
+                {
+                    case BASIC:
+                        current = "basic";
+                    case FULL:
+                        current = "full";
+                    case NONE:
+                        current = "none";
+                }
+            case 'Use Hit Sounds':
+                switch(ClientPrefs.useHitSounds)
+                {
+                    case true:
+                        current = "true";
+                    case false:
+                        current = "false";
+                }
+        }
+        return current;
+    }
+
+    function doTheFunny(type:FunnyType, ?refresh:Bool = true)
+    {
+        if(initialized == true) 
+        {
+            switch(type)
+            {
+                case STATES:
+                    for(i in 0...states.length)
+                    {
+                        curOptionState.text = states[i];
+                    }
+    
+                case OPTIONS:
+                    for(i in 0...avOptions.length)
+                    {
+                        displayState = currentState(avOptions[i]);
+                        curOptionState.text = displayState;
+                    }
+            }
+        }
     }
 
 }
@@ -203,4 +254,10 @@ enum ScrollType
 {
     HORIZONTAL;
     VERTICAL;
+}
+
+enum FunnyType
+{
+    STATES;
+    OPTIONS;
 }

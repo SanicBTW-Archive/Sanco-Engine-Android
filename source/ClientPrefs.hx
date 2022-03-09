@@ -32,7 +32,7 @@ class ClientPrefs {
 	//debug
 	public static var experimentalStuff:Bool = false;
 	//internal storage
-	public static var internalStorageUseType:String = "Basic";
+	public static var internalStorageUseType:StorageVariables.IntStorageUseType = StorageVariables.IntStorageUseType.BASIC;
 
 	public static var defaultKeys:Array<FlxKey> = [
 		A, LEFT,			//Note Left

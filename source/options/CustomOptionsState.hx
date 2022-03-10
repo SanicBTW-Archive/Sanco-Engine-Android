@@ -16,7 +16,32 @@ import flixel.FlxG;
 class CustomOptionsState extends MusicBeatState
 {
     var avOptions:Array<String> = [];
-    var stringOptions:Array<String> = [];
+    var engineOptions:Array<String> = [
+        "Internal Storage Type", 
+        "Use Hit Sounds"
+    ];
+    var graphicsOptions:Array<String> = [
+        "Low Quality", 
+        "Anti-Aliasing", 
+        'Persistent Cached Data', 
+        #if !html5 
+        'Framerate' 
+        #end
+    ];
+    var gameplayOptions:Array<String> = [
+        'Downscroll',
+        'Middlescroll',
+        'Ghost Tapping',
+        'Note Delay',
+        'Note Splashes',
+        'Hide HUD',
+        'Hide Song Length',
+        'Flashing Lights',
+        'Camera Zooms',
+        #if !mobile
+        'FPS Counter'
+        #end
+    ];
 
     private var grpOptions:FlxTypedGroup<Alphabet>;
     var curSelected:Int = 0;
@@ -32,9 +57,7 @@ class CustomOptionsState extends MusicBeatState
 
     override function create()
     {
-        //lets bloat the thing with addOption statements
-        addOption("Internal Storage Type", avOptions, ENGINE_OPTIONS, categories);
-        addOption("Use Hit Sounds", avOptions, ENGINE_OPTIONS, categories);
+        setOptions();
 
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		add(bg);
@@ -198,10 +221,10 @@ class CustomOptionsState extends MusicBeatState
                 if(curSelected >= array.length)
                     curSelected = 0;
                 categoryText.text = returnFunkyCategory();
-                hints(avOptions[curSelected]);
+                hints();
 
         }
-        refreshOptStTxt(avOptions[curSelected]);
+        curOptionState.text = returnOptionStr();
     }
 
     function saveandcheck(oldState:Dynamic, newState:Dynamic, option:String)
@@ -217,7 +240,7 @@ class CustomOptionsState extends MusicBeatState
                     ClientPrefs.useHitSounds = newState;
                 }
         }
-        refreshOptStTxt(option);
+        curOptionState.text = returnOptionStr();
     }
 
     //kind of stupid ngl
@@ -230,8 +253,9 @@ class CustomOptionsState extends MusicBeatState
         return false;
     }
 
-    function hints(option:String)
+    function hints()
     {
+        var option:String = avOptions[curSelected];
         switch(option)
         {
             case "Internal Storage Type":
@@ -241,20 +265,10 @@ class CustomOptionsState extends MusicBeatState
         }
     }
 
-    function refreshOptStTxt(option:String) 
-    {
-        switch(option)
-        {
-            case "Internal Storage Type":
-                curOptionState.text = returnOptionStr(option);
-            case "Use Hit Sounds":
-                curOptionState.text = returnOptionStr(option);
-        }
-    }
-
-    function returnOptionStr(option:String):String
+    function returnOptionStr():String
     {
         var current:String = "";
+        var option:String = avOptions[curSelected];
         switch(option)
         {
             case "Internal Storage Type":
@@ -272,9 +286,9 @@ class CustomOptionsState extends MusicBeatState
                 switch(ClientPrefs.useHitSounds)
                 {
                     case true:
-                        current = "True";
+                        current = "true";
                     case false:
-                        current = "False";
+                        current = "false";
                 }
         }
         return current;
@@ -293,6 +307,24 @@ class CustomOptionsState extends MusicBeatState
                 current = "Engine Options";
         }
         return current;
+    }
+
+    function setOptions()
+    {
+        for(i in 0...graphicsOptions.length)
+        {
+            addOption(graphicsOptions[i], avOptions, GRAPHICS, categories);
+        }
+
+        for(i in 0...gameplayOptions.length)
+        {
+            addOption(gameplayOptions[i], avOptions, GAMEPLAY, categories);
+        }
+
+        for(i in 0...engineOptions.length)
+        {
+            addOption(engineOptions[i], avOptions, ENGINE_OPTIONS, categories);
+        }
     }
 }
 

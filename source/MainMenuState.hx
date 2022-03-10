@@ -23,7 +23,7 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	public static var EngineVersion:String = '0.1.2 Test Build, Rev 34'; //This is also used for Discord RPC
+	public static var EngineVersion:String = '0.1.2 Test Build, Rev 40'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;

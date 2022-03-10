@@ -16,26 +16,25 @@ import flixel.FlxG;
 class CustomOptionsState extends MusicBeatState
 {
     var avOptions:Array<String> = [];
-    var allOptions:Array<String> = ["Internal Storage Type",
-    "Use Hit Sounds"];
+    var stringOptions:Array<String> = [];
+
     private var grpOptions:FlxTypedGroup<Alphabet>;
     var curSelected:Int = 0;
+
     var curStateSelc:Int = 0;
-    var hintText:FlxText;
     var curOptionState:FlxText;
     var states:Array<Dynamic> = [];
 
-    //for checking and stuff
-    var funnylog:String = "";
-    var checkTmr:FlxTimer = new FlxTimer();
-    var waitTime:Float = 0.3;
+    var hintText:FlxText;
+
+    var categoryText:FlxText;
+    var categories:Array<Categories> = [];
 
     override function create()
     {
-        for(i in 0...allOptions.length)
-        {
-            addOption(allOptions[i], avOptions);
-        }
+        //lets bloat the thing with addOption statements
+        addOption("Internal Storage Type", avOptions, ENGINE_OPTIONS, categories);
+        addOption("Use Hit Sounds", avOptions, ENGINE_OPTIONS, categories);
 
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		add(bg);
@@ -69,6 +68,11 @@ class CustomOptionsState extends MusicBeatState
 		hintText.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT);
 		hintText.scrollFactor.set();
 		add(hintText);
+
+        categoryText = new FlxText(100, 50, 0, "dulce te quiero", 32);
+        categoryText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
+        categoryText.scrollFactor.set();
+        add(categoryText);
 
         changeSelection();
         changeOptState(avOptions[curSelected]);
@@ -111,8 +115,6 @@ class CustomOptionsState extends MusicBeatState
         curSelected += change;
         
         scroll(avOptions, VERTICAL);
-        hints(avOptions[curSelected]);
-        refreshOptStTxt(avOptions[curSelected]);
 
         var bullShit:Int = 0;
 
@@ -146,10 +148,8 @@ class CustomOptionsState extends MusicBeatState
                 states = addOptState(avOptions[1], [true, false]);
                 scroll(states, HORIZONTAL);
                 trace(states[curStateSelc]);
-                curOptionState.text = states[curStateSelc];
                 saveandcheck(ClientPrefs.useHitSounds, states[curStateSelc], option);
         }
-        refreshOptStTxt(option);
     }
 
     //optName: Option Name, the name of your option obviously lol
@@ -159,18 +159,9 @@ class CustomOptionsState extends MusicBeatState
     function addOptState(optName:String, optStates:Array<Dynamic>):Array<Dynamic>
     {
         var optionStates:Array<Dynamic> = [];
-        switch(optName)
+        for(i in 0...optStates.length)
         {
-            case "Internal Storage Type":
-                for(i in 0...optStates.length)
-                {
-                    optionStates.push(optStates[i]);
-                }
-            case 'Use Hit Sounds':
-                for(i in 0...optStates.length)
-                {
-                    optionStates.push(optStates[i]);
-                }
+            optionStates.push(optStates[i]);
         }
         return optionStates;
     }
@@ -178,17 +169,17 @@ class CustomOptionsState extends MusicBeatState
     //optionName: Option Name, the name says it all
     //optArray: Option Array, push the option to an existing array, if its null it creates one
     //maybe the create array doesnt work properly
-    function addOption(optionName:String, ?optArray:Array<String>):Array<String>
+    function addOption(optionName:String, optArray:Array<String>, category:Categories, catArray:Array<Categories>)
     {
-        var optionArray:Array<String> = [];
-
-        if(optArray != null){
-            optArray.push(optionName);
-        } else {
-            optionArray.push(optionName);
-            return optionArray;
+        if(category != null)
+        {
+            if(optArray != null){
+                optArray.push(optionName);
+                if(catArray != null){
+                    catArray.push(category);
+                }
+            }
         }
-        return optionArray;
     }
 
     function scroll(array:Array<Dynamic>, scrolltype:ScrollType)
@@ -206,14 +197,15 @@ class CustomOptionsState extends MusicBeatState
                     curSelected = array.length - 1;
                 if(curSelected >= array.length)
                     curSelected = 0;
+                categoryText.text = returnFunkyCategory();
+                hints(avOptions[curSelected]);
+
         }
+        refreshOptStTxt(avOptions[curSelected]);
     }
 
     function saveandcheck(oldState:Dynamic, newState:Dynamic, option:String)
     {
-        funnylog = '$option changed to $newState';
-        trace(funnylog);
-
         switch(option)
         {
             case "Internal Storage Type":
@@ -287,10 +279,32 @@ class CustomOptionsState extends MusicBeatState
         }
         return current;
     }
+
+    function returnFunkyCategory():String 
+    {
+        var current:String = "";
+        switch(categories[curSelected])
+        {
+            case GRAPHICS:
+                current = "Graphics";
+            case GAMEPLAY:
+                current = "Gameplay";
+            case ENGINE_OPTIONS:
+                current = "Engine Options";
+        }
+        return current;
+    }
 }
 
 enum ScrollType
 {
     HORIZONTAL;
     VERTICAL;
+}
+
+enum Categories
+{
+    GRAPHICS;
+    GAMEPLAY;
+    ENGINE_OPTIONS;
 }

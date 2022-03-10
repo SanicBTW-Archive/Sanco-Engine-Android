@@ -1,5 +1,6 @@
 package;
 
+import options.CustomOptionsState;
 import flixel.FlxG;
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
@@ -115,6 +116,7 @@ class ClientPrefs {
 		save.data.customControls = lastControls;
 		save.flush();
 		FlxG.log.add("Settings saved!");
+		trace("Settings seems to be saved");
 	}
 
 	public static function loadPrefs() {

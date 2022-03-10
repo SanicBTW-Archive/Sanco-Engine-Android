@@ -1,5 +1,6 @@
 package options;
 
+import flixel.util.FlxTimer;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSound;
 import haxe.io.Path;
@@ -15,21 +16,26 @@ import flixel.FlxG;
 class CustomOptionsState extends MusicBeatState
 {
     var avOptions:Array<String> = [];
+    var allOptions:Array<String> = ["Internal Storage Type",
+    "Use Hit Sounds"];
     private var grpOptions:FlxTypedGroup<Alphabet>;
     var curSelected:Int = 0;
     var curStateSelc:Int = 0;
-    var hintText:String = "hello world";
+    var hintText:FlxText;
     var curOptionState:FlxText;
-    var stateText:String = "";
-    var displayState:String = "";
     var states:Array<Dynamic> = [];
-    var initialized:Bool = false;
-    var whatChanged:Array<String> = [];
+
+    //for checking and stuff
+    var funnylog:String = "";
+    var checkTmr:FlxTimer = new FlxTimer();
+    var waitTime:Float = 0.3;
 
     override function create()
     {
-        addOption("Internal Storage Type", avOptions);
-        addOption("Use Hit Sounds", avOptions);
+        for(i in 0...allOptions.length)
+        {
+            addOption(allOptions[i], avOptions);
+        }
 
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		add(bg);
@@ -45,7 +51,7 @@ class CustomOptionsState extends MusicBeatState
             grpOptions.add(avOptText);
         }
 
-        curOptionState = new FlxText(FlxG.width * 0.7, 5, 0, stateText, 32);
+        curOptionState = new FlxText(FlxG.width * 0.7, 5, 0, "dulce te quiero", 32);
         curOptionState.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
         curOptionState.scrollFactor.set();
 
@@ -59,10 +65,10 @@ class CustomOptionsState extends MusicBeatState
 		textBG.alpha = 0.6;
 		add(textBG);
 
-        var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, hintText, 18);
-		text.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT);
-		text.scrollFactor.set();
-		add(text);
+        hintText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, "holis", 18);
+		hintText.setFormat(Paths.font("vcr.ttf"), 18, FlxColor.WHITE, RIGHT);
+		hintText.scrollFactor.set();
+		add(hintText);
 
         changeSelection();
         changeOptState(avOptions[curSelected]);
@@ -71,7 +77,6 @@ class CustomOptionsState extends MusicBeatState
         addVirtualPad(FULL, A_B);
         #end
 
-        initialized = true;
         super.create();
     }
 
@@ -84,16 +89,18 @@ class CustomOptionsState extends MusicBeatState
             MusicBeatState.switchState(new MainMenuState());
         }
 
-        if(controls.UI_UP_P)
+        if(controls.UI_UP_P){
             changeSelection(-1);
-        if(controls.UI_DOWN_P)
+        }
+        if(controls.UI_DOWN_P){
             changeSelection(1);
+        }
 
         if(controls.UI_LEFT_P)
             changeOptState(avOptions[curSelected], -1);
         if(controls.UI_RIGHT_P)
             changeOptState(avOptions[curSelected], 1);
-    
+
         super.update(elapsed);
     }
 
@@ -104,6 +111,8 @@ class CustomOptionsState extends MusicBeatState
         curSelected += change;
         
         scroll(avOptions, VERTICAL);
+        hints(avOptions[curSelected]);
+        refreshOptStTxt(avOptions[curSelected]);
 
         var bullShit:Int = 0;
 
@@ -132,11 +141,15 @@ class CustomOptionsState extends MusicBeatState
                 states = addOptState(avOptions[0], [StorageVariables.IntStorageUseType.BASIC, StorageVariables.IntStorageUseType.FULL, StorageVariables.IntStorageUseType.NONE]);
                 scroll(states, HORIZONTAL);
                 trace(states[curStateSelc]);
+                saveandcheck(ClientPrefs.internalStorageUseType, states[curStateSelc], option);
             case 'Use Hit Sounds':
                 states = addOptState(avOptions[1], [true, false]);
                 scroll(states, HORIZONTAL);
                 trace(states[curStateSelc]);
+                curOptionState.text = states[curStateSelc];
+                saveandcheck(ClientPrefs.useHitSounds, states[curStateSelc], option);
         }
+        refreshOptStTxt(option);
     }
 
     //optName: Option Name, the name of your option obviously lol
@@ -187,77 +200,97 @@ class CustomOptionsState extends MusicBeatState
                     curStateSelc = array.length - 1;
                 if(curStateSelc >= array.length)
                     curStateSelc = 0;
-                doTheFunny(STATES, false);
 
             case VERTICAL:
                 if (curSelected < 0)
                     curSelected = array.length - 1;
                 if(curSelected >= array.length)
                     curSelected = 0;
-                doTheFunny(OPTIONS, false);
         }
-
     }
 
-    function currentState(optionName:String):String
+    function saveandcheck(oldState:Dynamic, newState:Dynamic, option:String)
+    {
+        funnylog = '$option changed to $newState';
+        trace(funnylog);
+
+        switch(option)
+        {
+            case "Internal Storage Type":
+                if(funnycheck(oldState, newState) == true){
+                    ClientPrefs.internalStorageUseType = newState;
+                }
+            case "Use Hit Sounds":
+                if(funnycheck(oldState, newState) == true){
+                    ClientPrefs.useHitSounds = newState;
+                }
+        }
+        refreshOptStTxt(option);
+    }
+
+    //kind of stupid ngl
+    function funnycheck(oldState:Dynamic, newState:Dynamic):Bool{
+        if(oldState != newState){
+            return true; //it changed
+        } else {
+            return false; //didnt change
+        }
+        return false;
+    }
+
+    function hints(option:String)
+    {
+        switch(option)
+        {
+            case "Internal Storage Type":
+                hintText.text = "Basic: Hitsounds and nothing essential for gameplay | Full: ?? | None: Don't use internal storage";
+            case "Use Hit Sounds":
+                hintText.text = "If there is a hit sound chosen it will play every time you hit a note";
+        }
+    }
+
+    function refreshOptStTxt(option:String) 
+    {
+        switch(option)
+        {
+            case "Internal Storage Type":
+                curOptionState.text = returnOptionStr(option);
+            case "Use Hit Sounds":
+                curOptionState.text = returnOptionStr(option);
+        }
+    }
+
+    function returnOptionStr(option:String):String
     {
         var current:String = "";
-        switch(optionName)
+        switch(option)
         {
             case "Internal Storage Type":
                 switch(ClientPrefs.internalStorageUseType)
                 {
                     case BASIC:
-                        current = "basic";
+                        current = "Basic";
                     case FULL:
-                        current = "full";
+                        current = "Full";
                     case NONE:
-                        current = "none";
+                        current = "None";
                 }
-            case 'Use Hit Sounds':
+            
+            case "Use Hit Sounds":
                 switch(ClientPrefs.useHitSounds)
                 {
                     case true:
-                        current = "true";
+                        current = "True";
                     case false:
-                        current = "false";
+                        current = "False";
                 }
         }
         return current;
     }
-
-    function doTheFunny(type:FunnyType, ?refresh:Bool = true)
-    {
-        if(initialized == true) 
-        {
-            switch(type)
-            {
-                case STATES:
-                    for(i in 0...states.length)
-                    {
-                        curOptionState.text = states[i];
-                    }
-    
-                case OPTIONS:
-                    for(i in 0...avOptions.length)
-                    {
-                        displayState = currentState(avOptions[i]);
-                        curOptionState.text = displayState;
-                    }
-            }
-        }
-    }
-
 }
 
 enum ScrollType
 {
     HORIZONTAL;
     VERTICAL;
-}
-
-enum FunnyType
-{
-    STATES;
-    OPTIONS;
 }

@@ -78,7 +78,9 @@ class MoveMusicState extends MusicBeatState
 
             var instPath:String = Path.join([instDir, 'Inst.${Paths.SOUND_EXT}']);
             var voicesPath:String = Path.join([voicesDir, 'Voices.${Paths.SOUND_EXT}']);
+            var chartEzPath:String = Path.join([chartDir, '${songs[curSelected]}-easy.json']);
             var chartPath:String = Path.join([chartDir, '${songs[curSelected]}.json']);
+            var chartFuckPath:String = Path.join([chartDir, '${songs[curSelected]}-hard.json']);
             trace(folder);
             trace(instPath);
             trace(voicesPath);
@@ -87,7 +89,9 @@ class MoveMusicState extends MusicBeatState
                 //move chart, inst and vocals
                 StorageVariables.copySongIntoAssets(instDir, songsInstPaths[curSelected], instPath);
                 StorageVariables.copySongIntoAssets(voicesDir, songsVoicesPaths[curSelected], voicesPath);
+                StorageVariables.copySongIntoAssets(chartDir, songsChartPaths[curSelected], chartEzPath);
                 StorageVariables.copySongIntoAssets(chartDir, songsChartPaths[curSelected], chartPath);
+                StorageVariables.copySongIntoAssets(chartDir, songsChartPaths[curSelected], chartFuckPath);
 
             }
             else if(songCheck[curSelected] == "Voice and Inst")

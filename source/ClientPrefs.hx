@@ -1,6 +1,6 @@
 package;
 
-import options.CustomOptionsState;
+import options.NewOptionsState;
 import flixel.FlxG;
 import flixel.util.FlxSave;
 import flixel.input.keyboard.FlxKey;
@@ -32,9 +32,6 @@ class ClientPrefs {
 	public static var hitSoundPath:String = ""; //sorry
 	//debug
 	public static var experimentalStuff:Bool = false;
-	//internal storage
-	public static var internalStorageUseType:StorageVariables.IntStorageUseType = StorageVariables.IntStorageUseType.BASIC;
-
 	public static var defaultKeys:Array<FlxKey> = [
 		A, LEFT,			//Note Left
 		S, DOWN,			//Note Down
@@ -97,9 +94,6 @@ class ClientPrefs {
 
 		//debug
 		FlxG.save.data.experimentalStuff = experimentalStuff;
-
-		//internal storage
-		FlxG.save.data.internalStorageUseType = internalStorageUseType;
 
 		var achieves:Array<String> = [];
 		for (i in 0...Achievements.achievementsUnlocked.length) {
@@ -195,10 +189,6 @@ class ClientPrefs {
 		//debug
 		if(FlxG.save.data.experimentalStuff != null){
 			experimentalStuff = FlxG.save.data.experimentalStuff;
-		}
-		//internal storage
-		if(FlxG.save.data.internalStorageUseType != null){
-			internalStorageUseType = FlxG.save.data.internalStorageUseType;
 		}
 
 		var save:FlxSave = new FlxSave();

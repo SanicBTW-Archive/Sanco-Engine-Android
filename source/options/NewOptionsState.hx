@@ -13,7 +13,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.FlxSprite;
 import flixel.FlxG;
 
-class CustomOptionsState extends MusicBeatState
+class NewOptionsState extends MusicBeatState
 {
     //todo: order the code or put them inside a region
     var avOptions:Array<String> = [];
@@ -56,7 +56,26 @@ class CustomOptionsState extends MusicBeatState
     var categoryText:FlxText;
     var categories:Array<Categories> = [];
 
-    var holdTime:Float = 0;
+    var clientPrefsHelper:Array<Dynamic> = [
+        //graphics
+        ClientPrefs.lowQuality,
+        ClientPrefs.globalAntialiasing,
+        ClientPrefs.imagesPersist,
+        ClientPrefs.framerate,
+        //gameplay
+        ClientPrefs.downScroll,
+        ClientPrefs.middleScroll,
+        ClientPrefs.ghostTapping,
+        ClientPrefs.noteOffset,
+        ClientPrefs.noteSplashes,
+        ClientPrefs.hideHud,
+        ClientPrefs.hideTime,
+        ClientPrefs.flashing,
+        ClientPrefs.camZooms,
+        ClientPrefs.showFPS,
+        //engine options
+        ClientPrefs.useHitSounds
+    ];
 
     override function create()
     {
@@ -161,7 +180,6 @@ class CustomOptionsState extends MusicBeatState
 
         curStateSelc += change;
         var option:String = avOptions[curSelected];
-        var add:Int = controls.UI_LEFT ? -1 : 1;
         switch(option)
         {
             case 'Low Quality':
@@ -177,23 +195,11 @@ class CustomOptionsState extends MusicBeatState
                 scroll(states, HORIZONTAL);
                 save(ClientPrefs.imagesPersist, states[curStateSelc]);
             case "Framerate":
-                //i doubt it will work
-                if(holdTime > 0.5 || controls.UI_LEFT_P || controls.UI_RIGHT_P)
-                {
-                    ClientPrefs.framerate += add;
-                    if(ClientPrefs.framerate < 60) ClientPrefs.framerate = 60;
-                    else if(ClientPrefs.framerate > 240) ClientPrefs.framerate = 240;
-
-                    if(ClientPrefs.framerate > FlxG.drawFramerate) {
-                        FlxG.updateFramerate = ClientPrefs.framerate;
-                        FlxG.drawFramerate = ClientPrefs.framerate;
-                    } else {
-                        FlxG.drawFramerate = ClientPrefs.framerate;
-                        FlxG.updateFramerate = ClientPrefs.framerate;
-                    }
-                }
+                states = addOptState([60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240]);
+                scroll(states, HORIZONTAL);
+                save(ClientPrefs.framerate, states[curStateSelc]);
             case "Downscroll":
-                 states = addOptState([true, false]);
+                states = addOptState([true, false]);
                 scroll(states, HORIZONTAL);
                 save(ClientPrefs.downScroll, states[curStateSelc]);
             case "Middlescroll":
@@ -205,13 +211,6 @@ class CustomOptionsState extends MusicBeatState
                 scroll(states, HORIZONTAL);
                 save(ClientPrefs.ghostTapping, states[curStateSelc]);
             case "Note Delay":
-                var mult:Int = 1;
-				if(holdTime > 1.5) { //Double speed after 1.5 seconds holding
-					mult = 2;
-				}
-				ClientPrefs.noteOffset += add * mult;
-				if(ClientPrefs.noteOffset < 0) ClientPrefs.noteOffset = 0;
-				else if(ClientPrefs.noteOffset > 500) ClientPrefs.noteOffset = 500;
             case "Note Splashes":
                 states = addOptState([true, false]);
                 scroll(states, HORIZONTAL);
@@ -237,9 +236,6 @@ class CustomOptionsState extends MusicBeatState
                 scroll(states, HORIZONTAL);
                 save(ClientPrefs.showFPS, states[curStateSelc]);
             case "Internal Storage Type":
-                states = addOptState([StorageVariables.IntStorageUseType.BASIC, StorageVariables.IntStorageUseType.FULL, StorageVariables.IntStorageUseType.NONE]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.internalStorageUseType, states[curStateSelc]);
             case 'Use Hit Sounds':
                 states = addOptState([true, false]);
                 scroll(states, HORIZONTAL);
@@ -295,84 +291,53 @@ class CustomOptionsState extends MusicBeatState
     function save(oldState:Dynamic, newState:Dynamic) //will improve it soon
     {
         var option:String = avOptions[curSelected];
+
+        clientPrefsHelper[curSelected] = newState;
+        ClientPrefs.saveSettings();
+        /*
         switch(option)
         {
             case "Low Quality":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.lowQuality = newState;
-                }
+                ClientPrefs.lowQuality = newState;
             case "Anti-Aliasing":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.globalAntialiasing = newState;
-                }
+                ClientPrefs.globalAntialiasing = newState;
             case "Persistent Cached Data":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.imagesPersist = newState;
-                }
+                ClientPrefs.imagesPersist = newState;
             case "Framerate":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.framerate = newState;
+                if(ClientPrefs.framerate > FlxG.drawFramerate) {
+                    FlxG.updateFramerate = ClientPrefs.framerate;
+                    FlxG.drawFramerate = ClientPrefs.framerate;
+                } else {
+                    FlxG.drawFramerate = ClientPrefs.framerate;
+                    FlxG.updateFramerate = ClientPrefs.framerate;
                 }
+                ClientPrefs.framerate = newState;
+                FlxG.drawFramerate = newState;
             case "Downscroll":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.downScroll = newState;
-                }
+                ClientPrefs.downScroll = newState;
             case "Middlescroll":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.middleScroll = newState;
-                }
+                ClientPrefs.middleScroll = newState;
             case "Ghost Tapping":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.ghostTapping = newState;
-                }
+                ClientPrefs.ghostTapping = newState;
             case "Note Delay":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.noteOffset = newState;
-                }
+                ClientPrefs.noteOffset = newState;
             case "Note Splashes":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.noteSplashes = newState;
-                }
+                ClientPrefs.noteSplashes = newState;
             case "Hide HUD":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.hideHud = newState;
-                }
+                ClientPrefs.hideHud = newState;
             case "Hide Song Length":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.hideTime = newState;
-                }
+                ClientPrefs.hideTime = newState;
             case "Flashing Lights":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.flashing = newState;
-                }
+                ClientPrefs.flashing = newState;
             case "Camera Zooms":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.camZooms = newState;
-                }
+                ClientPrefs.camZooms = newState;
             case "FPS Counter":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.showFPS = newState;
-                }
+                ClientPrefs.showFPS = newState;
             case "Internal Storage Type":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.internalStorageUseType = newState;
-                }
             case "Use Hit Sounds":
-                if(funnycheck(oldState, newState) == true){
-                    ClientPrefs.useHitSounds = newState;
-                }
-        }
+                ClientPrefs.useHitSounds = newState;
+        }*/
         curOptionState.text = returnOptionStr();
-    }
-
-    //kind of stupid ngl
-    function funnycheck(oldState:Dynamic, newState:Dynamic):Bool{
-        if(oldState != newState){
-            return true; //it changed
-        } else {
-            return false; //didnt change
-        }
-        return false;
     }
 
     function hints()
@@ -410,7 +375,7 @@ class CustomOptionsState extends MusicBeatState
             case "FPS Counter":
                 jaja = "If unchecked, hides FPS Counter.";
             case "Internal Storage Type":
-                jaja = "Basic: Hitsounds and nothing essential for gameplay | Full: ?? | None: Don't use internal storage";
+                jaja = "help";
             case "Use Hit Sounds":
                 jaja = "If there is a hit sound chosen it will play every time you hit a note";
         }
@@ -452,16 +417,12 @@ class CustomOptionsState extends MusicBeatState
                 current = returnfunnyBool(ClientPrefs.camZooms);
             case "FPS Counter":
                 current = returnfunnyBool(ClientPrefs.showFPS);
-            case "Internal Storage Type":
-                switch(ClientPrefs.internalStorageUseType)
-                {
-                    case BASIC:
-                        current = "Basic";
-                    case FULL:
-                        current = "Full";
-                    case NONE:
-                        current = "None";
-                }
+            case "Internal Storage Options":
+                #if android
+                current = 'Press A for more options';
+                #else
+                current = 'Press ${controls.ACCEPT} for more options';
+                #end
             
             case "Use Hit Sounds":
                 current = returnfunnyBool(ClientPrefs.useHitSounds);

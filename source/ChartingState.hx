@@ -38,9 +38,9 @@ import openfl.net.FileReference;
 import openfl.utils.ByteArray;
 import openfl.utils.Assets as OpenFlAssets;
 
-//android
+#if android
 import ui.FlxVirtualPad;
-// android
+#end
 
 #if MODS_ALLOWED
 import sys.io.File;
@@ -129,7 +129,9 @@ class ChartingState extends MusicBeatState
 	//add buttons
 	var key_space:FlxButton;
 
+	#if android
 	var _pad:FlxVirtualPad;
+	#end
 
 	var value1InputText:FlxUIInputText;
 	var value2InputText:FlxUIInputText;
@@ -291,9 +293,11 @@ class ChartingState extends MusicBeatState
         key_space.alpha = 0.75;
         add(key_space);
 
+		#if android
 		_pad = new FlxVirtualPad(FULL, NONE);
     	_pad.alpha = 0.75;
     	this.add(_pad);
+		#end
 
 		super.create();
 	}
@@ -1125,14 +1129,14 @@ class ChartingState extends MusicBeatState
 
 			if (!FlxG.keys.pressed.SHIFT)
 			{
-				if (FlxG.keys.pressed.W || FlxG.keys.pressed.S || _pad.buttonUp.pressed || _pad.buttonDown.pressed)
+				if (FlxG.keys.pressed.W || FlxG.keys.pressed.S  #if android || _pad.buttonUp.pressed || _pad.buttonDown.pressed #end)
 				{
 					FlxG.sound.music.pause();
 					vocals.pause();
 
 					var daTime:Float = 700 * FlxG.elapsed;
 
-					if (FlxG.keys.pressed.W || _pad.buttonUp.pressed)
+					if (FlxG.keys.pressed.W #if android || _pad.buttonUp.pressed #end)
 					{
 						FlxG.sound.music.time -= daTime;
 					}
@@ -1144,14 +1148,14 @@ class ChartingState extends MusicBeatState
 			}
 			else
 			{
-				if (FlxG.keys.justPressed.W || FlxG.keys.justPressed.S || _pad.buttonUp.pressed || _pad.buttonDown.pressed)
+				if (FlxG.keys.justPressed.W || FlxG.keys.justPressed.S  #if android || _pad.buttonUp.pressed || _pad.buttonDown.pressed #end)
 				{
 					FlxG.sound.music.pause();
 					vocals.pause();
 
 					var daTime:Float = Conductor.stepCrochet * 2;
 
-					if (FlxG.keys.justPressed.W || _pad.buttonUp.justPressed)
+					if (FlxG.keys.justPressed.W #if android || _pad.buttonUp.justPressed #end)
 					{
 						FlxG.sound.music.time -= daTime;
 					}
@@ -1168,9 +1172,9 @@ class ChartingState extends MusicBeatState
 		var shiftThing:Int = 1;
 		if (FlxG.keys.pressed.SHIFT)
 			shiftThing = 4;
-		if (FlxG.keys.justPressed.RIGHT || FlxG.keys.justPressed.D || _pad.buttonRight.justPressed)
+		if (FlxG.keys.justPressed.RIGHT || FlxG.keys.justPressed.D #if android || _pad.buttonRight.justPressed #end)
 			changeSection(curSection + shiftThing);
-		if (FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.A || _pad.buttonLeft.justPressed)
+		if (FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.A #if android || _pad.buttonLeft.justPressed #end)
 			changeSection(curSection - shiftThing);
 
 		if(FlxG.sound.music.time < 0) {
@@ -1410,7 +1414,7 @@ class ChartingState extends MusicBeatState
 			path = Paths.getPreloadPath('characters/' + Character.DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 		}
 
-		#if windows
+		#if sys
 		var rawJson = File.getContent(path);
 		#else
 		var rawJson = OpenFlAssets.getText(path);

@@ -60,7 +60,9 @@ class TitleState extends MusicBeatState
 		} else {
 			StorageVariables.CheckStuff();
 		}
-	    #end
+	    #elseif sys
+		StorageVariables.CheckStuff();
+		#end
 	    
 		#if (polymod && !html5)
 		if (sys.FileSystem.exists('mods/')) {

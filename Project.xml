@@ -134,6 +134,7 @@
 	<!--In case you want to use nape with flixel-->
 	<!--<haxelib name="nape-haxe4" />-->
 	<haxelib name="android6permissions"/>
+	<haxelib name="haxe-files" />
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 

@@ -46,7 +46,8 @@ class NewOptionsState extends MusicBeatState
     var engineOptions:Array<String> = [
         "Internal Storage Options", 
         "Use Hit Sounds",
-        'Experimental Stuff'
+        'Experimental Stuff',
+        'Move Experimental'
     ];
 
     private var grpOptions:FlxTypedGroup<Alphabet>;
@@ -481,6 +482,9 @@ class NewOptionsState extends MusicBeatState
             
             case "Mobile Controls":
                 MusicBeatState.switchState(new CustomControlsState());
+
+            case "Move Experimental":
+                MusicBeatState.switchState(new test.MoveMusicState());
             
         }
     }

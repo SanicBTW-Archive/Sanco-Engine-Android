@@ -160,6 +160,11 @@ class Paths
 		return 'assets/fonts/$key';
 	}
 
+	inline static public function songsFolder()
+	{
+		return 'assets/songs/';
+	}
+
 	inline static public function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?library:String)
 	{
 		if(OpenFlAssets.exists(Paths.getPath(key, type))) {
@@ -229,6 +234,10 @@ class Paths
 	}
 	inline static public function modsTxt(key:String) {
 		return mods('images/' + key + '.xml');
+	}
+
+	inline static public function extSongs(key:String){
+		return 'externalsongs/' + key;
 	}
 	#end
 }

@@ -7,6 +7,7 @@ import sys.FileSystem;
 import openfl.utils.Assets;
 import lime.system.System;
 import haxe.io.Path;
+import hx.files.*;
 
 class StorageVariables
 {
@@ -50,12 +51,17 @@ class StorageVariables
             if(!FileSystem.exists(SongsPath)){FileSystem.createDirectory(SongsPath);}
         }
     }
-    #end
-}
 
-enum IntStorageUseType //what type of use you want to give to the internal storage
-{
-    BASIC;
-    FULL;
-    NONE;
+    public static function copySongIntoAssets(mainDir:String, filePath:String, newPath:String)
+    {
+        if(!FileSystem.exists(mainDir)){
+            FileSystem.createDirectory(mainDir);
+        }
+        var f = hx.files.File.of(filePath);
+        trace("trying");
+        f.copyTo(newPath, [OVERWRITE]);
+        trace("done?");
+        trace(newPath);
+    }
+    #end
 }

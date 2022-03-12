@@ -95,7 +95,7 @@ class HitSoundState extends MusicBeatState
         {
             FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7);
             ClientPrefs.saveSettings();
-            MusicBeatState.switchState(new OptionsState());
+            MusicBeatState.switchState(new NewOptionsState());
         }
 
         if(controls.UI_UP_P)
@@ -109,7 +109,7 @@ class HitSoundState extends MusicBeatState
             ClientPrefs.hitSoundPath = avHitSP[curSelected];
             FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7);
             ClientPrefs.saveSettings();
-            MusicBeatState.switchState(new OptionsState());
+            MusicBeatState.switchState(new NewOptionsState());
         }
 
         super.update(elapsed);

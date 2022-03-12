@@ -1,5 +1,6 @@
 package options;
 
+import ui.Mobilecontrols;
 import flixel.util.FlxTimer;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSound;
@@ -26,6 +27,9 @@ class NewOptionsState extends MusicBeatState
         #end
     ];
     var gameplayOptions:Array<String> = [
+        #if mobile
+        'Mobile Controls',
+        #end
         'Downscroll',
         'Middlescroll',
         'Ghost Tapping',
@@ -40,8 +44,9 @@ class NewOptionsState extends MusicBeatState
         #end
     ];
     var engineOptions:Array<String> = [
-        "Internal Storage Type", 
-        "Use Hit Sounds"
+        "Internal Storage Options", 
+        "Use Hit Sounds",
+        'Experimental Stuff'
     ];
 
     private var grpOptions:FlxTypedGroup<Alphabet>;
@@ -55,27 +60,6 @@ class NewOptionsState extends MusicBeatState
 
     var categoryText:FlxText;
     var categories:Array<Categories> = [];
-
-    var clientPrefsHelper:Array<Dynamic> = [
-        //graphics
-        ClientPrefs.lowQuality,
-        ClientPrefs.globalAntialiasing,
-        ClientPrefs.imagesPersist,
-        ClientPrefs.framerate,
-        //gameplay
-        ClientPrefs.downScroll,
-        ClientPrefs.middleScroll,
-        ClientPrefs.ghostTapping,
-        ClientPrefs.noteOffset,
-        ClientPrefs.noteSplashes,
-        ClientPrefs.hideHud,
-        ClientPrefs.hideTime,
-        ClientPrefs.flashing,
-        ClientPrefs.camZooms,
-        ClientPrefs.showFPS,
-        //engine options
-        ClientPrefs.useHitSounds
-    ];
 
     override function create()
     {
@@ -148,9 +132,13 @@ class NewOptionsState extends MusicBeatState
         if(controls.UI_RIGHT_P)
             changeOptState(1);
 
+        if(controls.ACCEPT)
+            openExternalState();
+
         super.update(elapsed);
     }
 
+    //#region Options Handler
     function changeSelection(change:Int = 0)
     {
         FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
@@ -174,85 +162,6 @@ class NewOptionsState extends MusicBeatState
 
     }
 
-    function changeOptState(change:Int = 0)
-    {
-        FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-
-        curStateSelc += change;
-        var option:String = avOptions[curSelected];
-        switch(option)
-        {
-            case 'Low Quality':
-                states = addOptState([true, false]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.lowQuality, states[curStateSelc]);
-            case "Anti-Aliasing":
-                states = addOptState([true, false]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.globalAntialiasing, states[curStateSelc]);
-            case "Persistent Cached Data":
-                states = addOptState([true, false]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.imagesPersist, states[curStateSelc]);
-            case "Framerate":
-                states = addOptState([60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.framerate, states[curStateSelc]);
-            case "Downscroll":
-                states = addOptState([true, false]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.downScroll, states[curStateSelc]);
-            case "Middlescroll":
-                states = addOptState([true, false]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.middleScroll, states[curStateSelc]);
-            case "Ghost Tapping":
-                states = addOptState([true, false]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.ghostTapping, states[curStateSelc]);
-            case "Note Delay":
-            case "Note Splashes":
-                states = addOptState([true, false]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.noteSplashes, states[curStateSelc]);
-            case "Hide HUD":
-                states = addOptState([true, false]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.hideHud, states[curStateSelc]);
-            case "Hide Song Length":
-                states = addOptState([true, false]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.hideTime, states[curStateSelc]);
-            case "Flashing Lights":
-                states = addOptState([true, false]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.flashing, states[curStateSelc]);
-            case "Camera Zooms":
-                states = addOptState([true, false]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.camZooms, states[curStateSelc]);
-            case "FPS Counter":
-                states = addOptState([true, false]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.showFPS, states[curStateSelc]);
-            case "Internal Storage Type":
-            case 'Use Hit Sounds':
-                states = addOptState([true, false]);
-                scroll(states, HORIZONTAL);
-                save(ClientPrefs.useHitSounds, states[curStateSelc]);
-        }
-    }
-
-    function addOptState(optStates:Array<Dynamic>):Array<Dynamic>
-    {
-        var optionStates:Array<Dynamic> = [];
-        for(i in 0...optStates.length)
-        {
-            optionStates.push(optStates[i]);
-        }
-        return optionStates;
-    }
-
     function addOption(optionName:String, optArray:Array<String>, category:Categories, catArray:Array<Categories>)
     {
         if(category != null)
@@ -265,6 +174,65 @@ class NewOptionsState extends MusicBeatState
             }
         }
     }
+    //#endregion
+
+
+    //#region Option States Handler
+    function changeOptState(change:Int = 0)
+    {
+        FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+
+        curStateSelc += change;
+        var option:String = avOptions[curSelected];
+        switch(option)
+        {
+            case 'Low Quality':
+                states = addOptState([true, false]);
+            case "Anti-Aliasing":
+                states = addOptState([true, false]);
+            case "Persistent Cached Data":
+                states = addOptState([true, false]);
+            case "Framerate":
+                states = addOptState([60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240]);
+            case "Downscroll":
+                states = addOptState([true, false]);
+            case "Middlescroll":
+                states = addOptState([true, false]);
+            case "Ghost Tapping":
+                states = addOptState([true, false]);
+            case "Note Delay":
+                states = addOptState([0]); //will work in this soon
+            case "Note Splashes":
+                states = addOptState([true, false]);
+            case "Hide HUD":
+                states = addOptState([true, false]);
+            case "Hide Song Length":
+                states = addOptState([true, false]);
+            case "Flashing Lights":
+                states = addOptState([true, false]);
+            case "Camera Zooms":
+                states = addOptState([true, false]);
+            case "FPS Counter":
+                states = addOptState([true, false]);
+            case 'Use Hit Sounds':
+                states = addOptState([true, false]);
+            case 'Experimental Stuff':
+                states = addOptState([true, false]);
+        }
+        scroll(states, HORIZONTAL);
+        save(states[curStateSelc]);
+    }
+
+    function addOptState(optStates:Array<Dynamic>):Array<Dynamic>
+    {
+        var optionStates:Array<Dynamic> = [];
+        for(i in 0...optStates.length)
+        {
+            optionStates.push(optStates[i]);
+        }
+        return optionStates;
+    }
+    //#endregion
 
     function scroll(array:Array<Dynamic>, scrolltype:ScrollType)
     {
@@ -288,13 +256,10 @@ class NewOptionsState extends MusicBeatState
         curOptionState.text = returnOptionStr();
     }
 
-    function save(oldState:Dynamic, newState:Dynamic) //will improve it soon
+    function save(newState:Dynamic)
     {
         var option:String = avOptions[curSelected];
 
-        clientPrefsHelper[curSelected] = newState;
-        ClientPrefs.saveSettings();
-        /*
         switch(option)
         {
             case "Low Quality":
@@ -304,6 +269,7 @@ class NewOptionsState extends MusicBeatState
             case "Persistent Cached Data":
                 ClientPrefs.imagesPersist = newState;
             case "Framerate":
+                ClientPrefs.framerate = newState;
                 if(ClientPrefs.framerate > FlxG.drawFramerate) {
                     FlxG.updateFramerate = ClientPrefs.framerate;
                     FlxG.drawFramerate = ClientPrefs.framerate;
@@ -311,8 +277,7 @@ class NewOptionsState extends MusicBeatState
                     FlxG.drawFramerate = ClientPrefs.framerate;
                     FlxG.updateFramerate = ClientPrefs.framerate;
                 }
-                ClientPrefs.framerate = newState;
-                FlxG.drawFramerate = newState;
+
             case "Downscroll":
                 ClientPrefs.downScroll = newState;
             case "Middlescroll":
@@ -333,10 +298,13 @@ class NewOptionsState extends MusicBeatState
                 ClientPrefs.camZooms = newState;
             case "FPS Counter":
                 ClientPrefs.showFPS = newState;
-            case "Internal Storage Type":
+                if(Main.fpsVar != null)
+                    Main.fpsVar.visible = ClientPrefs.showFPS;
             case "Use Hit Sounds":
                 ClientPrefs.useHitSounds = newState;
-        }*/
+            case "Experimental Stuff":
+                ClientPrefs.experimentalStuff = newState;
+        }
         curOptionState.text = returnOptionStr();
     }
 
@@ -354,6 +322,11 @@ class NewOptionsState extends MusicBeatState
                 jaja =  "If true, images loaded will stay in memory until the game is closed, this increases memory usage, but basically makes reloading times instant.";
             case "Framerate":
                 jaja = "Pretty self explanatory, isn't it? Default value is 60.";
+            
+            case "Key Binds":
+                jaja = "Press ENTER for more";
+            case "Mobile Controls":
+                jaja = "Press A for more";
             case "Downscroll":
                 jaja = "If true, notes go Down instead of Up, simple enough.";
             case "Middlescroll":
@@ -374,10 +347,24 @@ class NewOptionsState extends MusicBeatState
                 jaja = "If unchecked, the camera won't zoom in on a beat hit.";
             case "FPS Counter":
                 jaja = "If unchecked, hides FPS Counter.";
-            case "Internal Storage Type":
-                jaja = "help";
+            case "Internal Storage Options":
+                #if android
+                jaja = "Press A for more";
+                #else
+                jaja = "Press ENTER for more";
+                #end
             case "Use Hit Sounds":
-                jaja = "If there is a hit sound chosen it will play every time you hit a note";
+                #if android
+                jaja = "If there is a hit sound chosen it will play every time you hit a note | Press A for more";
+                #else
+                jaja = 'If there is a hit sound chosen it will play every time you hit a note | Press ENTER for more';
+                #end
+            case "Experimental Stuff":
+                #if android
+                jaja = "Enables experimental features which may be unstable, proceed with caution | Press A for more";
+                #else
+                jaja = "Enables experimental features which may be unstable, proceed with caution | Press ENTER for more";
+                #end
         }
         hintText.text = jaja;
     }
@@ -396,7 +383,7 @@ class NewOptionsState extends MusicBeatState
             case "Persistent Cached Data":
                 current = returnfunnyBool(ClientPrefs.imagesPersist);
             case "Framerate":
-                current = '${ClientPrefs.framerate}';
+                current = '${ClientPrefs.framerate}FPS';
             case "Downscroll":
                 current = returnfunnyBool(ClientPrefs.downScroll);
             case "Middlescroll":
@@ -404,7 +391,7 @@ class NewOptionsState extends MusicBeatState
             case "Ghost Tapping":
                 current = returnfunnyBool(ClientPrefs.ghostTapping);
             case "Note Delay":
-                current = '${ClientPrefs.noteOffset}';
+                current = '${ClientPrefs.noteOffset}ms';
             case "Note Splashes":
                 current = returnfunnyBool(ClientPrefs.noteSplashes);
             case "Hide HUD":
@@ -417,19 +404,15 @@ class NewOptionsState extends MusicBeatState
                 current = returnfunnyBool(ClientPrefs.camZooms);
             case "FPS Counter":
                 current = returnfunnyBool(ClientPrefs.showFPS);
-            case "Internal Storage Options":
-                #if android
-                current = 'Press A for more options';
-                #else
-                current = 'Press ${controls.ACCEPT} for more options';
-                #end
-            
             case "Use Hit Sounds":
                 current = returnfunnyBool(ClientPrefs.useHitSounds);
+            case "Experimental Stuff":
+                current = returnfunnyBool(ClientPrefs.experimentalStuff);
         }
         return current;
     }
 
+    //#region Helper
     function returnFunkyCategory():String 
     {
         var current:String = "";
@@ -474,6 +457,32 @@ class NewOptionsState extends MusicBeatState
                 current = "false";
         }
         return current;
+    }
+    //#endregion
+
+    function openExternalState()
+    {
+        var option:String = avOptions[curSelected];
+        switch(option)
+        {
+            case "Internal Storage Options":
+                //MusicBeatState.switchState();
+            case "Use Hit Sounds":
+                if(ClientPrefs.useHitSounds == true){
+                    MusicBeatState.switchState(new HitSoundState());
+                }
+            case "Experimental Stuff":
+                if(ClientPrefs.experimentalStuff == true){
+                    MusicBeatState.switchState(new test.ExtMusicState());
+                }
+
+            //case "Key Binds": keybinds doesnt seem to work sadly
+                //openSubState(new OptionsState.ControlsSubstate());
+            
+            case "Mobile Controls":
+                MusicBeatState.switchState(new CustomControlsState());
+            
+        }
     }
 }
 

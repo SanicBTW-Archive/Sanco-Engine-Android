@@ -507,6 +507,7 @@ class ControlsSubstate extends MusicBeatSubstate {
 					}
 				}
 				close();
+				ClientPrefs.saveSettings();
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 			}
 

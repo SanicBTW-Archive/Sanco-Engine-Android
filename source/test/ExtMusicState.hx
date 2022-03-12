@@ -73,7 +73,9 @@ class ExtMusicState extends MusicBeatState
 
         changeSelection();
 
+        #if android
         addVirtualPad(UP_DOWN, A_B);
+        #end
 
         FlxG.sound.music.stop();
 
@@ -215,7 +217,7 @@ class ExtMusicState extends MusicBeatState
                 if(songs[curSelected] == "Voice and Inst"){
                     loaded.push(formattedThing);
                     trace(vocalsTickT);    
-                    trace(loaded[1]);
+                    trace(loaded[0]);
                 }
             case instrumental:
                 instTickT = FlxG.game.ticks;
@@ -223,12 +225,12 @@ class ExtMusicState extends MusicBeatState
                 if(songs[curSelected] == "Only Inst"){
                     loaded.push(formattedThing);
                     trace(instTickT);
-                    trace(loaded[1]);
+                    trace(loaded[0]);
                 }
                 else {
                     loaded.push(formattedThing);
                     trace(instTickT);
-                    trace(loaded[2]);
+                    trace(loaded[1]);
                 }
 
         }

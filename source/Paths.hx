@@ -112,12 +112,14 @@ class Paths
 
 	inline static public function voices(song:String)
 	{
-		return 'songs:assets/songs/${song.toLowerCase()}/Voices.$SOUND_EXT';
+		return extVoices(song);
+		//return 'songs:assets/songs/${song.toLowerCase()}/Voices.$SOUND_EXT';
 	}
 
 	inline static public function inst(song:String)
 	{
-		return 'songs:assets/songs/${song.toLowerCase()}/Inst.$SOUND_EXT';
+		return extInst(song);
+		//return 'songs:assets/songs/${song.toLowerCase()}/Inst.$SOUND_EXT';
 	}
 
 	inline static public function image(key:String, ?library:String):Dynamic
@@ -159,12 +161,6 @@ class Paths
 	{
 		return 'assets/fonts/$key';
 	}
-
-	inline static public function songsFolder()
-	{
-		return 'assets/songs/';
-	}
-
 	inline static public function fileExists(key:String, type:AssetType, ?ignoreMods:Bool = false, ?library:String)
 	{
 		if(OpenFlAssets.exists(Paths.getPath(key, type))) {
@@ -236,8 +232,29 @@ class Paths
 		return mods('images/' + key + '.xml');
 	}
 
-	inline static public function extSongs(key:String){
-		return 'externalsongs/' + key;
-	}
+
 	#end
+	inline static public function custSFolder(key:String)
+	{
+		return 'externalSongs/custom/' + key;
+	}
+	inline static public function custSV(song:String)
+	{
+		return custSFolder('${song.toLowerCase()}/Voices.$SOUND_EXT');
+	}
+	inline static public function custSI(song:String)
+	{
+		return custSFolder('${song.toLowerCase()}/Inst.$SOUND_EXT');
+	}
+
+	inline static public function extVoices(song:String)
+	{
+		return 'externalSongs/${song.toLowerCase()}/Voices.$SOUND_EXT';
+	}
+
+	inline static public function extInst(song:String)
+	{
+		return 'externalSongs/${song.toLowerCase()}/Inst.$SOUND_EXT';
+	}
+
 }

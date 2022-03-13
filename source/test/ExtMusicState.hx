@@ -17,19 +17,16 @@ class ExtMusicState extends MusicBeatState
     var songs:Array<String> = [];
     var songsInstPaths:Array<String> = [];
     var songsVoicesPaths:Array<String> = [];
-    var songsChartPaths:Array<String> = [];
+    var custInstPath:Array<String> = [];
+    var custVoicePath:Array<String> = [];
     private var grpSongs:FlxTypedGroup<Alphabet>;
     var curSelected:Int = 0;
     var leText:String;
     var checkText:FlxText;
     var songCheck:Array<String> = [];
     var text:FlxText;
-    var ltimer:FlxTimer;
-    var loaded:Array<String> = [""];
-
-    /*
     var inst:FlxSound;
-    var vocals:FlxSound;*/
+    var vocals:FlxSound;
 
     override function create()
     {
@@ -131,115 +128,84 @@ class ExtMusicState extends MusicBeatState
         }
 
         checkText.text = songCheck[curSelected];
-        text.text = songsInstPaths[curSelected];
     }
 
     function play(){
         FlxG.sound.destroy();
-        loaded = [""];
 
-        /* method 1, doesnt works / doesnt play anything, does it need to be .mp3???
         if(songCheck[curSelected] == "Voice and Inst"){
-            vocals = new FlxSound().loadStream(songsVoicesPaths[curSelected]);
-        } 
+            vocals = new FlxSound().loadEmbedded(songsVoicesPaths[curSelected]);
+        } else if (songCheck[curSelected] == "Voice and Inst (Custom)"){
+            vocals = new FlxSound().loadEmbedded(custVoicePath[curSelected]);
+        }
         else
             vocals = new FlxSound();
 
         FlxG.sound.list.add(vocals);
-        FlxG.sound.list.add(new FlxSound().loadStream(songsInstPaths[curSelected]));
-        */
-
-        /* method 2, doesnt works / doesnt play anything, does it need to be .mp3???
-        vocals = new FlxSound().loadStream(songsVoicesPaths[curSelected]);
+        var jiji:FlxSound;
+        if(songCheck[curSelected] == "Voice and Inst (Custom)"){
+            jiji = FlxG.sound.list.add(new FlxSound().loadEmbedded(custInstPath[curSelected]));
+        } else {
+            jiji = FlxG.sound.list.add(new FlxSound().loadEmbedded(songsInstPaths[curSelected]));
+        }
         vocals.play();
-        inst = new FlxSound().loadStream(songsInstPaths[curSelected]);
-        inst.play();
-        */
-
-        //method 3, works but plays the thing out of sync, depends on the order
-        FlxG.sound.stream(songsVoicesPaths[curSelected], 1, false, null, false, null, () -> sync(vocals) );
-        FlxG.sound.stream(songsInstPaths[curSelected], 1, false, null, false, null, () -> sync(instrumental));
+        jiji.play();
     }
 
     function PushAndCheck(initSongList:Array<String>, i:Int)
     {
         songs.push(initSongList[i]);
-        
-        //possible paths and names
-        var theInstName:String = "Inst." + Paths.SOUND_EXT;
-        var theVoiceName:String = "Voices." + Paths.SOUND_EXT;
-        var theChartName:String = initSongList[i] + ".json"; //lets just go with the normal one, lazy to add difs, this is a test state, not playstate :skull:
-        var possibleInstPath:String = Path.join([StorageVariables.SongsPath, initSongList[i], theInstName]);
-        var possibleVoicePath:String = Path.join([StorageVariables.SongsPath, initSongList[i], theVoiceName]);
-        var possibleChartPath:String = Path.join([StorageVariables.DataPath, initSongList[i], theChartName]);
-       
-        //pushing for easy check for later
+
+        var chartName:String = '${initSongList[i]}.json';
+        var possibleInstPath:String = Paths.extInst(initSongList[i]);
+        var possibleVoicePath:String = Paths.extVoices(initSongList[i]);
+
         trace("Pushing possible inst path");
         songsInstPaths.push(possibleInstPath);
         trace("Pushing possible voice path");
         songsVoicesPaths.push(possibleVoicePath);
-        trace("Pushing possible chart path");
-        songsChartPaths.push(possibleChartPath);
 
-        //check, maybe try doing a failsafe? for ex: chart exists but not the audio and stuff
-        if(FileSystem.exists(songsInstPaths[i]) && FileSystem.exists(songsVoicesPaths[i]) && FileSystem.exists(songsChartPaths[i])){
-            trace("Everything needed exists (Chart, Inst, Voices)");
-            songCheck.push("Everything alright");
-        } else if(FileSystem.exists(songsInstPaths[i]) && FileSystem.exists(songsVoicesPaths[i])){
+        var possibleCustInst:String = Paths.custSI(initSongList[i]);
+        var possibleCustVoice:String = Paths.custSV(initSongList[i]);
+        trace("Another possible inst");
+        custInstPath.push(possibleCustInst);
+        trace("Another possible voice");
+        custVoicePath.push(possibleCustVoice);
+        
+        checkOne(i);
+
+        //tracing data for debugging
+        trace(songsInstPaths[i]);
+        trace(songsVoicesPaths[i]);
+        trace(custInstPath[i]);
+        trace(custVoicePath[i]);
+    }
+
+    function checkOne(i:Int)
+    {
+        if(FileSystem.exists(songsInstPaths[i]) && FileSystem.exists(songsVoicesPaths[i])){
             trace("Existing voice and inst");
             songCheck.push("Voice and Inst");
         } else if (FileSystem.exists(songsInstPaths[i]) && !FileSystem.exists(songsVoicesPaths[i])) {
             trace("Existing inst");
             songCheck.push("Only Inst");
         } else {
-            trace("fuck");
+            trace("gonna do check two lol");
+            checkTwo(i); //lil chainin
+        }
+    }
+
+    function checkTwo(i:Int)
+    {
+        if(FileSystem.exists(custInstPath[i]) && FileSystem.exists(custVoicePath[i])){
+            trace("Existing voice and inst in custom folder");
+            songCheck.push("Voice and Inst (Custom)");
+        } else if (FileSystem.exists(custInstPath[i]) && !FileSystem.exists(custVoicePath[i])) {
+            trace("Existing inst in custom folder");
+            songCheck.push("Only Inst (Custom)");
+        } else {
+            trace("I tried");
             songCheck.push("None");
         }
-
-        //tracing data for debugging
-        trace(songsInstPaths[i]);
-        trace(songsVoicesPaths[i]);
-        trace(songsChartPaths[i]);
     }
-
-    function sync(type:SoundType){
-        trace("trying to sync");
-
-        var vocalsTickT;
-        var instTickT;
-        var formattedThing:String;
-
-        switch(type)
-        {
-            case vocals:
-                vocalsTickT = FlxG.game.ticks;
-                formattedThing = type.getName() + " " + vocalsTickT;
-                if(songs[curSelected] == "Voice and Inst"){
-                    loaded.push(formattedThing);
-                    trace(vocalsTickT);    
-                    trace(loaded[0]);
-                }
-            case instrumental:
-                instTickT = FlxG.game.ticks;
-                formattedThing = type.getName() + " " + instTickT;
-                if(songs[curSelected] == "Only Inst"){
-                    loaded.push(formattedThing);
-                    trace(instTickT);
-                    trace(loaded[0]);
-                }
-                else {
-                    loaded.push(formattedThing);
-                    trace(instTickT);
-                    trace(loaded[1]);
-                }
-
-        }
-
-    }
-}
-
-enum SoundType
-{
-    vocals;
-    instrumental;
 }

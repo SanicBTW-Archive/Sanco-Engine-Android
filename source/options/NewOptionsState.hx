@@ -46,8 +46,7 @@ class NewOptionsState extends MusicBeatState
     var engineOptions:Array<String> = [
         "Internal Storage Options", 
         "Use Hit Sounds",
-        'Experimental Stuff',
-        'Move Experimental'
+        'Experimental Stuff'
     ];
 
     private var grpOptions:FlxTypedGroup<Alphabet>;

@@ -51,17 +51,5 @@ class StorageVariables
             if(!FileSystem.exists(SongsPath)){FileSystem.createDirectory(SongsPath);}
         }
     }
-
-    public static function copySongIntoAssets(mainDir:String, filePath:String, newPath:String)
-    {
-        if(!FileSystem.exists(mainDir)){
-            FileSystem.createDirectory(mainDir);
-        }
-        var f = hx.files.File.of(filePath);
-        trace("trying");
-        f.copyTo(newPath, [OVERWRITE]);
-        trace("done?");
-        trace(newPath);
-    }
     #end
 }

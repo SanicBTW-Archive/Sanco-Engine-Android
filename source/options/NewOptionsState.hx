@@ -482,10 +482,6 @@ class NewOptionsState extends MusicBeatState
             
             case "Mobile Controls":
                 MusicBeatState.switchState(new CustomControlsState());
-
-            case "Move Experimental":
-                MusicBeatState.switchState(new test.MoveMusicState());
-            
         }
     }
 }

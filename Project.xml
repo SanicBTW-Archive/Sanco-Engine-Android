@@ -99,7 +99,9 @@
 	<assets path="assets/week6"         library="week6"         exclude="*.ogg" if="web"/>
 	<assets path="assets/week6"         library="week6"         exclude="*.mp3" unless="web"/>
 	
-	<assets path='extSongs' rename='externalSongs' embed='false'/>
+	<assets path='extSongs' rename='externalSongs' embed='false' exclude="*.ogg" if="web"/>
+	<assets path='extSongs' rename='externalSongs' embed='false' exclude="*.mp3" unless="web"/>
+
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
 	<!-- <template path='mods' /> -->
 	

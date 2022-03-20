@@ -55,10 +55,13 @@ class Song
 			rawJson = sys.io.File.getContent(Paths.json(folder.toLowerCase() + '/events')).trim();
 			#else
 			rawJson = Assets.getText(Paths.json(folder.toLowerCase() + '/events')).trim();
-
 			#end
 		} else {
+			#if sys
+			rawJson = sys.io.File.getContent(Paths.json(folder.toLowerCase() + '/' + jsonInput.toLowerCase())).trim();
+			#else
 			rawJson = Assets.getText(Paths.json(folder.toLowerCase() + '/' + jsonInput.toLowerCase())).trim();
+			#end
 		}
 
 		while (!rawJson.endsWith("}"))

@@ -33,6 +33,7 @@ class ClientPrefs {
 	public static var useHitSounds:Bool = true;
 	public static var useExternalCharts:Bool = true;
 	public static var useExternalCharacters:Bool = true;
+	public static var optimizationType:OptimizationType = NONE;
 
 	public static var defaultKeys:Array<FlxKey> = [
 		D, LEFT,			//Note Left
@@ -96,6 +97,8 @@ class ClientPrefs {
 
 		FlxG.save.data.useExternalCharts = useExternalCharts;
 		FlxG.save.data.useExternalCharacters = useExternalCharacters;
+
+		FlxG.save.data.optimizationType = optimizationType;
 
 		var achieves:Array<String> = [];
 		for (i in 0...Achievements.achievementsUnlocked.length) {
@@ -196,6 +199,10 @@ class ClientPrefs {
 			useExternalCharacters = FlxG.save.data.useExternalCharacters;
 		}
 
+		if(FlxG.save.data.optimizationType != null){
+			optimizationType = FlxG.save.data.optimizationType;
+		}
+
 		var save:FlxSave = new FlxSave();
 		save.bind('controls', 'ninjamuffin99');
 		if(save != null && save.data.customControls != null) {
@@ -237,4 +244,12 @@ class ClientPrefs {
 			}
 		}
 	}
+}
+
+enum OptimizationType
+{
+	NONE;
+	BASIC;
+	ADVANCED;
+	EXTREME;
 }

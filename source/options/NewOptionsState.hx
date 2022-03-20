@@ -49,6 +49,7 @@ class NewOptionsState extends MusicBeatState
         "Internal Storage Options", 
         #end
         "Use Hit Sounds",
+        'Optimization Type'
     ];
 
     private var grpOptions:FlxTypedGroup<Alphabet>;
@@ -220,6 +221,8 @@ class NewOptionsState extends MusicBeatState
                 states = addOptState([true, false]);
             case 'Use Hit Sounds':
                 states = addOptState([true, false]);
+            case 'Optimization Type':
+                states = addOptState([ClientPrefs.OptimizationType.NONE, ClientPrefs.OptimizationType.BASIC, ClientPrefs.OptimizationType.ADVANCED, ClientPrefs.OptimizationType.EXTREME]);
         }
         scroll(states, HORIZONTAL);
         save(states[curStateSelc]);
@@ -305,6 +308,8 @@ class NewOptionsState extends MusicBeatState
                 FlxG.fullscreen = newState;
             case "Use Hit Sounds":
                 ClientPrefs.useHitSounds = newState;
+            case 'Optimization Type':
+                ClientPrefs.optimizationType = newState;
         }
         curOptionState.text = returnOptionStr();
     }
@@ -365,6 +370,8 @@ class NewOptionsState extends MusicBeatState
                 #else
                 jaja = "Enables experimental features which may be unstable, proceed with caution | Press ENTER for more";
                 #end
+            case 'Optimization Type':
+                jaja = "Optimization for the game, this will be improved on the next version lol, but the type explains by itself";
         }
         hintText.text = jaja;
     }
@@ -408,6 +415,18 @@ class NewOptionsState extends MusicBeatState
                 current = returnfunnyBool(FlxG.fullscreen);
             case "Use Hit Sounds":
                 current = returnfunnyBool(ClientPrefs.useHitSounds);
+            case 'Optimization Type':
+                switch(ClientPrefs.optimizationType)
+                {
+                    case NONE:
+                        current = "None";
+                    case BASIC:
+                        current = "Basic";
+                    case ADVANCED:
+                        current = "Advanced";
+                    case EXTREME:
+                        current = "Extreme";
+                }
         }
         return current;
     }

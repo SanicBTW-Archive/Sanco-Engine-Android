@@ -87,7 +87,7 @@ class Paths
 
 	inline static public function json(key:String, ?library:String)
 	{
-		return externalSongs(haxe.io.Path.join(['$key.json']));
+		return externalSongs('$key.json');
 		//return getPath('data/$key.json', TEXT, library);
 	}
 

@@ -13,7 +13,6 @@ import flixel.FlxG;
 
 class HitSoundState extends MusicBeatState
 {
-    var soundExt = "ogg";
     var avHitS:Array<String> = [];
     var avHitSP:Array<String> = [];
     var checkArr:Array<String> = [];
@@ -32,7 +31,7 @@ class HitSoundState extends MusicBeatState
             var initHitSoundsList = CoolUtil.coolTextFile(StorageVariables.HSLFPath);
             for(i in 0...initHitSoundsList.length){
                 avHitS.push(initHitSoundsList[i]);
-                var hitSName:String = avHitS[i] + "." + soundExt;
+                var hitSName:String = avHitS[i] + '.${Paths.SOUND_EXT}';
                 var possibleFilePath:String = Path.join([StorageVariables.HitSoundsPath, hitSName]);
                 trace("Pushing possible hit sound path");
                 avHitSP.push(possibleFilePath.toLowerCase());
@@ -128,7 +127,7 @@ class HitSoundState extends MusicBeatState
 
         var bullShit:Int = 0;
 
-        //FlxG.sound.stream(avHitSP[curSelected], 1000, true, null, false);
+        play();
 
         for(item in grpHitSounds.members)
         {
@@ -142,5 +141,18 @@ class HitSoundState extends MusicBeatState
         }
 
         CheckText.text = checkArr[curSelected];
+    }
+
+    function play()
+    {
+        //var jaja = FlxG.sound.load(null, 1000, true, null, false, false, avHitSP[curSelected], () -> {trace("completed");}, () -> {trace("loaded");});
+        FlxG.sound.stream(avHitSP[curSelected], 1000, true, null, false);
+        //FlxG.sound.list.add(jaja);
+        //jaja.play();
+        /*
+        var help:FlxSound;
+        help = new FlxSound().loadStream(avHitSP[curSelected], true, false, () -> {trace("help");}, () -> {trace("loaded");});
+        FlxG.sound.list.add(help);
+        help.play();*/
     }
 }

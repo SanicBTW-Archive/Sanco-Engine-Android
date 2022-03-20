@@ -681,7 +681,7 @@ class PlayState extends MusicBeatState
 				add(evilTrail);
 		}
 
-		//add(gfGroup);
+		add(gfGroup);
 
 		// Shitty layering but whatev it works LOL
 		if (curStage == 'limo')
@@ -3341,6 +3341,7 @@ class PlayState extends MusicBeatState
 				note.kill();
 				notes.remove(note, true);
 				note.destroy();
+				//seems to lag in desktop targets
 				if(ClientPrefs.useHitSounds && ClientPrefs.currentHitSound != null && ClientPrefs.hitSoundPath != null)
 					FlxG.sound.stream(ClientPrefs.hitSoundPath, 1, false, null, true);
 			}

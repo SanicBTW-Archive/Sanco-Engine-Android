@@ -40,7 +40,8 @@ class NewOptionsState extends MusicBeatState
         'Flashing Lights',
         'Camera Zooms',
         #if !mobile
-        'FPS Counter'
+        'FPS Counter',
+        'Fullscreen'
         #end
     ];
     var engineOptions:Array<String> = [
@@ -215,6 +216,8 @@ class NewOptionsState extends MusicBeatState
                 states = addOptState([true, false]);
             case "FPS Counter":
                 states = addOptState([true, false]);
+            case 'Fullscreen':
+                states = addOptState([true, false]);
             case 'Use Hit Sounds':
                 states = addOptState([true, false]);
         }
@@ -276,7 +279,6 @@ class NewOptionsState extends MusicBeatState
                     FlxG.drawFramerate = ClientPrefs.framerate;
                     FlxG.updateFramerate = ClientPrefs.framerate;
                 }
-
             case "Downscroll":
                 ClientPrefs.downScroll = newState;
             case "Middlescroll":
@@ -299,6 +301,8 @@ class NewOptionsState extends MusicBeatState
                 ClientPrefs.showFPS = newState;
                 if(Main.fpsVar != null)
                     Main.fpsVar.visible = ClientPrefs.showFPS;
+            case 'Fullscreen':
+                FlxG.fullscreen = newState;
             case "Use Hit Sounds":
                 ClientPrefs.useHitSounds = newState;
         }
@@ -319,9 +323,6 @@ class NewOptionsState extends MusicBeatState
                 jaja =  "If true, images loaded will stay in memory until the game is closed, this increases memory usage, but basically makes reloading times instant.";
             case "Framerate":
                 jaja = "Pretty self explanatory, isn't it? Default value is 60.";
-            
-            case "Key Binds":
-                jaja = "Press ENTER for more";
             case "Mobile Controls":
                 jaja = "Press A for more";
             case "Downscroll":
@@ -344,6 +345,8 @@ class NewOptionsState extends MusicBeatState
                 jaja = "If unchecked, the camera won't zoom in on a beat hit.";
             case "FPS Counter":
                 jaja = "If unchecked, hides FPS Counter.";
+            case "Fullscreen":
+                jaja = "what do you want me to put here";
             case "Internal Storage Options":
                 #if android
                 jaja = "Press A for more";
@@ -401,6 +404,8 @@ class NewOptionsState extends MusicBeatState
                 current = returnfunnyBool(ClientPrefs.camZooms);
             case "FPS Counter":
                 current = returnfunnyBool(ClientPrefs.showFPS);
+            case "Fullscreen":
+                current = returnfunnyBool(FlxG.fullscreen);
             case "Use Hit Sounds":
                 current = returnfunnyBool(ClientPrefs.useHitSounds);
         }

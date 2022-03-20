@@ -44,7 +44,9 @@ class NewOptionsState extends MusicBeatState
         #end
     ];
     var engineOptions:Array<String> = [
+        #if sys
         "Internal Storage Options", 
+        #end
         "Use Hit Sounds",
     ];
 
@@ -417,6 +419,8 @@ class NewOptionsState extends MusicBeatState
                 current = "Gameplay";
             case ENGINE_OPTIONS:
                 current = "Engine Options";
+            case STORAGE_OPTIONS:
+                current = "Storage Options";
         }
         return current;
     }
@@ -459,7 +463,7 @@ class NewOptionsState extends MusicBeatState
         switch(option)
         {
             case "Internal Storage Options":
-                //MusicBeatState.switchState();
+                MusicBeatState.switchState(new InternalStorageOptionsState());
             case "Use Hit Sounds":
                 if(ClientPrefs.useHitSounds == true){
                     MusicBeatState.switchState(new HitSoundState());
@@ -485,4 +489,5 @@ enum Categories
     GRAPHICS;
     GAMEPLAY;
     ENGINE_OPTIONS;
+    STORAGE_OPTIONS;
 }

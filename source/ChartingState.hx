@@ -1401,11 +1401,6 @@ class ChartingState extends MusicBeatState
 		var characterPath:String = 'characters/' + char + '.json';
 		#if MODS_ALLOWED
 		var path:String = Paths.mods(characterPath);
-		if (!Utils.existsCheck(path)) {
-			path = Paths.getPreloadPath(characterPath);
-		}
-
-		if (!Utils.existsCheck(path))
 		#else
 		var path:String = Paths.getPreloadPath(characterPath);
 		if (!OpenFlAssets.exists(path))

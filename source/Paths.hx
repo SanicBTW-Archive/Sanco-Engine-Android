@@ -87,7 +87,8 @@ class Paths
 
 	inline static public function json(key:String, ?library:String)
 	{
-		return getPath('data/$key.json', TEXT, library);
+		return externalSongs(haxe.io.Path.join(['$key.json']));
+		//return getPath('data/$key.json', TEXT, library);
 	}
 
 	inline static public function lua(key:String, ?library:String)
@@ -112,18 +113,20 @@ class Paths
 
 	inline static public function externalSongs(key:String)
 	{
-		return 'externalSongs/' + key;
+		return haxe.io.Path.join(['externalSongs', key]);
 	}
 
 	inline static public function voices(song:String)
 	{
-		return externalSongs('${song.toLowerCase()}/Voices.$SOUND_EXT');
+		return externalSongs(haxe.io.Path.join([song.toLowerCase(), 'Voices.$SOUND_EXT']));
+		//return externalSongs('${song.toLowerCase()}/Voices.$SOUND_EXT');
 		//return 'songs:externalSongs/${song.toLowerCase()}/Voices.$SOUND_EXT';
 	}
 
 	inline static public function inst(song:String)
 	{
-		return externalSongs('${song.toLowerCase()}/Inst.$SOUND_EXT');
+		return externalSongs(haxe.io.Path.join([song.toLowerCase(), 'Inst.$SOUND_EXT']));
+		//return externalSongs('${song.toLowerCase()}/Inst.$SOUND_EXT');
 		//return 'songs:externalSongs/${song.toLowerCase()}/Inst.$SOUND_EXT';
 	}
 

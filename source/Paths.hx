@@ -110,16 +110,21 @@ class Paths
 		return getPath('music/$key.$SOUND_EXT', MUSIC, library);
 	}
 
+	inline static public function externalSongs(key:String)
+	{
+		return 'externalSongs/' + key;
+	}
+
 	inline static public function voices(song:String)
 	{
-		return extVoices(song);
-		//return 'songs:assets/songs/${song.toLowerCase()}/Voices.$SOUND_EXT';
+		return externalSongs('${song.toLowerCase()}/Voices.$SOUND_EXT');
+		//return 'songs:externalSongs/${song.toLowerCase()}/Voices.$SOUND_EXT';
 	}
 
 	inline static public function inst(song:String)
 	{
-		return extInst(song);
-		//return 'songs:assets/songs/${song.toLowerCase()}/Inst.$SOUND_EXT';
+		return externalSongs('${song.toLowerCase()}/Inst.$SOUND_EXT');
+		//return 'songs:externalSongs/${song.toLowerCase()}/Inst.$SOUND_EXT';
 	}
 
 	inline static public function image(key:String, ?library:String):Dynamic
@@ -234,27 +239,4 @@ class Paths
 
 
 	#end
-	inline static public function custSFolder(key:String)
-	{
-		return 'externalSongs/custom/' + key;
-	}
-	inline static public function custSV(song:String)
-	{
-		return custSFolder('${song.toLowerCase()}/Voices.$SOUND_EXT');
-	}
-	inline static public function custSI(song:String)
-	{
-		return custSFolder('${song.toLowerCase()}/Inst.$SOUND_EXT');
-	}
-
-	inline static public function extVoices(song:String)
-	{
-		return 'externalSongs/${song.toLowerCase()}/Voices.$SOUND_EXT';
-	}
-
-	inline static public function extInst(song:String)
-	{
-		return 'externalSongs/${song.toLowerCase()}/Inst.$SOUND_EXT';
-	}
-
 }

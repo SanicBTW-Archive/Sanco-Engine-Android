@@ -43,10 +43,7 @@ class OptionsState extends MusicBeatState
 		DiscordClient.changePresence("Options Menu", null);
 		#end
 
-		//spaghetti moment lol
-		if(ClientPrefs.useHitSounds && !ClientPrefs.experimentalStuff){
-			options = ['Mobile Controls','Preferences', 'Notes', 'External Music Test', 'Hit Sounds'];
-		} else if (ClientPrefs.useHitSounds) {
+		if (ClientPrefs.useHitSounds) {
 			options = ['Mobile Controls','Preferences', 'Notes', 'Hit Sounds'];
 		} else {
 			options = ['Mobile Controls','Preferences', 'Notes'];	
@@ -115,8 +112,6 @@ class OptionsState extends MusicBeatState
 
 				case 'Hit Sounds':
 					MusicBeatState.switchState(new options.HitSoundState());
-				case 'External Music Test':
-					MusicBeatState.switchState(new test.ExtMusicState());
 			}
 		}
 	}

@@ -46,7 +46,6 @@ class NewOptionsState extends MusicBeatState
     var engineOptions:Array<String> = [
         "Internal Storage Options", 
         "Use Hit Sounds",
-        'Experimental Stuff'
     ];
 
     private var grpOptions:FlxTypedGroup<Alphabet>;
@@ -216,8 +215,6 @@ class NewOptionsState extends MusicBeatState
                 states = addOptState([true, false]);
             case 'Use Hit Sounds':
                 states = addOptState([true, false]);
-            case 'Experimental Stuff':
-                states = addOptState([true, false]);
         }
         scroll(states, HORIZONTAL);
         save(states[curStateSelc]);
@@ -302,8 +299,6 @@ class NewOptionsState extends MusicBeatState
                     Main.fpsVar.visible = ClientPrefs.showFPS;
             case "Use Hit Sounds":
                 ClientPrefs.useHitSounds = newState;
-            case "Experimental Stuff":
-                ClientPrefs.experimentalStuff = newState;
         }
         curOptionState.text = returnOptionStr();
     }
@@ -406,8 +401,6 @@ class NewOptionsState extends MusicBeatState
                 current = returnfunnyBool(ClientPrefs.showFPS);
             case "Use Hit Sounds":
                 current = returnfunnyBool(ClientPrefs.useHitSounds);
-            case "Experimental Stuff":
-                current = returnfunnyBool(ClientPrefs.experimentalStuff);
         }
         return current;
     }
@@ -470,10 +463,6 @@ class NewOptionsState extends MusicBeatState
             case "Use Hit Sounds":
                 if(ClientPrefs.useHitSounds == true){
                     MusicBeatState.switchState(new HitSoundState());
-                }
-            case "Experimental Stuff":
-                if(ClientPrefs.experimentalStuff == true){
-                    MusicBeatState.switchState(new test.ExtMusicState());
                 }
 
             //case "Key Binds": keybinds doesnt seem to work sadly

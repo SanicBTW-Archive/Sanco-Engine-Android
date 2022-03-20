@@ -231,6 +231,10 @@ class PlayState extends MusicBeatState
 	// Lua shit
 	public var backgroundGroup:FlxTypedGroup<FlxSprite>;
 	public var foregroundGroup:FlxTypedGroup<FlxSprite>;
+	var campointX:Float = 0;
+	var campointY:Float = 0;
+	var bfturn:Bool = false;
+	var camMov:Int = 30;
 
 	override public function create()
 	{
@@ -2661,12 +2665,18 @@ class PlayState extends MusicBeatState
 		{
 			moveCamera(true);
 			callOnLuas('onMoveCamera', ['dad']);
+			campointX = camFollow.x;
+			campointY = camFollow.y;
+			bfturn = false;
 		}
 
 		if (SONG.notes[id] != null && SONG.notes[id].mustHitSection && camFollow.x != boyfriend.getMidpoint().x - 100)
 		{
 			moveCamera(false);
 			callOnLuas('onMoveCamera', ['boyfriend']);
+			campointX = camFollow.x;
+			campointY = camFollow.y;
+			bfturn = true;
 		}
 	}
 
@@ -3312,15 +3322,28 @@ class PlayState extends MusicBeatState
 			if(note.noteType == 1) daAlt = '-alt';
 
 			var animToPlay:String = '';
+
 			switch (Std.int(Math.abs(note.noteData)))
 			{
 				case 0:
+					if(bfturn)
+						camFollow.x = campointX - camMov;
+					//FlxTween.tween(camFollow, {x: camFollow.x - 10}, 0.5, {ease: FlxEase.linear});
 					animToPlay = 'singLEFT';
 				case 1:
+					if(bfturn)
+						camFollow.y = campointY + camMov;
+					//FlxTween.tween(camGame, {y: camGame.y - 10}, 0.5, {ease: FlxEase.linear});
 					animToPlay = 'singDOWN';
 				case 2:
+					if(bfturn)
+						camFollow.y = campointY - camMov;
+					//FlxTween.tween(camGame, {y: camGame.y + 10}, 0.5, {ease: FlxEase.linear});
 					animToPlay = 'singUP';
 				case 3:
+					if(bfturn)
+						camFollow.x = campointX + camMov;
+					//FlxTween.tween(camGame, {x: camGame.x + 10}, 0.5, {ease: FlxEase.linear});
 					animToPlay = 'singRIGHT';
 			}
 

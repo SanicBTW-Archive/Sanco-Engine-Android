@@ -42,35 +42,5 @@ class StorageVariables
         if(!FileSystem.exists(FPLPath)){File.saveContent(FPLPath, freeplayListTemplate);}
         if(!FileSystem.exists(FPCPath)){File.saveContent(FPCPath, freeplayColorTemplate);}
     }
-
-    public static function InitPolymod() 
-    {
-        trace("trying to init polymod");
-        #if (polymod && !html5)
-		if (sys.FileSystem.exists('extSongs/')) {
-			var folders:Array<String> = [];
-            var files:Array<String> = [];
-			for (folder in sys.FileSystem.readDirectory('extSongs/')) {
-				var path = haxe.io.Path.join(['extSongs/', folder]);
-				if (sys.FileSystem.isDirectory(path)) {
-					folders.push(folder);
-					trace(folders);
-                    for(file in sys.FileSystem.readDirectory(path))
-                    {
-                        var pathjaja = haxe.io.Path.join([folder, file]);
-                        trace(pathjaja);
-                        files.push(pathjaja);
-                    }
-				}
-			}
-			if(folders.length > 0) {
-				polymod.Polymod.init({modRoot: "extSongs", dirs: folders});
-                if(files.length > 0) {
-                    polymod.Polymod.loadMods(files);
-                }
-			}
-		}
-        #end
-    }
     #end
 }

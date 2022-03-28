@@ -65,7 +65,6 @@ class TitleState extends MusicBeatState
 	    #elseif sys
 		StorageVariables.CheckStuff();
 		#end
-		StorageVariables.InitPolymod();
 		
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.sound.muteKeys = muteKeys;

@@ -49,7 +49,8 @@ class NewOptionsState extends MusicBeatState
         "Internal Storage Options", 
         #end
         "Use Hit Sounds",
-        'Optimization Type'
+        'Optimization Type',
+        'Camera Movement On Note Press'
     ];
 
     private var grpOptions:FlxTypedGroup<Alphabet>;
@@ -223,6 +224,8 @@ class NewOptionsState extends MusicBeatState
                 states = addOptState([true, false]);
             case 'Optimization Type':
                 states = addOptState([ClientPrefs.OptimizationType.NONE, ClientPrefs.OptimizationType.BASIC, ClientPrefs.OptimizationType.ADVANCED, ClientPrefs.OptimizationType.EXTREME]);
+            case 'Camera Movement On Note Press':
+                states = addOptState([true, false]);
         }
         scroll(states, HORIZONTAL);
         save(states[curStateSelc]);
@@ -310,6 +313,8 @@ class NewOptionsState extends MusicBeatState
                 ClientPrefs.useHitSounds = newState;
             case 'Optimization Type':
                 ClientPrefs.optimizationType = newState;
+            case 'Camera Movement On Note Press':
+                ClientPrefs.cameraMovOnNotePress = newState;
         }
         curOptionState.text = returnOptionStr();
     }
@@ -372,6 +377,8 @@ class NewOptionsState extends MusicBeatState
                 #end
             case 'Optimization Type':
                 jaja = "Optimization for the game, this will be improved on the next version lol, but the type explains by itself";
+            case 'Camera Movement On Note Press':
+                jaja = "If enabled, the camera moves or snaps in the direction of the arrow, was a little bit tricky to add it but i guess it works";
         }
         hintText.text = jaja;
     }
@@ -427,6 +434,8 @@ class NewOptionsState extends MusicBeatState
                     case EXTREME:
                         current = "Extreme";
                 }
+            case 'Camera Movement On Note Press':
+                current = returnfunnyBool(ClientPrefs.cameraMovOnNotePress);
         }
         return current;
     }

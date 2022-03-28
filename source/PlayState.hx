@@ -3265,19 +3265,19 @@ class PlayState extends MusicBeatState
 			switch (Std.int(Math.abs(note.noteData)))
 			{
 				case 0:
-					if(bfturn)
+					if(bfturn && ClientPrefs.cameraMovOnNotePress)
 						snapCamFollowToPos(campointX - camMov, campointY);
 					animToPlay = 'singLEFT';
 				case 1:
-					if(bfturn)
+					if(bfturn && ClientPrefs.cameraMovOnNotePress)
 						snapCamFollowToPos(campointX, campointY + camMov);
 					animToPlay = 'singDOWN';
 				case 2:
-					if(bfturn)
+					if(bfturn && ClientPrefs.cameraMovOnNotePress)
 						snapCamFollowToPos(campointX, campointY - camMov);
 					animToPlay = 'singUP';
 				case 3:
-					if(bfturn)
+					if(bfturn && ClientPrefs.cameraMovOnNotePress)
 						snapCamFollowToPos(campointX + camMov, campointY);
 					animToPlay = 'singRIGHT';
 			}

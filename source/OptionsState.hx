@@ -1,8 +1,5 @@
 package;
 
-#if desktop
-import Discord.DiscordClient;
-#end
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -39,10 +36,6 @@ class OptionsState extends MusicBeatState
 	public static var menuBG:FlxSprite;
 
 	override function create() {
-		#if desktop
-		DiscordClient.changePresence("Options Menu", null);
-		#end
-
 		if (ClientPrefs.useHitSounds) {
 			options = ['Mobile Controls','Preferences', 'Notes', 'Hit Sounds'];
 		} else {

@@ -1,9 +1,6 @@
 package;
 
 import flixel.addons.display.FlxBackdrop;
-#if desktop
-import Discord.DiscordClient;
-#end
 import Section.SwagSection;
 import Song.SwagSong;
 import WiggleEffect.WiggleEffectType;
@@ -1006,11 +1003,7 @@ class PlayState extends MusicBeatState
 		CoolUtil.precacheSound('missnote1');
 		CoolUtil.precacheSound('missnote2');
 		CoolUtil.precacheSound('missnote3');
-		
-		#if desktop
-		// Updating Discord Rich Presence.
-		DiscordClient.changePresence(detailsText, displaySongName + " (" + storyDifficultyText + ")", iconP2.getCharacter());
-		#end
+
 		super.create();
 	}
 	
@@ -1356,10 +1349,6 @@ class PlayState extends MusicBeatState
 		FlxTween.tween(timeBar, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
 		FlxTween.tween(timeTxt, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
 
-		#if desktop
-		// Updating Discord Rich Presence (with Time Left)
-		DiscordClient.changePresence(detailsText, displaySongName + " (" + storyDifficultyText + ")", iconP2.getCharacter(), true, songLength);
-		#end
 		setOnLuas('songLength', songLength);
 		callOnLuas('onSongStart', []);
 	}
@@ -1709,17 +1698,6 @@ class PlayState extends MusicBeatState
 			}
 			paused = false;
 			callOnLuas('onResume', []);
-
-			#if desktop
-			if (startTimer.finished)
-			{
-				DiscordClient.changePresence(detailsText, displaySongName + " (" + storyDifficultyText + ")", iconP2.getCharacter(), true, songLength - Conductor.songPosition - ClientPrefs.noteOffset);
-			}
-			else
-			{
-				DiscordClient.changePresence(detailsText, displaySongName + " (" + storyDifficultyText + ")", iconP2.getCharacter());
-			}
-			#end
 		}
 
 		super.closeSubState();
@@ -1727,32 +1705,11 @@ class PlayState extends MusicBeatState
 
 	override public function onFocus():Void
 	{
-		#if desktop
-		if (health > 0 && !paused)
-		{
-			if (Conductor.songPosition > 0.0)
-			{
-				DiscordClient.changePresence(detailsText, displaySongName + " (" + storyDifficultyText + ")", iconP2.getCharacter(), true, songLength - Conductor.songPosition - ClientPrefs.noteOffset);
-			}
-			else
-			{
-				DiscordClient.changePresence(detailsText, displaySongName + " (" + storyDifficultyText + ")", iconP2.getCharacter());
-			}
-		}
-		#end
-
 		super.onFocus();
 	}
 	
 	override public function onFocusLost():Void
 	{
-		#if desktop
-		if (health > 0 && !paused)
-		{
-			DiscordClient.changePresence(detailsPausedText, displaySongName + " (" + storyDifficultyText + ")", iconP2.getCharacter());
-		}
-		#end
-
 		super.onFocusLost();
 	}
 
@@ -1933,23 +1890,12 @@ class PlayState extends MusicBeatState
 				persistentDraw = true;
 				paused = true;
 
-				// 1 / 1000 chance for Gitaroo Man easter egg
-				if (FlxG.random.bool(0.1))
-				{
-					// gitaroo man easter egg
-					MusicBeatState.switchState(new GitarooPause());
+				if(FlxG.sound.music != null) {
+					FlxG.sound.music.pause();
+					vocals.pause();
 				}
-				else {
-					if(FlxG.sound.music != null) {
-						FlxG.sound.music.pause();
-						vocals.pause();
-					}
-					openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-				}
-			
-				#if desktop
-				DiscordClient.changePresence(detailsPausedText, displaySongName + " (" + storyDifficultyText + ")", iconP2.getCharacter());
-				#end
+				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+
 			}
 		}
 
@@ -1958,10 +1904,6 @@ class PlayState extends MusicBeatState
 			persistentUpdate = false;
 			paused = true;
 			MusicBeatState.switchState(new ChartingState());
-
-			#if desktop
-			DiscordClient.changePresence("Chart Editor", null, null, true);
-			#end
 		}
 
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
@@ -2094,10 +2036,6 @@ class PlayState extends MusicBeatState
 
 				// MusicBeatState.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 				
-				#if desktop
-				// Game Over doesn't get his own variable because it's only used here
-				DiscordClient.changePresence("Game Over - " + detailsText, displaySongName + " (" + storyDifficultyText + ")", iconP2.getCharacter());
-				#end
 			}
 		}
 
@@ -3323,27 +3261,24 @@ class PlayState extends MusicBeatState
 
 			var animToPlay:String = '';
 
+			//the snapcamfollowtopos its just a placeholder xd
 			switch (Std.int(Math.abs(note.noteData)))
 			{
 				case 0:
 					if(bfturn)
-						camFollow.x = campointX - camMov;
-					//FlxTween.tween(camFollow, {x: camFollow.x - 10}, 0.5, {ease: FlxEase.linear});
+						snapCamFollowToPos(campointX - camMov, campointY);
 					animToPlay = 'singLEFT';
 				case 1:
 					if(bfturn)
-						camFollow.y = campointY + camMov;
-					//FlxTween.tween(camGame, {y: camGame.y - 10}, 0.5, {ease: FlxEase.linear});
+						snapCamFollowToPos(campointX, campointY + camMov);
 					animToPlay = 'singDOWN';
 				case 2:
 					if(bfturn)
-						camFollow.y = campointY - camMov;
-					//FlxTween.tween(camGame, {y: camGame.y + 10}, 0.5, {ease: FlxEase.linear});
+						snapCamFollowToPos(campointX, campointY - camMov);
 					animToPlay = 'singUP';
 				case 3:
 					if(bfturn)
-						camFollow.x = campointX + camMov;
-					//FlxTween.tween(camGame, {x: camGame.x + 10}, 0.5, {ease: FlxEase.linear});
+						snapCamFollowToPos(campointX + camMov, campointY);
 					animToPlay = 'singRIGHT';
 			}
 

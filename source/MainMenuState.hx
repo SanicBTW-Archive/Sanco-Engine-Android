@@ -20,7 +20,7 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	public static var EngineVersion:String = '0.1.1 (Test) '; //This is also used for Discord RPC
+	public static var EngineVersion:String = '0.1.1 (EXPERIMENTAL BRANCH) '; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
@@ -141,6 +141,9 @@ class MainMenuState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
+		if(FlxG.keys.justPressed.H){
+			trace(polymod.Polymod.listModFiles(AUDIO_GENERIC));
+		}
 		if (FlxG.sound.music.volume < 0.8)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;

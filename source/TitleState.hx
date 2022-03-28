@@ -26,7 +26,10 @@ import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.app.Application;
 import openfl.Assets;
+#if android
+import android.AndroidTools;
 import com.player03.android6.Permissions;
+#end
 
 using StringTools;
 
@@ -51,7 +54,7 @@ class TitleState extends MusicBeatState
 	override public function create():Void
 	{
 		#if android
-	    FlxG.android.preventDefaultKeys = [BACK];
+		FlxG.android.preventDefaultKeys = [BACK];
 
 		if(!Permissions.hasPermission(Permissions.READ_EXTERNAL_STORAGE) && !Permissions.hasPermission(Permissions.WRITE_EXTERNAL_STORAGE)){
 			Permissions.requestPermissions([Permissions.READ_EXTERNAL_STORAGE, Permissions.WRITE_EXTERNAL_STORAGE]);

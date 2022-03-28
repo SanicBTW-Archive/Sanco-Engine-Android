@@ -231,7 +231,7 @@ class PlayState extends MusicBeatState
 	var campointX:Float = 0;
 	var campointY:Float = 0;
 	var bfturn:Bool = false;
-	var camMov:Int = 30;
+	var camMov:Int = 15;
 
 	override public function create()
 	{

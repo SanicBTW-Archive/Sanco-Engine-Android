@@ -7,7 +7,6 @@ import sys.FileSystem;
 import openfl.utils.Assets;
 import lime.system.System;
 import haxe.io.Path;
-import hx.files.*;
 
 class StorageVariables
 {

@@ -5,5 +5,7 @@ Although its based off an old Psych Engine (0.3.2) Android (0.3.3) version it ha
 Wiki will be finished once I have enough time to focus on that lol
 
 # Build instructions
-I don't know why would you want to build this but ok.
-
+-- add the rest of instructions
+haxelib install android6permissions
+haxelib git linc_luajit https://github.com/kviks/linc_luajit
+haxelib git AndroidTools https://github.com/jigsaw-4277821/AndroidTools

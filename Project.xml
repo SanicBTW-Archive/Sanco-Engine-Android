@@ -100,9 +100,7 @@
 	<assets path="assets/week6"         library="week6"         exclude="*.mp3" unless="web"/>
 	
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
-	<!-- <template path='mods' /> -->
-	<assets path='ex_modSongs' rename='extSongs' embed='false' if="MODS_ALLOWED"/>
-	
+	<!-- <template path='mods' /> -->	
 	<!-- assets path="CHANGELOG.md" rename='changelog.txt' -->
 
 	<!-- NOTE FOR FUTURE SELF SINCE FONTS ARE ALWAYS FUCKY 

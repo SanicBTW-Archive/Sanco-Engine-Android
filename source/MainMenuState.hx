@@ -142,7 +142,7 @@ class MainMenuState extends MusicBeatState
 	override function update(elapsed:Float)
 	{
 		if(FlxG.keys.justPressed.H){
-			trace(polymod.Polymod.listModFiles(AUDIO_GENERIC));
+			MusicBeatState.switchState(new options.TestState());
 		}
 		if (FlxG.sound.music.volume < 0.8)
 		{

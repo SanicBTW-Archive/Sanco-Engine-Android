@@ -29,6 +29,8 @@ class NewOptionsState extends MusicBeatState
     var gameplayOptions:Array<String> = [
         #if mobile
         'Mobile Controls',
+        #else
+        "Key Binds",
         #end
         'Downscroll',
         'Middlescroll',
@@ -77,9 +79,10 @@ class NewOptionsState extends MusicBeatState
 
         for(i in 0...avOptions.length)
         {
-            var avOptText:Alphabet = new Alphabet(0,(70 * i) + 30, avOptions[i], true, false);
+            var avOptText:Alphabet = new Alphabet(0,(70 * i) + 30, avOptions[i], false, false);
             avOptText.isMenuItem = true;
             avOptText.targetY = i;
+            avOptText.forceX = 0;
             grpOptions.add(avOptText);
         }
 
@@ -333,6 +336,8 @@ class NewOptionsState extends MusicBeatState
                 jaja =  "If true, images loaded will stay in memory until the game is closed, this increases memory usage, but basically makes reloading times instant.";
             case "Framerate":
                 jaja = "Pretty self explanatory, isn't it? Default value is 60.";
+            case "Key Binds":
+                jaja = "Press ENTER for more";
             case "Mobile Controls":
                 jaja = "Press A for more";
             case "Downscroll":
@@ -368,12 +373,6 @@ class NewOptionsState extends MusicBeatState
                 jaja = "If there is a hit sound chosen it will play every time you hit a note | Press A for more";
                 #else
                 jaja = 'If there is a hit sound chosen it will play every time you hit a note | Press ENTER for more';
-                #end
-            case "Experimental Stuff":
-                #if android
-                jaja = "Enables experimental features which may be unstable, proceed with caution | Press A for more";
-                #else
-                jaja = "Enables experimental features which may be unstable, proceed with caution | Press ENTER for more";
                 #end
             case 'Optimization Type':
                 jaja = "Optimization for the game, this will be improved on the next version lol, but the type explains by itself";
@@ -502,8 +501,8 @@ class NewOptionsState extends MusicBeatState
                     MusicBeatState.switchState(new HitSoundState());
                 }
 
-            //case "Key Binds": keybinds doesnt seem to work sadly
-                //openSubState(new OptionsState.ControlsSubstate());
+            case "Key Binds":
+                openSubState(new OptionsState.ControlsSubstate());
             
             case "Mobile Controls":
                 MusicBeatState.switchState(new CustomControlsState());

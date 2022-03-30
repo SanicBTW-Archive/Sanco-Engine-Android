@@ -22,7 +22,7 @@ class StorageVariables
     public static var CharImgPath:String = Path.join([CharactersPath, 'images']);
 
     //files
-    public static var HSLFPath:String = Path.join([HitSoundsPath, 'hitsoundsList.txt']);  //for custom hit sounds and shit
+    public static var HSLFPath:String = Path.join([HitSoundsPath, 'hitsoundsList.txt']);  //for custom hit sounds and shit, will make it easier soon
 
     public static function CheckStuff() 
     {

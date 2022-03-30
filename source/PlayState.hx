@@ -1891,7 +1891,7 @@ class PlayState extends MusicBeatState
 					FlxG.sound.music.pause();
 					vocals.pause();
 				}
-				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+				openSubState(new NewPauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
 			}
 		}
@@ -3275,7 +3275,7 @@ class PlayState extends MusicBeatState
 				notes.remove(note, true);
 				note.destroy();
 				//seems to lag in desktop targets
-				#if sys
+				#if (sys && android)
 				if(ClientPrefs.useHitSounds && ClientPrefs.currentHitSound != null && ClientPrefs.hitSoundPath != null)
 					FlxG.sound.stream(ClientPrefs.hitSoundPath, 1, false, null, true);
 				#else

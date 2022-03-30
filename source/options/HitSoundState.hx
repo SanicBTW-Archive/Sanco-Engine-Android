@@ -102,8 +102,8 @@ class HitSoundState extends MusicBeatState
 
         if(controls.ACCEPT)
         {
-            if(checkArr[curSelected] == "Check the directory"){
-                openSubState(new PromptSubState(["You will be sent to the download page of the hitsound", "once downloaded go to the internal storage and move it to hitsounds","sanco engine files folder"], "https://github.com/SanicBTW/Sanco-Engine-Android/releases/download/v0.1/osumania.ogg"));
+            if(checkArr[curSelected] == "Check the directory" && avHitS[curSelected] == "osumania"){
+                CoolUtil.browserLoad("https://github.com/SanicBTW/Sanco-Engine-Android/releases/download/v0.1/osumania.ogg");
             } else {
                 ClientPrefs.currentHitSound = avHitS[curSelected];
                 ClientPrefs.hitSoundPath = avHitSP[curSelected];
@@ -149,91 +149,4 @@ class HitSoundState extends MusicBeatState
     {
         FlxG.sound.stream(avHitSP[curSelected], 1000, true, null, false);
     }
-}
-
-
-//has alpha problems, will look into it soon
-class PromptSubState extends MusicBeatSubstate
-{
-    var onOk:Bool = false;
-    var okText:Alphabet;
-	var cancelText:Alphabet;
-    var alphabetArray:Array<Alphabet> = [];
-    var bg:FlxSprite;
-    var todoAfterOk:String = "";
-    public function new(promptText:Array<String>, gotoAfterOk:String)
-    {
-        super();
-
-        var text:Alphabet = new Alphabet(0, 0, "hola", true);
-        for(i in 0...promptText.length)
-        {
-            text = new Alphabet(0, 180, promptText[i], true);
-            text.screenCenter(X);
-            alphabetArray.push(text);
-            text.alpha = 0;
-            add(text);
-        }
-
-        okText = new Alphabet(0, text.y + 150, 'Ok', true);
-		okText.screenCenter(X);
-		okText.x -= 200;
-		add(okText);
-		cancelText = new Alphabet(0, text.y + 150, 'Cancel', true);
-		cancelText.screenCenter(X);
-		cancelText.x += 200;
-		add(cancelText);
-
-        bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		bg.alpha = 0;
-		bg.scrollFactor.set();
-		add(bg);
-        updateOptions();
-
-        #if mobileC
-		addVirtualPad(FULL, A_B);
-		#end
-
-        gotoAfterOk = todoAfterOk;
-    }
-
-    override function update(elapsed:Float)
-    {
-        bg.alpha += elapsed * 1.5;
-		if(bg.alpha > 0.6) bg.alpha = 0.6;
-
-		for (i in 0...alphabetArray.length) {
-			var spr = alphabetArray[i];
-			spr.alpha += elapsed * 2.5;
-		}
-
-		if(controls.UI_LEFT_P || controls.UI_RIGHT_P) {
-			FlxG.sound.play(Paths.sound('scrollMenu'), 1);
-			onOk = !onOk;
-			updateOptions();
-		}
-		if(controls.BACK) {
-			FlxG.sound.play(Paths.sound('cancelMenu'), 1);
-			close();
-		} else if(controls.ACCEPT) {
-			if(onOk) {
-                CoolUtil.browserLoad(todoAfterOk);
-			}
-			FlxG.sound.play(Paths.sound('cancelMenu'), 1);
-			close();
-		}
-		super.update(elapsed);
-    }
-
-    function updateOptions() {
-		var scales:Array<Float> = [0.75, 1];
-		var alphas:Array<Float> = [0.6, 1.25];
-		var confirmInt:Int = onOk ? 1 : 0;
-
-		okText.alpha = alphas[confirmInt];
-		okText.scale.set(scales[confirmInt], scales[confirmInt]);
-		cancelText.alpha = alphas[1 - confirmInt];
-		cancelText.scale.set(scales[1 - confirmInt], scales[1 - confirmInt]);
-	}
-
 }

@@ -26,20 +26,19 @@ class ClientPrefs {
 	public static var imagesPersist:Bool = false;
 	public static var ghostTapping:Bool = true;
 	public static var hideTime:Bool = false;
-	//hit sounds
 	public static var currentHitSound:String = "";
 	public static var hitSoundPath:String = ""; //sorry
-	//internal storage functions
 	public static var useHitSounds:Bool = true;
 	public static var useExternalCharts:Bool = true;
 	public static var useExternalCharacters:Bool = true;
 	public static var optimizationType:OptimizationType = NONE;
+	public static var cameraMovOnNotePress:Bool = true;
 
 	public static var defaultKeys:Array<FlxKey> = [
-		D, LEFT,			//Note Left
-		F, DOWN,			//Note Down
-		J, UP,				//Note Up
-		K, RIGHT,			//Note Right
+		A, LEFT,			//Note Left
+		S, DOWN,			//Note Down
+		W, UP,				//Note Up
+		D, RIGHT,			//Note Right
 
 		A, LEFT,			//UI Left
 		S, DOWN,			//UI Down
@@ -99,6 +98,8 @@ class ClientPrefs {
 		FlxG.save.data.useExternalCharacters = useExternalCharacters;
 
 		FlxG.save.data.optimizationType = optimizationType;
+
+		FlxG.save.data.cameraMovOnNotePress = cameraMovOnNotePress;
 
 		var achieves:Array<String> = [];
 		for (i in 0...Achievements.achievementsUnlocked.length) {
@@ -202,6 +203,10 @@ class ClientPrefs {
 		if(FlxG.save.data.optimizationType != null){
 			optimizationType = FlxG.save.data.optimizationType;
 		}
+		if(FlxG.save.data.cameraMovOnNotePress != null){
+			cameraMovOnNotePress = FlxG.save.data.cameraMovOnNotePress;
+		}
+
 
 		var save:FlxSave = new FlxSave();
 		save.bind('controls', 'ninjamuffin99');

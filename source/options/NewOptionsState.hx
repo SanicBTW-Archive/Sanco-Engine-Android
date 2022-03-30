@@ -29,6 +29,8 @@ class NewOptionsState extends MusicBeatState
     var gameplayOptions:Array<String> = [
         #if mobile
         'Mobile Controls',
+        #else
+        "Key Binds",
         #end
         'Downscroll',
         'Middlescroll',
@@ -49,7 +51,8 @@ class NewOptionsState extends MusicBeatState
         "Internal Storage Options", 
         #end
         "Use Hit Sounds",
-        'Optimization Type'
+        'Optimization Type',
+        'Camera Movement On Note Press'
     ];
 
     private var grpOptions:FlxTypedGroup<Alphabet>;
@@ -76,9 +79,10 @@ class NewOptionsState extends MusicBeatState
 
         for(i in 0...avOptions.length)
         {
-            var avOptText:Alphabet = new Alphabet(0,(70 * i) + 30, avOptions[i], true, false);
+            var avOptText:Alphabet = new Alphabet(0,(70 * i) + 30, avOptions[i], false, false);
             avOptText.isMenuItem = true;
             avOptText.targetY = i;
+            avOptText.forceX = 0;
             grpOptions.add(avOptText);
         }
 
@@ -223,6 +227,8 @@ class NewOptionsState extends MusicBeatState
                 states = addOptState([true, false]);
             case 'Optimization Type':
                 states = addOptState([ClientPrefs.OptimizationType.NONE, ClientPrefs.OptimizationType.BASIC, ClientPrefs.OptimizationType.ADVANCED, ClientPrefs.OptimizationType.EXTREME]);
+            case 'Camera Movement On Note Press':
+                states = addOptState([true, false]);
         }
         scroll(states, HORIZONTAL);
         save(states[curStateSelc]);
@@ -310,6 +316,8 @@ class NewOptionsState extends MusicBeatState
                 ClientPrefs.useHitSounds = newState;
             case 'Optimization Type':
                 ClientPrefs.optimizationType = newState;
+            case 'Camera Movement On Note Press':
+                ClientPrefs.cameraMovOnNotePress = newState;
         }
         curOptionState.text = returnOptionStr();
     }
@@ -328,6 +336,8 @@ class NewOptionsState extends MusicBeatState
                 jaja =  "If true, images loaded will stay in memory until the game is closed, this increases memory usage, but basically makes reloading times instant.";
             case "Framerate":
                 jaja = "Pretty self explanatory, isn't it? Default value is 60.";
+            case "Key Binds":
+                jaja = "Press ENTER for more";
             case "Mobile Controls":
                 jaja = "Press A for more";
             case "Downscroll":
@@ -364,14 +374,10 @@ class NewOptionsState extends MusicBeatState
                 #else
                 jaja = 'If there is a hit sound chosen it will play every time you hit a note | Press ENTER for more';
                 #end
-            case "Experimental Stuff":
-                #if android
-                jaja = "Enables experimental features which may be unstable, proceed with caution | Press A for more";
-                #else
-                jaja = "Enables experimental features which may be unstable, proceed with caution | Press ENTER for more";
-                #end
             case 'Optimization Type':
                 jaja = "Optimization for the game, this will be improved on the next version lol, but the type explains by itself";
+            case 'Camera Movement On Note Press':
+                jaja = "If enabled, the camera moves or snaps in the direction of the arrow, was a little bit tricky to add it but i guess it works";
         }
         hintText.text = jaja;
     }
@@ -427,6 +433,8 @@ class NewOptionsState extends MusicBeatState
                     case EXTREME:
                         current = "Extreme";
                 }
+            case 'Camera Movement On Note Press':
+                current = returnfunnyBool(ClientPrefs.cameraMovOnNotePress);
         }
         return current;
     }
@@ -493,8 +501,8 @@ class NewOptionsState extends MusicBeatState
                     MusicBeatState.switchState(new HitSoundState());
                 }
 
-            //case "Key Binds": keybinds doesnt seem to work sadly
-                //openSubState(new OptionsState.ControlsSubstate());
+            case "Key Binds":
+                openSubState(new OptionsState.ControlsSubstate());
             
             case "Mobile Controls":
                 MusicBeatState.switchState(new CustomControlsState());

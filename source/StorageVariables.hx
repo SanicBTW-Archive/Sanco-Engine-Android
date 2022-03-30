@@ -10,10 +10,8 @@ import haxe.io.Path;
 
 class StorageVariables
 {
+    //the freeplay data got deprecated due to not being able to add dynamic songs support
     #if sys
-    //templates for missing files
-    static var freeplayListTemplate = "Tutorial:gf:0xFF9271FD";
-    static var freeplayColorTemplate = "0xFF9271FD\n0xFF9271FD\n0xFF223344\n0xFF941653\n0xFFFC96D7\n0xFFA0D1FF\n0xFFFF78BF";
 
     //directories
 	public static var RequiredPath:String = Path.join([System.userDirectory, 'sancoengine_files']);
@@ -24,11 +22,10 @@ class StorageVariables
     public static var CharImgPath:String = Path.join([CharactersPath, 'images']);
 
     //files
-    public static var FPLPath:String = Path.join([DataPath, 'freeplaySonglist.txt']);
-    public static var HSLFPath:String = Path.join([HitSoundsPath, 'hitsoundsList.txt']);  //for custom hit sounds and shit
-    public static var FPCPath:String = Path.join([DataPath, 'freeplayColors.txt']);
+    public static var HSLFPath:String = Path.join([HitSoundsPath, 'hitsoundsList.txt']);  //for custom hit sounds and shit, will make it easier soon
 
-    public static function CheckStuff() {
+    public static function CheckStuff() 
+    {
         //stable
         if(!FileSystem.exists(RequiredPath)){FileSystem.createDirectory(RequiredPath);}
         if(!FileSystem.exists(DataPath)){FileSystem.createDirectory(DataPath);}
@@ -37,9 +34,6 @@ class StorageVariables
         if(!FileSystem.exists(CharactersPath)){FileSystem.createDirectory(CharactersPath);}
         if(!FileSystem.exists(CharDataPath)){FileSystem.createDirectory(CharDataPath);}
         if(!FileSystem.exists(CharImgPath)){FileSystem.createDirectory(CharImgPath);}
-
-        if(!FileSystem.exists(FPLPath)){File.saveContent(FPLPath, freeplayListTemplate);}
-        if(!FileSystem.exists(FPCPath)){File.saveContent(FPCPath, freeplayColorTemplate);}
     }
     #end
 }

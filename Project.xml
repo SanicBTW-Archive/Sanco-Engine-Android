@@ -100,8 +100,7 @@
 	<assets path="assets/week6"         library="week6"         exclude="*.mp3" unless="web"/>
 	
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
-	<!-- <template path='mods' /> -->
-	
+	<!-- <template path='mods' /> -->	
 	<!-- assets path="CHANGELOG.md" rename='changelog.txt' -->
 
 	<!-- NOTE FOR FUTURE SELF SINCE FONTS ARE ALWAYS FUCKY 
@@ -123,7 +122,6 @@
 	<haxelib name="flixel-ui" />
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
 	<haxelib name="faxe" if='switch'/>
-	<!--<haxelib name="polymod"/> -->
 	<!--<haxelib name="discord_rpc" if="desktop"/>-->
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
 

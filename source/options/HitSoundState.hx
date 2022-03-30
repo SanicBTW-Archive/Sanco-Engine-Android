@@ -4,12 +4,14 @@ import OptionsState.NotesSubstate;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSound;
 import haxe.io.Path;
-import sys.FileSystem;
 import flixel.util.FlxColor;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.FlxSprite;
 import flixel.FlxG;
+#if sys
+import sys.FileSystem;
+#end
 
 class HitSoundState extends MusicBeatState
 {
@@ -21,7 +23,6 @@ class HitSoundState extends MusicBeatState
     var curSelected:Int = 0;
     var CheckText:FlxText;
     var leText:String = "Current hit sound: " + ClientPrefs.currentHitSound;
-
     override function create()
     {
         CheckText = new FlxText(FlxG.width * 0.7, 5, 0, "i dont know", 32);
@@ -44,9 +45,6 @@ class HitSoundState extends MusicBeatState
                 }
                 trace(avHitSP[i]);
             }
-        } else if (!FileSystem.exists(StorageVariables.HSLFPath)){
-            //useless
-            leText = "No hit sounds were found maybe the necessary file isn't existing, check your internal storage and check the help file";
         }
 
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
@@ -104,11 +102,15 @@ class HitSoundState extends MusicBeatState
 
         if(controls.ACCEPT)
         {
-            ClientPrefs.currentHitSound = avHitS[curSelected];
-            ClientPrefs.hitSoundPath = avHitSP[curSelected];
-            FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7);
-            ClientPrefs.saveSettings();
-            MusicBeatState.switchState(new NewOptionsState());
+            if(checkArr[curSelected] == "Check the directory"){
+                openSubState(new PromptSubState(["You will be sent to the download page of the hitsound", "once downloaded go to the internal storage and move it to hitsounds","sanco engine files folder"], "https://github.com/SanicBTW/Sanco-Engine-Android/releases/download/v0.1/osumania.ogg"));
+            } else {
+                ClientPrefs.currentHitSound = avHitS[curSelected];
+                ClientPrefs.hitSoundPath = avHitSP[curSelected];
+                FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7);
+                ClientPrefs.saveSettings();
+                MusicBeatState.switchState(new NewOptionsState());
+            }
         }
 
         super.update(elapsed);
@@ -145,14 +147,93 @@ class HitSoundState extends MusicBeatState
 
     function play()
     {
-        //var jaja = FlxG.sound.load(null, 1000, true, null, false, false, avHitSP[curSelected], () -> {trace("completed");}, () -> {trace("loaded");});
         FlxG.sound.stream(avHitSP[curSelected], 1000, true, null, false);
-        //FlxG.sound.list.add(jaja);
-        //jaja.play();
-        /*
-        var help:FlxSound;
-        help = new FlxSound().loadStream(avHitSP[curSelected], true, false, () -> {trace("help");}, () -> {trace("loaded");});
-        FlxG.sound.list.add(help);
-        help.play();*/
     }
+}
+
+
+//has alpha problems, will look into it soon
+class PromptSubState extends MusicBeatSubstate
+{
+    var onOk:Bool = false;
+    var okText:Alphabet;
+	var cancelText:Alphabet;
+    var alphabetArray:Array<Alphabet> = [];
+    var bg:FlxSprite;
+    var todoAfterOk:String = "";
+    public function new(promptText:Array<String>, gotoAfterOk:String)
+    {
+        super();
+
+        var text:Alphabet = new Alphabet(0, 0, "hola", true);
+        for(i in 0...promptText.length)
+        {
+            text = new Alphabet(0, 180, promptText[i], true);
+            text.screenCenter(X);
+            alphabetArray.push(text);
+            text.alpha = 0;
+            add(text);
+        }
+
+        okText = new Alphabet(0, text.y + 150, 'Ok', true);
+		okText.screenCenter(X);
+		okText.x -= 200;
+		add(okText);
+		cancelText = new Alphabet(0, text.y + 150, 'Cancel', true);
+		cancelText.screenCenter(X);
+		cancelText.x += 200;
+		add(cancelText);
+
+        bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		bg.alpha = 0;
+		bg.scrollFactor.set();
+		add(bg);
+        updateOptions();
+
+        #if mobileC
+		addVirtualPad(FULL, A_B);
+		#end
+
+        gotoAfterOk = todoAfterOk;
+    }
+
+    override function update(elapsed:Float)
+    {
+        bg.alpha += elapsed * 1.5;
+		if(bg.alpha > 0.6) bg.alpha = 0.6;
+
+		for (i in 0...alphabetArray.length) {
+			var spr = alphabetArray[i];
+			spr.alpha += elapsed * 2.5;
+		}
+
+		if(controls.UI_LEFT_P || controls.UI_RIGHT_P) {
+			FlxG.sound.play(Paths.sound('scrollMenu'), 1);
+			onOk = !onOk;
+			updateOptions();
+		}
+		if(controls.BACK) {
+			FlxG.sound.play(Paths.sound('cancelMenu'), 1);
+			close();
+		} else if(controls.ACCEPT) {
+			if(onOk) {
+                CoolUtil.browserLoad(todoAfterOk);
+			}
+			FlxG.sound.play(Paths.sound('cancelMenu'), 1);
+			close();
+		}
+		super.update(elapsed);
+    }
+
+    function updateOptions() {
+		var scales:Array<Float> = [0.75, 1];
+		var alphas:Array<Float> = [0.6, 1.25];
+		var confirmInt:Int = onOk ? 1 : 0;
+
+		okText.alpha = alphas[confirmInt];
+		okText.scale.set(scales[confirmInt], scales[confirmInt]);
+		cancelText.alpha = alphas[1 - confirmInt];
+		cancelText.scale.set(scales[1 - confirmInt], scales[1 - confirmInt]);
+	}
+
 }

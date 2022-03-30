@@ -3275,8 +3275,13 @@ class PlayState extends MusicBeatState
 				notes.remove(note, true);
 				note.destroy();
 				//seems to lag in desktop targets
+				#if sys
 				if(ClientPrefs.useHitSounds && ClientPrefs.currentHitSound != null && ClientPrefs.hitSoundPath != null)
 					FlxG.sound.stream(ClientPrefs.hitSoundPath, 1, false, null, true);
+				#else
+				if(ClientPrefs.useHitSounds)
+					FlxG.sound.play(Paths.sound("osumania"), 1, false);
+				#end
 			}
 		}
 	}

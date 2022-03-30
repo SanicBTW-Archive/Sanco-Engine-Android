@@ -369,10 +369,12 @@ class NewOptionsState extends MusicBeatState
                 jaja = "Press ENTER for more";
                 #end
             case "Use Hit Sounds":
-                #if android
+                #if (sys && android)
                 jaja = "If there is a hit sound chosen it will play every time you hit a note | Press A for more";
-                #else
+                #elseif (sys && desktop)
                 jaja = 'If there is a hit sound chosen it will play every time you hit a note | Press ENTER for more';
+                #elseif !sys
+                jaja = "If there is a hit sound chosen it will play every time you hit a note";
                 #end
             case 'Optimization Type':
                 jaja = "Optimization for the game, this will be improved on the next version lol, but the type explains by itself";
@@ -497,9 +499,10 @@ class NewOptionsState extends MusicBeatState
             case "Internal Storage Options":
                 MusicBeatState.switchState(new InternalStorageOptionsState());
             case "Use Hit Sounds":
+                #if sys
                 if(ClientPrefs.useHitSounds == true){
                     MusicBeatState.switchState(new HitSoundState());
-                }
+                }#end
 
             case "Key Binds":
                 openSubState(new OptionsState.ControlsSubstate());

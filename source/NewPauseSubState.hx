@@ -39,8 +39,6 @@ class NewPauseSubState extends MusicBeatSubstate
 		pauseMusic.volume = 0;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 
-		FlxG.sound.list.add(pauseMusic);
-
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
 		bg.scrollFactor.set();
@@ -63,7 +61,7 @@ class NewPauseSubState extends MusicBeatSubstate
 		StatsBG.scrollFactor.set();
 		add(StatsBG);
 
-		var blueballedTxt:FlxText = new FlxText(StatsBG.x + 10, StatsBG.y - 10, 0, "", 32);
+		var blueballedTxt:FlxText = new FlxText(StatsBG.x + 10, StatsBG.y - 50, 0, "", 32);
 		blueballedTxt.text = "Blueballed: " + PlayState.deathCounter;
 		blueballedTxt.scrollFactor.set();
 		blueballedTxt.setFormat(Paths.font('vcr.ttf'), 32);
@@ -72,7 +70,7 @@ class NewPauseSubState extends MusicBeatSubstate
 
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 		FlxTween.tween(StatsBG, {alpha: 0.8}, 0.4, {ease: FlxEase.quartInOut});
-		FlxTween.tween(blueballedTxt, {alpha: 1, y: blueballedTxt.y + 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
+		FlxTween.tween(blueballedTxt, {alpha: 1, y: blueballedTxt.y + 50}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
@@ -91,12 +89,7 @@ class NewPauseSubState extends MusicBeatSubstate
 		var upP = controls.UI_UP_P;
 		var downP = controls.UI_DOWN_P;
 		var accepted = controls.ACCEPT;
-		var cancelr = controls.BACK;
 
-		if(cancelr)
-		{
-			close();
-		}
 		if (upP)
 		{
 			changeSelection(-1);
@@ -108,7 +101,6 @@ class NewPauseSubState extends MusicBeatSubstate
 
 		if (accepted)
 		{
-			/*
 			var daSelected:String = menuItems[curSelected];
 			for (i in 0...difficultyChoices.length-1) {
 				if(difficultyChoices[i] == daSelected) {
@@ -122,12 +114,12 @@ class NewPauseSubState extends MusicBeatSubstate
 					PlayState.cpuControlled = false;
 					return;
 				}
-			} */
-			/*
+			}
 
 			switch (daSelected)
 			{
 				case "Resume":
+					pauseMusic.destroy();
 					close();
 				case 'Change Difficulty':
 					menuItems = difficultyChoices;
@@ -137,6 +129,7 @@ class NewPauseSubState extends MusicBeatSubstate
 					PlayState.usedPractice = true;
 					practiceText.visible = PlayState.practiceMode;
 				case "Restart Song":
+					pauseMusic.destroy();
 					MusicBeatState.resetState();
 					FlxG.sound.music.volume = 0;
 				case "Chart editor":
@@ -144,12 +137,13 @@ class NewPauseSubState extends MusicBeatSubstate
 				case "Character editor":
 					FlxG.switchState(new CharacterEditorState());
 				/*case "Change Control":
-					FlxG.switchState(new options.PauseControlsState());
+					FlxG.switchState(new options.PauseControlsState());*/
 				case 'Botplay':
 					PlayState.cpuControlled = !PlayState.cpuControlled;
 					PlayState.usedPractice = true;
 					botplayText.visible = PlayState.cpuControlled;
 				case "Exit to menu":
+					pauseMusic.destroy();
 					PlayState.deathCounter = 0;
 					PlayState.seenCutscene = false;
 					if(PlayState.isStoryMode) {
@@ -163,9 +157,8 @@ class NewPauseSubState extends MusicBeatSubstate
 					PlayState.cpuControlled = false;
 
 				case 'BACK':
-					menuItems = menuItemsOG;
 					regenMenu();
-			}*/
+			}
 		}
 	}
 

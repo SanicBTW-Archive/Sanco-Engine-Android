@@ -28,6 +28,7 @@ class HitSoundState extends MusicBeatState
         CheckText = new FlxText(FlxG.width * 0.7, 5, 0, "i dont know", 32);
         CheckText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 
+        #if sys
         if(FileSystem.exists(StorageVariables.HSLFPath)){
             var initHitSoundsList = CoolUtil.coolTextFile(StorageVariables.HSLFPath);
             for(i in 0...initHitSoundsList.length){
@@ -46,6 +47,7 @@ class HitSoundState extends MusicBeatState
                 trace(avHitSP[i]);
             }
         }
+        #end
 
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		add(bg);

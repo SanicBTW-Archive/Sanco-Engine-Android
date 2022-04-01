@@ -185,11 +185,7 @@ class PlayState extends MusicBeatState
 	var bgGirls:BackgroundGirls;
 	var wiggleShit:WiggleEffect = new WiggleEffect();
 	var bgGhouls:BGSprite;
-
-	public var songScore:Int = 0;
-	public var songHits:Int = 0;
-	public var songMisses:Int = 0;
-	public var ghostMisses:Int = 0;
+	
 	public var scoreTxt:FlxText;
 	var timeTxt:FlxText;
 	var scoreTxtTween:FlxTween;
@@ -197,7 +193,6 @@ class PlayState extends MusicBeatState
 	public static var campaignScore:Int = 0;
 	public static var campaignMisses:Int = 0;
 	public static var seenCutscene:Bool = false;
-	public static var deathCounter:Int = 0;
 
 	public var defaultCamZoom:Float = 1.05;
 
@@ -1868,9 +1863,9 @@ class PlayState extends MusicBeatState
 		super.update(elapsed); //TEST
 
 		if(ratingString == '?') {
-			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingString + ' | Combo: ' + DynamicValues.combo + ' | Highest Combo: ' + DynamicValues.highestCombo;
+			scoreTxt.text = 'Score: ' + DynamicValues.songScore + ' | Misses: ' + DynamicValues.songMisses + ' | Rating: ' + ratingString + ' | Combo: ' + DynamicValues.combo + ' | Highest Combo: ' + DynamicValues.highestCombo;
 		} else {
-			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingString + ' (' + Math.floor(ratingPercent * 100) + '%) | Combo: ' + DynamicValues.combo + ' | Highest Combo: ' + DynamicValues.highestCombo;
+			scoreTxt.text = 'Score: ' + DynamicValues.songScore + ' | Misses: ' + DynamicValues.songMisses + ' | Rating: ' + ratingString + ' (' + Math.floor(ratingPercent * 100) + '%) | Combo: ' + DynamicValues.combo + ' | Highest Combo: ' + DynamicValues.highestCombo;
 		}
 
 		if(cpuControlled) {
@@ -2011,7 +2006,7 @@ class PlayState extends MusicBeatState
 			var ret:Dynamic = callOnLuas('onGameOver', []);
 			if(ret != FunkinLua.Function_Stop) {
 				boyfriend.stunned = true;
-				deathCounter++;
+				DynamicValues.deathCounter++;
 
 				persistentUpdate = false;
 				persistentDraw = false;
@@ -2592,7 +2587,7 @@ class PlayState extends MusicBeatState
 		inCutscene = false;
 		updateTime = false;
 
-		deathCounter = 0;
+		DynamicValues.deathCounter = 0;
 		seenCutscene = false;
 		KillNotes();
 
@@ -2614,14 +2609,14 @@ class PlayState extends MusicBeatState
 			#if !switch
 			var percent:Float = ratingPercent;
 			if(Math.isNaN(percent)) percent = 0;
-			Highscore.saveScore(SONG.song, songScore, storyDifficulty, percent);
+			Highscore.saveScore(SONG.song, DynamicValues.songScore, storyDifficulty, percent);
 			#end
 		}
 
 		if (isStoryMode)
 		{
-			campaignScore += songScore;
-			campaignMisses += songMisses;
+			campaignScore += DynamicValues.songScore;
+			campaignMisses += DynamicValues.songMisses;
 
 			storyPlaylist.remove(storyPlaylist[0]);
 
@@ -2766,8 +2761,8 @@ class PlayState extends MusicBeatState
 		}
 
 		if(!practiceMode && !cpuControlled) {
-			songScore += score;
-			songHits++;
+			DynamicValues.songScore += score;
+			DynamicValues.songHits++;
 			RecalculateRating();
 			if(scoreTxtTween != null) {
 				scoreTxtTween.cancel();
@@ -3005,7 +3000,7 @@ class PlayState extends MusicBeatState
 		});
 
 		health -= 0.04;
-		songMisses++;
+		DynamicValues.songMisses++;
 		vocals.volume = 0;
 		if(DynamicValues.combo > DynamicValues.highestCombo)
 			DynamicValues.highestCombo = DynamicValues.combo;
@@ -3046,10 +3041,10 @@ class PlayState extends MusicBeatState
 				DynamicValues.highestCombo = DynamicValues.combo;
 			DynamicValues.combo = 0;
 
-			if(!practiceMode) songScore -= 10;
+			if(!practiceMode) DynamicValues.songScore -= 10;
 			if(!endingSong) {
-				if(ghostMiss) ghostMisses++;
-				songMisses++;
+				if(ghostMiss) DynamicValues.ghostMisses++;
+				DynamicValues.songMisses++;
 			}
 			RecalculateRating();
 
@@ -3162,7 +3157,7 @@ class PlayState extends MusicBeatState
 					noteMiss(note);
 					if(!endingSong)
 					{
-						--songMisses;
+						--DynamicValues.songMisses;
 						RecalculateRating();
 						if(!note.isSustainNote) {
 							health -= 0.26; //0.26 + 0.04 = -0.3 (-15%) of HP if you hit a hurt note
@@ -3635,13 +3630,13 @@ class PlayState extends MusicBeatState
 	public var ratingString:String;
 	public var ratingPercent:Float;
 	public function RecalculateRating() {
-		setOnLuas('score', songScore);
-		setOnLuas('misses', songMisses);
-		setOnLuas('hits', songHits);
+		setOnLuas('score', DynamicValues.songScore);
+		setOnLuas('misses', DynamicValues.songMisses);
+		setOnLuas('hits', DynamicValues.songHits);
 
 		var ret:Dynamic = callOnLuas('onRecalculateRating', []);
 		if(ret != FunkinLua.Function_Stop) {
-			ratingPercent = songScore / ((songHits + songMisses) * 350);
+			ratingPercent = DynamicValues.songScore / ((DynamicValues.songHits + DynamicValues.songMisses) * 350);
 			if(!Math.isNaN(ratingPercent) && ratingPercent < 0) ratingPercent = 0;
 
 			if(Math.isNaN(ratingPercent)) {
@@ -3669,7 +3664,7 @@ class PlayState extends MusicBeatState
 			if(!Achievements.achievementsUnlocked[arrayIDs[i]][1]) {
 				switch(arrayIDs[i]) {
 					case 1 | 2 | 3 | 4 | 5 | 6 | 7:
-						if(isStoryMode && campaignMisses + songMisses < 1 && CoolUtil.difficultyString() == 'Hard' &&
+						if(isStoryMode && campaignMisses + DynamicValues.songMisses < 1 && CoolUtil.difficultyString() == 'Hard' &&
 						storyPlaylist.length <= 1 && WeekData.getCurrentWeekNumber() == arrayIDs[i] && !changedDifficulty && !usedPractice) {
 							Achievements.unlockAchievement(arrayIDs[i]);
 							return arrayIDs[i];

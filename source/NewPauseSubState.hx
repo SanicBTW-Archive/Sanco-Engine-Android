@@ -24,21 +24,27 @@ class NewPauseSubState extends MusicBeatSubstate
 	var pauseMusic:FlxSound;
 	var practiceText:FlxText;
 	var botplayText:FlxText;
+	var levelInfo:FlxText;
+	var levelDifficulty:FlxText;
+	var blueballedTxt:FlxText;
 
     public function new(x:Float, y:Float)
     {
         super();
 
+		/*
         for (i in 0...CoolUtil.difficultyStuff.length) {
 			var diff:String = '' + CoolUtil.difficultyStuff[i][0];
 			difficultyChoices.push(diff);
 		}
-		difficultyChoices.push('BACK');
+		difficultyChoices.push('BACK');*/
 
+		//music
         pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
 		pauseMusic.volume = 0;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 
+		//#region background stuff and menu options
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
 		bg.scrollFactor.set();
@@ -60,9 +66,25 @@ class NewPauseSubState extends MusicBeatSubstate
 		StatsBG.alpha = 0;
 		StatsBG.scrollFactor.set();
 		add(StatsBG);
+		//#endregion
 
-		var blueballedTxt:FlxText = new FlxText(StatsBG.x + 10, StatsBG.y - 50, 0, "", 32);
-		blueballedTxt.text = "Blueballed: " + PlayState.deathCounter;
+		//#region stats and info stuff
+		levelInfo = new FlxText(StatsBG.x + 10, StatsBG.y - 50, 0, "", 32);
+		levelInfo.text += PlayState.displaySongName; //change it to the dynamic values class
+		levelInfo.scrollFactor.set();
+		levelInfo.setFormat(Paths.font("vcr.ttf"), 32);
+		levelInfo.updateHitbox();
+		add(levelInfo);
+
+		levelDifficulty = new FlxText(StatsBG.x + 10, StatsBG.y - 50, 0, "", 32);
+		levelDifficulty.text += CoolUtil.difficultyString();
+		levelDifficulty.scrollFactor.set();
+		levelDifficulty.setFormat(Paths.font('vcr.ttf'), 32);
+		levelDifficulty.updateHitbox();
+		add(levelDifficulty);
+
+		blueballedTxt = new FlxText(StatsBG.x + 10, StatsBG.y - 50, 0, "", 32);
+		blueballedTxt.text = "Blueballed: " + DynamicValues.deathCounter;
 		blueballedTxt.scrollFactor.set();
 		blueballedTxt.setFormat(Paths.font('vcr.ttf'), 32);
 		blueballedTxt.updateHitbox();
@@ -70,7 +92,10 @@ class NewPauseSubState extends MusicBeatSubstate
 
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 		FlxTween.tween(StatsBG, {alpha: 0.8}, 0.4, {ease: FlxEase.quartInOut});
-		FlxTween.tween(blueballedTxt, {alpha: 1, y: blueballedTxt.y + 50}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
+		FlxTween.tween(levelInfo, {alpha: 1, y: levelInfo.y + 55}, 0.4, {ease: FlxEase.quartInOut});
+		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 85}, 0.4, {ease: FlxEase.quartInOut});
+		FlxTween.tween(blueballedTxt, {alpha: 1, y: blueballedTxt.y + 115}, 0.4, {ease: FlxEase.quartInOut});
+		//#endregion
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
@@ -81,6 +106,9 @@ class NewPauseSubState extends MusicBeatSubstate
 
 	override function update(elapsed:Float)
 	{
+		if(FlxG.keys.justPressed.H){
+			//for debugging and shit
+		}
 		if (pauseMusic.volume < 0.5)
 			pauseMusic.volume += 0.01 * elapsed;
 
@@ -144,7 +172,7 @@ class NewPauseSubState extends MusicBeatSubstate
 					botplayText.visible = PlayState.cpuControlled;
 				case "Exit to menu":
 					pauseMusic.destroy();
-					PlayState.deathCounter = 0;
+					DynamicValues.deathCounter = 0;
 					PlayState.seenCutscene = false;
 					if(PlayState.isStoryMode) {
 						MusicBeatState.switchState(new StoryMenuState());
@@ -180,7 +208,7 @@ class NewPauseSubState extends MusicBeatSubstate
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			item.alpha = 0.6;
+			item.alpha = 0.5;
 
 			if (item.targetY == 0)
 			{

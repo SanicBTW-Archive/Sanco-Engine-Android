@@ -79,7 +79,7 @@ class NewOptionsState extends MusicBeatState
 
         for(i in 0...avOptions.length)
         {
-            var avOptText:Alphabet = new Alphabet(0,(70 * i) + 30, avOptions[i], false, false);
+            var avOptText:Alphabet = new Alphabet(0,(70 * i) + 30, avOptions[i], true, false, 0.05, 0.9);
             avOptText.isMenuItem = true;
             avOptText.targetY = i;
             avOptText.forceX = 0;

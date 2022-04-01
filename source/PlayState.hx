@@ -135,6 +135,7 @@ class PlayState extends MusicBeatState
 	private var timeBarBG:FlxSprite;
 	private var timeBar:FlxBar;
 
+	//still pending to move these to dynamic values
 	private var generatedMusic:Bool = false;
 	private var endingSong:Bool = false;
 	private var startingSong:Bool = false;
@@ -185,7 +186,7 @@ class PlayState extends MusicBeatState
 	var bgGirls:BackgroundGirls;
 	var wiggleShit:WiggleEffect = new WiggleEffect();
 	var bgGhouls:BGSprite;
-	
+
 	public var scoreTxt:FlxText;
 	var timeTxt:FlxText;
 	var scoreTxtTween:FlxTween;

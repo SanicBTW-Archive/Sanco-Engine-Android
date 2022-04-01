@@ -27,6 +27,11 @@ class NewPauseSubState extends MusicBeatSubstate
 	var levelInfo:FlxText;
 	var levelDifficulty:FlxText;
 	var blueballedTxt:FlxText;
+	//only shown if hide hud is true
+	var scoreTxt:FlxText;
+	var missesTxt:FlxText;
+	var comboTxt:FlxText;
+	var highestComboTxt:FlxText;
 
     public function new(x:Float, y:Float)
     {
@@ -62,39 +67,83 @@ class NewPauseSubState extends MusicBeatSubstate
 			grpMenuShit.add(songText);
 		}
 
-		var StatsBG:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 120, FlxColor.BLACK);
+		var StatsBG:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 145, FlxColor.BLACK);
 		StatsBG.alpha = 0;
 		StatsBG.scrollFactor.set();
 		add(StatsBG);
 		//#endregion
 
+		var columnOne = StatsBG.x + 10;
+		var columnTwo = StatsBG.x + 300;
+
 		//#region stats and info stuff
-		levelInfo = new FlxText(StatsBG.x + 10, StatsBG.y - 50, 0, "", 32);
+		//column 1
+		levelInfo = new FlxText(columnOne, StatsBG.y - 50, 0, "", 32);
 		levelInfo.text += PlayState.displaySongName; //change it to the dynamic values class
 		levelInfo.scrollFactor.set();
 		levelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		levelInfo.updateHitbox();
 		add(levelInfo);
 
-		levelDifficulty = new FlxText(StatsBG.x + 10, StatsBG.y - 50, 0, "", 32);
+		levelDifficulty = new FlxText(columnOne, StatsBG.y - 50, 0, "", 32);
 		levelDifficulty.text += CoolUtil.difficultyString();
 		levelDifficulty.scrollFactor.set();
 		levelDifficulty.setFormat(Paths.font('vcr.ttf'), 32);
 		levelDifficulty.updateHitbox();
 		add(levelDifficulty);
 
-		blueballedTxt = new FlxText(StatsBG.x + 10, StatsBG.y - 50, 0, "", 32);
+		blueballedTxt = new FlxText(columnOne, StatsBG.y - 50, 0, "", 32);
 		blueballedTxt.text = "Blueballed: " + DynamicValues.deathCounter;
 		blueballedTxt.scrollFactor.set();
 		blueballedTxt.setFormat(Paths.font('vcr.ttf'), 32);
 		blueballedTxt.updateHitbox();
 		add(blueballedTxt);
 
+		scoreTxt = new FlxText(columnOne, StatsBG.y - 50, 0, "", 32);
+		scoreTxt.text = "Score: " + DynamicValues.songScore;
+		scoreTxt.scrollFactor.set();
+		scoreTxt.setFormat(Paths.font('vcr.ttf'), 32);
+		scoreTxt.updateHitbox();
+		scoreTxt.visible = ClientPrefs.hideHud;
+		add(scoreTxt);
+
+		//column 2
+		comboTxt = new FlxText(columnTwo, StatsBG.y - 50, 0, "", 32);
+		comboTxt.text = "Combo: " + DynamicValues.combo;
+		comboTxt.scrollFactor.set();
+		comboTxt.setFormat(Paths.font('vcr.ttf'), 32);
+		comboTxt.updateHitbox();
+		comboTxt.visible = ClientPrefs.hideHud;
+		add(comboTxt);
+
+		highestComboTxt = new FlxText(columnTwo, StatsBG.y - 50, 0, "", 32);
+		highestComboTxt.text = "Highest Combo: " + DynamicValues.highestCombo;
+		highestComboTxt.scrollFactor.set();
+		highestComboTxt.setFormat(Paths.font('vcr.ttf'), 32);
+		highestComboTxt.updateHitbox();
+		highestComboTxt.visible = ClientPrefs.hideHud;
+		add(highestComboTxt);
+
+		missesTxt = new FlxText(columnTwo, StatsBG.y - 50, 0, "", 32);
+		missesTxt.text = "Misses: " + DynamicValues.songMisses;
+		missesTxt.scrollFactor.set();
+		missesTxt.setFormat(Paths.font('vcr.ttf'), 32);
+		missesTxt.updateHitbox();
+		missesTxt.visible = ClientPrefs.hideHud;
+		add(missesTxt);
+
+		//bg
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 		FlxTween.tween(StatsBG, {alpha: 0.8}, 0.4, {ease: FlxEase.quartInOut});
-		FlxTween.tween(levelInfo, {alpha: 1, y: levelInfo.y + 55}, 0.4, {ease: FlxEase.quartInOut});
-		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 85}, 0.4, {ease: FlxEase.quartInOut});
-		FlxTween.tween(blueballedTxt, {alpha: 1, y: blueballedTxt.y + 115}, 0.4, {ease: FlxEase.quartInOut});
+		//column one
+		FlxTween.tween(levelInfo, {alpha: 1, y: rowCalc(1, levelInfo.y)}, 0.4, {ease: FlxEase.quartInOut});
+		FlxTween.tween(levelDifficulty, {alpha: 1, y:  rowCalc(2, levelDifficulty.y)}, 0.4, {ease: FlxEase.quartInOut});
+		FlxTween.tween(blueballedTxt, {alpha: 1, y: rowCalc(3, blueballedTxt.y)}, 0.4, {ease: FlxEase.quartInOut});
+		FlxTween.tween(scoreTxt, {alpha: 1, y: rowCalc(4, scoreTxt.y)}, 0.4, {ease: FlxEase.quartInOut});
+		//column two
+		FlxTween.tween(comboTxt, {alpha: 1, y:  rowCalc(1, comboTxt.y)}, 0.4, {ease: FlxEase.quartInOut});
+		FlxTween.tween(highestComboTxt, {alpha: 1, y:  rowCalc(2, highestComboTxt.y)}, 0.4, {ease: FlxEase.quartInOut});
+		FlxTween.tween(missesTxt, {alpha: 1, y: rowCalc(3, missesTxt.y)}, 0.4, {ease: FlxEase.quartInOut});
 		//#endregion
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
@@ -130,63 +179,7 @@ class NewPauseSubState extends MusicBeatSubstate
 		if (accepted)
 		{
 			var daSelected:String = menuItems[curSelected];
-			for (i in 0...difficultyChoices.length-1) {
-				if(difficultyChoices[i] == daSelected) {
-					var name:String = PlayState.SONG.song.toLowerCase();
-					var poop = Highscore.formatSong(name, curSelected);
-					PlayState.SONG = Song.loadFromJson(poop, name);
-					PlayState.storyDifficulty = curSelected;
-					MusicBeatState.resetState();
-					FlxG.sound.music.volume = 0;
-					PlayState.changedDifficulty = true;
-					PlayState.cpuControlled = false;
-					return;
-				}
-			}
-
-			switch (daSelected)
-			{
-				case "Resume":
-					pauseMusic.destroy();
-					close();
-				case 'Change Difficulty':
-					menuItems = difficultyChoices;
-					regenMenu();
-				case 'Toggle Practice Mode':
-					PlayState.practiceMode = !PlayState.practiceMode;
-					PlayState.usedPractice = true;
-					practiceText.visible = PlayState.practiceMode;
-				case "Restart Song":
-					pauseMusic.destroy();
-					MusicBeatState.resetState();
-					FlxG.sound.music.volume = 0;
-				case "Chart editor":
-					FlxG.switchState(new ChartingState());
-				case "Character editor":
-					FlxG.switchState(new CharacterEditorState());
-				/*case "Change Control":
-					FlxG.switchState(new options.PauseControlsState());*/
-				case 'Botplay':
-					PlayState.cpuControlled = !PlayState.cpuControlled;
-					PlayState.usedPractice = true;
-					botplayText.visible = PlayState.cpuControlled;
-				case "Exit to menu":
-					pauseMusic.destroy();
-					DynamicValues.deathCounter = 0;
-					PlayState.seenCutscene = false;
-					if(PlayState.isStoryMode) {
-						MusicBeatState.switchState(new StoryMenuState());
-					} else {
-						MusicBeatState.switchState(new FreeplayState());
-					}
-					FlxG.sound.playMusic(Paths.music('freakyMenu'));
-					PlayState.usedPractice = false;
-					PlayState.changedDifficulty = false;
-					PlayState.cpuControlled = false;
-
-				case 'BACK':
-					regenMenu();
-			}
+			selectHandler(daSelected);
 		}
 	}
 
@@ -229,5 +222,84 @@ class NewPauseSubState extends MusicBeatSubstate
 		}
 		curSelected = 0;
 		changeSelection();
+	}
+
+	function selectHandler(selected:String)
+	{
+		/* will rework this for a different substate
+		for (i in 0...difficultyChoices.length-1) {
+			if(difficultyChoices[i] == selected) {
+				var name:String = PlayState.SONG.song.toLowerCase();
+				var poop = Highscore.formatSong(name, curSelected);
+				PlayState.SONG = Song.loadFromJson(poop, name);
+				PlayState.storyDifficulty = curSelected;
+				MusicBeatState.resetState();
+				FlxG.sound.music.volume = 0;
+				PlayState.changedDifficulty = true;
+				PlayState.cpuControlled = false;
+				return;
+			}
+		}*/
+
+		switch (selected)
+		{
+			case "Resume":
+				pauseMusic.destroy();
+				close();
+			case 'Change Difficulty':
+				menuItems = difficultyChoices;
+				regenMenu();
+			case 'Toggle Practice Mode':
+				PlayState.practiceMode = !PlayState.practiceMode;
+				PlayState.usedPractice = true;
+				practiceText.visible = PlayState.practiceMode;
+			case "Restart Song":
+				pauseMusic.destroy();
+				MusicBeatState.resetState();
+				FlxG.sound.music.volume = 0;
+			case "Chart editor":
+				FlxG.switchState(new ChartingState());
+			case "Character editor":
+				FlxG.switchState(new CharacterEditorState());
+			/*case "Change Control":
+				FlxG.switchState(new options.PauseControlsState());*/
+			case 'Botplay':
+				PlayState.cpuControlled = !PlayState.cpuControlled;
+				PlayState.usedPractice = true;
+				botplayText.visible = PlayState.cpuControlled;
+			case "Exit to menu":
+				pauseMusic.destroy();
+				DynamicValues.deathCounter = 0;
+				PlayState.seenCutscene = false;
+				if(PlayState.isStoryMode) {
+					MusicBeatState.switchState(new StoryMenuState());
+				} else {
+					MusicBeatState.switchState(new FreeplayState());
+				}
+				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+				PlayState.usedPractice = false;
+				PlayState.changedDifficulty = false;
+				PlayState.cpuControlled = false;
+
+			case 'BACK':
+				regenMenu();
+		}
+	}
+
+	function rowCalc(rowNum:Int, addTo:Dynamic):Int
+	{
+		var row:Int = 0;
+		switch(rowNum)
+		{
+			case 1:
+				row = addTo + 55;
+			case 2:
+				row = addTo + 85;
+			case 3:
+				row = addTo + 115;
+			case 4:
+				row = addTo + 145;
+		}
+		return row;
 	}
 }

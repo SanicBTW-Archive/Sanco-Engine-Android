@@ -1,3 +1,4 @@
+//the options and states are heavily based off the new options state code lol
 package;
 
 import Controls.Control;
@@ -18,9 +19,10 @@ class NewPauseSubState extends MusicBeatSubstate
     var grpMenuShit:FlxTypedGroup<Alphabet>;
 
 	var menuItems:Array<String> = [];
-	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Chart editor', 'Character editor', 'Change Difficulty', 'Toggle Practice Mode', 'Botplay', 'Settings', 'Exit to menu'];
+	//var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Chart editor', 'Character editor', 'Change Difficulty', 'Toggle Practice Mode', 'Botplay', 'Settings', 'Exit to menu'];
+	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Settings', 'Exit to menu'];
 	var difficultyChoices = [];
-	var changeableSettings = ['Use Hit Sounds', 'Back'];
+	var changeableSettings = ['Use Hit Sounds', 'Fullscreen', 'Back'];
 	var curSelected:Int = 0;
 	var curStateSelc:Int = 0;
 	var curOptionState:FlxText;
@@ -37,6 +39,7 @@ class NewPauseSubState extends MusicBeatSubstate
 	var missesTxt:FlxText;
 	var comboTxt:FlxText;
 	var highestComboTxt:FlxText;
+	var onSettings:Bool = false;
 
     public function new(x:Float, y:Float)
     {
@@ -154,6 +157,7 @@ class NewPauseSubState extends MusicBeatSubstate
 		curOptionState = new FlxText(FlxG.width * 0.7, 5, 0, "dulce te quiero", 32);
         curOptionState.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
         curOptionState.scrollFactor.set();
+		curOptionState.visible = false;
 
 		add(curOptionState);
 
@@ -189,11 +193,11 @@ class NewPauseSubState extends MusicBeatSubstate
 			changeSelection(1);
 		}
 
-		if(leftP)
+		if(leftP && onSettings)
 		{
 			settingsHandler(-1);
 		}
-		if(rightP)
+		if(rightP && onSettings)
 		{
 			settingsHandler(1);
 		}
@@ -211,7 +215,7 @@ class NewPauseSubState extends MusicBeatSubstate
 		
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 
-		scroll(menuItems, HORIZONTAL);
+		scroll(menuItems, VERTICAL);
 
 		var bullShit:Int = 0;
 
@@ -265,25 +269,14 @@ class NewPauseSubState extends MusicBeatSubstate
 			case "Resume":
 				pauseMusic.destroy();
 				close();
-			case 'Change Difficulty':
-				menuItems = difficultyChoices;
-				regenMenu();
-			case 'Toggle Practice Mode':
-				PlayState.practiceMode = !PlayState.practiceMode;
-				PlayState.usedPractice = true;
-				practiceText.visible = PlayState.practiceMode;
 			case "Restart Song":
 				pauseMusic.destroy();
 				MusicBeatState.resetState();
 				FlxG.sound.music.volume = 0;
-			case "Chart editor":
-				FlxG.switchState(new ChartingState());
-			case "Character editor":
-				FlxG.switchState(new CharacterEditorState());
-			case 'Botplay':
-				PlayState.cpuControlled = !PlayState.cpuControlled;
-				PlayState.usedPractice = true;
-				botplayText.visible = PlayState.cpuControlled;
+			case 'Settings':
+				curOptionState.visible = true;
+				menuItems = changeableSettings;
+				regenMenu();
 			case "Exit to menu":
 				pauseMusic.destroy();
 				DynamicValues.deathCounter = 0;
@@ -297,11 +290,26 @@ class NewPauseSubState extends MusicBeatSubstate
 				PlayState.usedPractice = false;
 				PlayState.changedDifficulty = false;
 				PlayState.cpuControlled = false;
-			case 'Back':
-				menuItems = menuItemsOG;
+			/* will move this to the new settings
+			case 'Change Difficulty':
+				menuItems = difficultyChoices;
 				regenMenu();
-			case 'Settings':
-				menuItems = changeableSettings;
+			case 'Toggle Practice Mode':
+				PlayState.practiceMode = !PlayState.practiceMode;
+				PlayState.usedPractice = true;
+				practiceText.visible = PlayState.practiceMode;
+			case 'Botplay':
+				PlayState.cpuControlled = !PlayState.cpuControlled;
+				PlayState.usedPractice = true;
+				botplayText.visible = PlayState.cpuControlled;
+			case "Chart editor":
+				FlxG.switchState(new ChartingState());
+			case "Character editor":
+				FlxG.switchState(new CharacterEditorState());
+			*/
+			case 'Back':
+				curOptionState.visible = false;
+				menuItems = menuItemsOG;
 				regenMenu();
 		}
 	}
@@ -339,10 +347,9 @@ class NewPauseSubState extends MusicBeatSubstate
                 states = addOptState([true, false]);
         }
         scroll(states, HORIZONTAL);
-        //save(states[curStateSelc]);
+        save(states[curStateSelc]);
 	}
 
-	//taken from new option state
 	function scroll(array:Array<Dynamic>, scrolltype:options.NewOptionsState.ScrollType)
     {
         switch(scrolltype)
@@ -360,7 +367,7 @@ class NewPauseSubState extends MusicBeatSubstate
                     curSelected = 0;
 
         }
-        curOptionState.text = "hola";//returnOptionStr();
+        curOptionState.text = returnOptionStr();
     }
 
 	function addOptState(optStates:Array<Dynamic>):Array<Dynamic>
@@ -371,5 +378,46 @@ class NewPauseSubState extends MusicBeatSubstate
             optionStates.push(optStates[i]);
         }
         return optionStates;
+    }
+
+	function returnOptionStr():String
+    {
+        var current:String = "";
+        var option:String = changeableSettings[curSelected];
+        switch(option)
+        {
+			case 'Fullscreen':
+				current = returnfunnyBool(FlxG.fullscreen);
+            case "Use Hit Sounds":
+                current = returnfunnyBool(ClientPrefs.useHitSounds);
+        }
+        return current;
+    }
+
+	function save(newState:Dynamic)
+    {
+        var option:String = changeableSettings[curSelected];
+
+        switch(option)
+        {
+			case 'Fullscreen':
+				FlxG.fullscreen = newState;
+            case "Use Hit Sounds":
+                ClientPrefs.useHitSounds = newState;
+        }
+        curOptionState.text = returnOptionStr();
+    }
+
+	function returnfunnyBool(condtion:Bool):String
+    {
+        var current:String = "";
+        switch(condtion)
+        {
+            case true:
+                current = "true";
+            case false:
+                current = "false";
+        }
+        return current;
     }
 }

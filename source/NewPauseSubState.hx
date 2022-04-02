@@ -274,6 +274,7 @@ class NewPauseSubState extends MusicBeatSubstate
 				MusicBeatState.resetState();
 				FlxG.sound.music.volume = 0;
 			case 'Settings':
+				onSettings = true;
 				curOptionState.visible = true;
 				menuItems = changeableSettings;
 				regenMenu();
@@ -308,6 +309,7 @@ class NewPauseSubState extends MusicBeatSubstate
 				FlxG.switchState(new CharacterEditorState());
 			*/
 			case 'Back':
+				onSettings = false;
 				curOptionState.visible = false;
 				menuItems = menuItemsOG;
 				regenMenu();

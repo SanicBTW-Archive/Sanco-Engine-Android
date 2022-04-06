@@ -101,14 +101,14 @@ class NewPauseSubState extends MusicBeatSubstate
 		add(levelDifficulty);
 
 		blueballedTxt = new FlxText(columnOne, StatsBG.y - 50, 0, "", 32);
-		blueballedTxt.text = "Blueballed: " + DynamicValues.deathCounter;
+		blueballedTxt.text = "Blueballed: " + PlayState.deathCounter;
 		blueballedTxt.scrollFactor.set();
 		blueballedTxt.setFormat(Paths.font('vcr.ttf'), 32);
 		blueballedTxt.updateHitbox();
 		add(blueballedTxt);
 
 		scoreTxt = new FlxText(columnOne, StatsBG.y - 50, 0, "", 32);
-		scoreTxt.text = "Score: " + DynamicValues.songScore;
+		scoreTxt.text = "Score: " + PlayState.songScore;
 		scoreTxt.scrollFactor.set();
 		scoreTxt.setFormat(Paths.font('vcr.ttf'), 32);
 		scoreTxt.updateHitbox();
@@ -117,7 +117,7 @@ class NewPauseSubState extends MusicBeatSubstate
 
 		//column 2
 		comboTxt = new FlxText(columnTwo, StatsBG.y - 50, 0, "", 32);
-		comboTxt.text = "Combo: " + DynamicValues.combo;
+		comboTxt.text = "Combo: " + PlayState.combo;
 		comboTxt.scrollFactor.set();
 		comboTxt.setFormat(Paths.font('vcr.ttf'), 32);
 		comboTxt.updateHitbox();
@@ -125,7 +125,7 @@ class NewPauseSubState extends MusicBeatSubstate
 		add(comboTxt);
 
 		highestComboTxt = new FlxText(columnTwo, StatsBG.y - 50, 0, "", 32);
-		highestComboTxt.text = "Highest Combo: " + DynamicValues.highestCombo;
+		highestComboTxt.text = "Highest Combo: " + PlayState.highestCombo;
 		highestComboTxt.scrollFactor.set();
 		highestComboTxt.setFormat(Paths.font('vcr.ttf'), 32);
 		highestComboTxt.updateHitbox();
@@ -133,7 +133,7 @@ class NewPauseSubState extends MusicBeatSubstate
 		add(highestComboTxt);
 
 		missesTxt = new FlxText(columnTwo, StatsBG.y - 50, 0, "", 32);
-		missesTxt.text = "Misses: " + DynamicValues.songMisses;
+		missesTxt.text = "Misses: " + PlayState.songMisses;
 		missesTxt.scrollFactor.set();
 		missesTxt.setFormat(Paths.font('vcr.ttf'), 32);
 		missesTxt.updateHitbox();
@@ -267,10 +267,8 @@ class NewPauseSubState extends MusicBeatSubstate
 		switch (selected)
 		{
 			case "Resume":
-				pauseMusic.destroy();
 				close();
 			case "Restart Song":
-				pauseMusic.destroy();
 				MusicBeatState.resetState();
 				FlxG.sound.music.volume = 0;
 			case 'Settings':
@@ -279,8 +277,7 @@ class NewPauseSubState extends MusicBeatSubstate
 				menuItems = changeableSettings;
 				regenMenu();
 			case "Exit to menu":
-				pauseMusic.destroy();
-				DynamicValues.deathCounter = 0;
+				PlayState.deathCounter = 0;
 				PlayState.seenCutscene = false;
 				if(PlayState.isStoryMode) {
 					MusicBeatState.switchState(new StoryMenuState());
@@ -422,4 +419,11 @@ class NewPauseSubState extends MusicBeatSubstate
         }
         return current;
     }
+
+	override function destroy()
+	{
+		pauseMusic.destroy();
+	
+		super.destroy();
+	}
 }

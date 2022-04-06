@@ -63,7 +63,7 @@ class PauseSubState extends MusicBeatSubstate
 		add(levelDifficulty);
 
 		var blueballedTxt:FlxText = new FlxText(20, 15 + 64, 0, "", 32);
-		blueballedTxt.text = "Blueballed: " + DynamicValues.deathCounter;
+		blueballedTxt.text = "Blueballed: " + PlayState.deathCounter;
 		blueballedTxt.scrollFactor.set();
 		blueballedTxt.setFormat(Paths.font('vcr.ttf'), 32);
 		blueballedTxt.updateHitbox();
@@ -180,7 +180,7 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.usedPractice = true;
 					botplayText.visible = PlayState.cpuControlled;
 				case "Exit to menu":
-					DynamicValues.deathCounter = 0;
+					PlayState.deathCounter = 0;
 					PlayState.seenCutscene = false;
 					if(PlayState.isStoryMode) {
 						MusicBeatState.switchState(new StoryMenuState());

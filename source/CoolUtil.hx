@@ -34,10 +34,11 @@ class CoolUtil
 
 	public static function coolTextFile(path:String):Array<String>
 	{
+		var daList:Array<String> = [];
 		#if (sys && !android)
-		var daList:Array<String> = File.getContent(path).trim().split('\n');
+		daList = File.getContent(path).trim().split('\n');
 		#else
-		var daList:Array<String> = Assets.getText(path).trim().split('\n');
+		daList = Assets.getText(path).trim().split('\n');
 		#end
 
 		for (i in 0...daList.length)

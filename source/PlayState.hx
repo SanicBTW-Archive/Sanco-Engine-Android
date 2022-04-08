@@ -235,6 +235,7 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
+		resetStats();
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
@@ -3733,4 +3734,14 @@ class PlayState extends MusicBeatState
 
 	var curLight:Int = 0;
 	var curLightEvent:Int = 0;
+
+	function resetStats()
+	{
+		trace("resetting stats");
+		combo = 0;
+		songScore = 0;
+		songHits = 0;
+		songMisses = 0;
+		highestCombo = 0;
+	}
 }

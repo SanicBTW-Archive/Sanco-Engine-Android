@@ -4,12 +4,14 @@ import OptionsState.NotesSubstate;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSound;
 import haxe.io.Path;
-import sys.FileSystem;
 import flixel.util.FlxColor;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.FlxSprite;
 import flixel.FlxG;
+#if sys
+import sys.FileSystem;
+#end
 
 class HitSoundState extends MusicBeatState
 {
@@ -21,12 +23,12 @@ class HitSoundState extends MusicBeatState
     var curSelected:Int = 0;
     var CheckText:FlxText;
     var leText:String = "Current hit sound: " + ClientPrefs.currentHitSound;
-
     override function create()
     {
         CheckText = new FlxText(FlxG.width * 0.7, 5, 0, "i dont know", 32);
         CheckText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 
+        #if sys
         if(FileSystem.exists(StorageVariables.HSLFPath)){
             var initHitSoundsList = CoolUtil.coolTextFile(StorageVariables.HSLFPath);
             for(i in 0...initHitSoundsList.length){
@@ -44,10 +46,8 @@ class HitSoundState extends MusicBeatState
                 }
                 trace(avHitSP[i]);
             }
-        } else if (!FileSystem.exists(StorageVariables.HSLFPath)){
-            //useless
-            leText = "No hit sounds were found maybe the necessary file isn't existing, check your internal storage and check the help file";
         }
+        #end
 
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		add(bg);
@@ -104,11 +104,15 @@ class HitSoundState extends MusicBeatState
 
         if(controls.ACCEPT)
         {
-            ClientPrefs.currentHitSound = avHitS[curSelected];
-            ClientPrefs.hitSoundPath = avHitSP[curSelected];
-            FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7);
-            ClientPrefs.saveSettings();
-            MusicBeatState.switchState(new NewOptionsState());
+            if(checkArr[curSelected] == "Check the directory" && avHitS[curSelected] == "osumania"){
+                CoolUtil.browserLoad("https://github.com/SanicBTW/Sanco-Engine-Android/releases/download/v0.1/osumania.ogg");
+            } else {
+                ClientPrefs.currentHitSound = avHitS[curSelected];
+                ClientPrefs.hitSoundPath = avHitSP[curSelected];
+                FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7);
+                ClientPrefs.saveSettings();
+                MusicBeatState.switchState(new NewOptionsState());
+            }
         }
 
         super.update(elapsed);
@@ -145,14 +149,6 @@ class HitSoundState extends MusicBeatState
 
     function play()
     {
-        //var jaja = FlxG.sound.load(null, 1000, true, null, false, false, avHitSP[curSelected], () -> {trace("completed");}, () -> {trace("loaded");});
         FlxG.sound.stream(avHitSP[curSelected], 1000, true, null, false);
-        //FlxG.sound.list.add(jaja);
-        //jaja.play();
-        /*
-        var help:FlxSound;
-        help = new FlxSound().loadStream(avHitSP[curSelected], true, false, () -> {trace("help");}, () -> {trace("loaded");});
-        FlxG.sound.list.add(help);
-        help.play();*/
     }
 }

@@ -407,27 +407,27 @@ class FunkinLua {
 		
 		//stupid bietch ass functions
 		Lua_helper.add_callback(lua, "addScore", function(value:Int = 0) {
-			lePlayState.songScore += value;
+			DynamicValues.songScore += value;
 			lePlayState.RecalculateRating();
 		});
 		Lua_helper.add_callback(lua, "addMisses", function(value:Int = 0) {
-			lePlayState.songMisses += value;
+			DynamicValues.songMisses += value;
 			lePlayState.RecalculateRating();
 		});
 		Lua_helper.add_callback(lua, "addHits", function(value:Int = 0) {
-			lePlayState.songHits += value;
+			DynamicValues.songHits += value;
 			lePlayState.RecalculateRating();
 		});
 		Lua_helper.add_callback(lua, "setScore", function(value:Int = 0) {
-			lePlayState.songScore = value;
+			DynamicValues.songScore = value;
 			lePlayState.RecalculateRating();
 		});
 		Lua_helper.add_callback(lua, "setMisses", function(value:Int = 0) {
-			lePlayState.songMisses = value;
+			DynamicValues.songMisses = value;
 			lePlayState.RecalculateRating();
 		});
 		Lua_helper.add_callback(lua, "setHits", function(value:Int = 0) {
-			lePlayState.songHits = value;
+			DynamicValues.songHits = value;
 			lePlayState.RecalculateRating();
 		});
 		

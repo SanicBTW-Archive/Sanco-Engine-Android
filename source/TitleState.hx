@@ -53,17 +53,19 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
+		//FileSystem features have been disabled for this Release
 		#if android
 		FlxG.android.preventDefaultKeys = [BACK];
 
+		/*
 		if(!Permissions.hasPermission(Permissions.READ_EXTERNAL_STORAGE) && !Permissions.hasPermission(Permissions.WRITE_EXTERNAL_STORAGE)){
 			Permissions.requestPermissions([Permissions.READ_EXTERNAL_STORAGE, Permissions.WRITE_EXTERNAL_STORAGE]);
 			MusicBeatState.resetState();
 		} else {
 			StorageVariables.CheckStuff();
-		}
+		}*/
 	    #elseif sys
-		StorageVariables.CheckStuff();
+		//StorageVariables.CheckStuff();
 		#end
 		
 		FlxG.game.focusLostFramerate = 60;

@@ -43,7 +43,7 @@
 
 	<classpath name="source" />
 
-	<assets path="assets/preload" rename="assets"/>
+	<assets path="assets/preload" rename="assets" exclude="*.mp3"/>
 	<!--
 	<assets path="assets/preload" rename="assets" exclude="*.ogg" if="web"/>
 	<assets path="assets/preload" rename="assets" exclude="*.mp3"  unless="web"/>-->
@@ -82,15 +82,15 @@
 		<library name="week6"         preload="false" />
 	</section>
 	
-	<assets path="assets/songs"			library="songs"/>
-	<assets path="assets/shared"		library="shared"/>
-	<assets path="assets/tutorial"		library="tutorial"/>
-	<assets path="assets/week1"			library="week1"/>
-	<assets path="assets/week2"			library="week2"/>
-	<assets path="assets/week3"			library="week3"/>
-	<assets path="assets/week4"			library="week4"/>
-	<assets path="assets/week5"			library="week5"/>
-	<assets path="assets/week6"			library="week6"/>
+	<assets path="assets/songs"			library="songs" exclude="*.mp3"/>
+	<assets path="assets/shared"		library="shared" exclude="*.mp3"/>
+	<assets path="assets/tutorial"		library="tutorial" exclude="*.mp3"/>
+	<assets path="assets/week1"			library="week1" exclude="*.mp3"/>
+	<assets path="assets/week2"			library="week2" exclude="*.mp3"/>
+	<assets path="assets/week3"			library="week3" exclude="*.mp3"/>
+	<assets path="assets/week4"			library="week4" exclude="*.mp3"/>
+	<assets path="assets/week5"			library="week5" exclude="*.mp3"/>
+	<assets path="assets/week6"			library="week6" exclude="*.mp3"/>
 	<!--
 	<assets path="assets/songs"         library="songs"         exclude="*.ogg" if="web"/>
 	<assets path="assets/songs"         library="songs"         exclude="*.mp3" unless="web"/>

@@ -47,9 +47,10 @@ class NewOptionsState extends MusicBeatState
         #end
     ];
     var engineOptions:Array<String> = [
+        /* still in development, not tested
         #if sys
         "Internal Storage Options", 
-        #end
+        #end*/
         "Use Hit Sounds",
         'Optimization Type',
         'Camera Movement On Note Press'
@@ -392,41 +393,41 @@ class NewOptionsState extends MusicBeatState
         switch(option)
         {
             case "Low Quality":
-                current = returnfunnyBool(ClientPrefs.lowQuality);
+                current = '${ClientPrefs.lowQuality}';
             case "Anti-Aliasing":
-                current = returnfunnyBool(ClientPrefs.globalAntialiasing);
+                current = '${ClientPrefs.globalAntialiasing}';
             case "Persistent Cached Data":
-                current = returnfunnyBool(ClientPrefs.imagesPersist);
+                current = '${ClientPrefs.imagesPersist}';
             case "Framerate":
                 current = '${ClientPrefs.framerate}FPS';
             case "Downscroll":
-                current = returnfunnyBool(ClientPrefs.downScroll);
+                current = '${ClientPrefs.downScroll}';
             case "Middlescroll":
-                current = returnfunnyBool(ClientPrefs.middleScroll);
+                current = '${ClientPrefs.middleScroll}';
             case "Ghost Tapping":
-                current = returnfunnyBool(ClientPrefs.ghostTapping);
+                current = '${ClientPrefs.ghostTapping}';
             case "Note Delay":
                 current = '${ClientPrefs.noteOffset}ms';
             case "Note Splashes":
-                current = returnfunnyBool(ClientPrefs.noteSplashes);
+                current = '${ClientPrefs.noteSplashes}';
             case "Hide HUD":
-                current = returnfunnyBool(ClientPrefs.hideHud);
+                current = '${ClientPrefs.hideHud}';
             case "Hide Song Length":
-                current = returnfunnyBool(ClientPrefs.hideTime);
+                current = '${ClientPrefs.hideTime}';
             case "Flashing Lights":
-                current = returnfunnyBool(ClientPrefs.flashing);
+                current = '${ClientPrefs.flashing}';
             case "Camera Zooms":
-                current = returnfunnyBool(ClientPrefs.camZooms);
+                current = '${ClientPrefs.camZooms}';
             case "FPS Counter":
-                current = returnfunnyBool(ClientPrefs.showFPS);
+                current = '${ClientPrefs.showFPS}';
             case "Fullscreen":
-                current = returnfunnyBool(FlxG.fullscreen);
+                current = '${FlxG.fullscreen}';
             case "Use Hit Sounds":
-                current = returnfunnyBool(ClientPrefs.useHitSounds);
+                current = '${ClientPrefs.useHitSounds}';
             case 'Optimization Type':
                 current = '${ClientPrefs.optimizationType.getName()}';
             case 'Camera Movement On Note Press':
-                current = returnfunnyBool(ClientPrefs.cameraMovOnNotePress);
+                current = '${ClientPrefs.cameraMovOnNotePress}';
         }
         return current;
     }
@@ -465,19 +466,6 @@ class NewOptionsState extends MusicBeatState
         {
             addOption(engineOptions[i], avOptions, ENGINE_OPTIONS, categories);
         }
-    }
-
-    function returnfunnyBool(condtion:Bool):String
-    {
-        var current:String = "";
-        switch(condtion)
-        {
-            case true:
-                current = "true";
-            case false:
-                current = "false";
-        }
-        return current;
     }
     //#endregion
 

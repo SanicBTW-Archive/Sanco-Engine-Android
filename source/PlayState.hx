@@ -1877,6 +1877,9 @@ class PlayState extends MusicBeatState
 			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingString + ' (' + Math.floor(ratingPercent * 100) + '%) | Combo: ' + combo + ' | Highest Combo: ' + highestCombo;
 		}
 
+		if(combo > highestCombo)
+			highestCombo = combo;
+
 		if(cpuControlled) {
 			botplaySine += 180 * elapsed;
 			botplayTxt.alpha = 1 - Math.sin((Math.PI * botplaySine) / 180);
@@ -2838,6 +2841,7 @@ class PlayState extends MusicBeatState
 		var daLoop:Int = 0;
 		for (i in seperatedScore)
 		{
+			/*
 			var numScore:FlxSprite;
 
 			numScore = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
@@ -2870,7 +2874,7 @@ class PlayState extends MusicBeatState
 					numScore.destroy();
 				},
 				startDelay: Conductor.crochet * 0.002
-			});
+			});	*/
 
 			daLoop++;
 		}
@@ -3198,7 +3202,7 @@ class PlayState extends MusicBeatState
 			{
 				popUpScore(note);
 				combo += 1;
-				if(combo > 999) combo = 9999; //will fix it soon, gives an error when reaches 1000
+				//if(combo > 999) combo = 9999; //will fix it soon, gives an error when reaches 1000
 			}
 			health += 0.023; //???? have to check this or something lol
 
@@ -3279,13 +3283,16 @@ class PlayState extends MusicBeatState
 				notes.remove(note, true);
 				note.destroy();
 				//seems to lag in desktop targets
+				if(ClientPrefs.useHitSounds)
+					FlxG.sound.play(Paths.sound("osumania"), 1, false);
+				/* FileSystem features have been disabled for this Release
 				#if (sys && android)
 				if(ClientPrefs.useHitSounds && ClientPrefs.currentHitSound != null && ClientPrefs.hitSoundPath != null)
 					FlxG.sound.stream(ClientPrefs.hitSoundPath, 1, false, null, true);
 				#else
 				if(ClientPrefs.useHitSounds)
 					FlxG.sound.play(Paths.sound("osumania"), 1, false);
-				#end
+				#end*/
 			}
 		}
 	}

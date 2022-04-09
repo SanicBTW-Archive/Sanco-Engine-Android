@@ -29,6 +29,7 @@ class HitSoundState extends MusicBeatState
         CheckText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
 
         #if sys
+        /*
         if(FileSystem.exists(StorageVariables.HSLFPath)){
             var initHitSoundsList = CoolUtil.coolTextFile(StorageVariables.HSLFPath);
             for(i in 0...initHitSoundsList.length){
@@ -46,8 +47,10 @@ class HitSoundState extends MusicBeatState
                 }
                 trace(avHitSP[i]);
             }
-        }
+        }*/
         #end
+
+        avHitS.push("Temporarily disabled :(");
 
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		add(bg);
@@ -106,7 +109,11 @@ class HitSoundState extends MusicBeatState
         {
             if(checkArr[curSelected] == "Check the directory" && avHitS[curSelected] == "osumania"){
                 CoolUtil.browserLoad("https://github.com/SanicBTW/Sanco-Engine-Android/releases/download/v0.1/osumania.ogg");
-            } else {
+            } else if (avHitS[curSelected] == "Temporarily disabled :(") {
+                FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7);
+                MusicBeatState.switchState(new NewOptionsState());
+            }
+            else {
                 ClientPrefs.currentHitSound = avHitS[curSelected];
                 ClientPrefs.hitSoundPath = avHitSP[curSelected];
                 FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7);

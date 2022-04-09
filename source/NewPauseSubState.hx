@@ -28,7 +28,7 @@ class NewPauseSubState extends MusicBeatSubstate
 		'Camera Movement On Note', 
 		'Change Difficulty', 
 		'Practice Mode', 
-		'Botplay',  
+		'Botplay',
 		'Back'];
 	var curSelected:Int = 0;
 	var curStateSelc:Int = 0;
@@ -58,7 +58,7 @@ class NewPauseSubState extends MusicBeatSubstate
 			var diff:String = '' + CoolUtil.difficultyStuff[i][0];
 			difficultyChoices.push(diff);
 		}
-		difficultyChoices.push('Back');
+		difficultyChoices.push('Back 2 Settings');
 
 		//music
         pauseMusic = new FlxSound().loadEmbedded(Paths.music('breakfast'), true, true);
@@ -163,12 +163,27 @@ class NewPauseSubState extends MusicBeatSubstate
 		//#endregion
 
 		curOptionState = new FlxText(0, 5, 0, "dulce te quiero", 32);
-		//curOptionState = new FlxText(0, 350, 0, "dulce te quiero", 32);
         curOptionState.setFormat(Paths.font("vcr.ttf"), 40, FlxColor.WHITE, CENTER);
         curOptionState.scrollFactor.set();
 		curOptionState.visible = false;
 
 		add(curOptionState);
+
+		practiceText = new FlxText(FlxG.width * 0.7, 5, 0, "PRACTICE MODE", 32);
+		practiceText.scrollFactor.set();
+		practiceText.setFormat(Paths.font('vcr.ttf'), 32);
+		practiceText.x = FlxG.width - (practiceText.width + 20);
+		practiceText.updateHitbox();
+		practiceText.visible = PlayState.practiceMode;
+		add(practiceText);
+
+		botplayText = new FlxText(FlxG.width * 0.7, 30, 0, "BOTPLAY", 32);
+		botplayText.scrollFactor.set();
+		botplayText.setFormat(Paths.font('vcr.ttf'), 32);
+		botplayText.x = FlxG.width - (botplayText.width + 20);
+		botplayText.updateHitbox();
+		botplayText.visible = PlayState.cpuControlled;
+		add(botplayText);
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
@@ -214,7 +229,12 @@ class NewPauseSubState extends MusicBeatSubstate
 		if (accepted)
 		{
 			var daSelected:String = menuItems[curSelected];
-			selectHandler(daSelected);
+			//why, idk
+			if(onSettings)
+				optionsSelectHandler(daSelected);
+			else
+				selectHandler(daSelected);
+
 		}
 	}
 
@@ -300,28 +320,16 @@ class NewPauseSubState extends MusicBeatSubstate
 				PlayState.changedDifficulty = false;
 				PlayState.cpuControlled = false;
 			/* will move this to the new settings
-			case 'Change Difficulty':
-				menuItems = difficultyChoices;
-				regenMenu();
-			case 'Toggle Practice Mode':
-				PlayState.practiceMode = !PlayState.practiceMode;
-				PlayState.usedPractice = true;
-				practiceText.visible = PlayState.practiceMode;
-			case 'Botplay':
-				PlayState.cpuControlled = !PlayState.cpuControlled;
-				PlayState.usedPractice = true;
-				botplayText.visible = PlayState.cpuControlled;
 			case "Chart editor":
 				FlxG.switchState(new ChartingState());
 			case "Character editor":
 				FlxG.switchState(new CharacterEditorState());
 			*/
-			case 'Back':
-				//even if its coming from the difficulty menu, its not gonna affect anything, maybe a failsafe might do the thing
-				onSettings = false;
-				curOptionState.visible = false;
-				statsState(true);
-				menuItems = menuItemsOG;
+			case 'Back 2 Settings':
+				onSettings = true;
+				curOptionState.visible = true;
+				statsState(false);
+				menuItems = changeableSettings;
 				regenMenu();
 		}
 	}
@@ -341,25 +349,6 @@ class NewPauseSubState extends MusicBeatSubstate
 				row = addTo + 145;
 		}
 		return row;
-	}
-
-	function settingsHandler(change:Int = 0) 
-	{
-		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
-
-        curStateSelc += change;
-        var option:String = changeableSettings[curSelected];
-        switch(option)
-        {
-            case 'Fullscreen':
-                states = addOptState([true, false]);
-            case 'Use Hit Sounds':
-                states = addOptState([true, false]);
-            case 'Camera Movement On Note Press':
-                states = addOptState([true, false]);
-        }
-        scroll(states, HORIZONTAL);
-        save(states[curStateSelc]);
 	}
 
 	function scroll(array:Array<Dynamic>, scrolltype:options.NewOptionsState.ScrollType)
@@ -392,6 +381,29 @@ class NewPauseSubState extends MusicBeatSubstate
         return optionStates;
     }
 
+	function settingsHandler(change:Int = 0) 
+	{
+		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+
+        curStateSelc += change;
+        var option:String = changeableSettings[curSelected];
+        switch(option)
+        {
+            case 'Fullscreen':
+                states = addOptState([true, false]);
+            case 'Use Hit Sounds':
+                states = addOptState([true, false]);
+            case 'Camera Movement On Note':
+                states = addOptState([true, false]);
+			case 'Practice Mode':
+				states = addOptState([true, false]);
+			case 'Botplay':
+				states = addOptState([true, false]);
+        }
+        scroll(states, HORIZONTAL);
+        save(states[curStateSelc]);
+	}
+
 	function returnOptionStr():String
     {
         var current:String = "";
@@ -399,11 +411,21 @@ class NewPauseSubState extends MusicBeatSubstate
         switch(option)
         {
 			case 'Fullscreen':
-				current = returnfunnyBool(FlxG.fullscreen);
+				current = '${FlxG.fullscreen}';
             case "Use Hit Sounds":
-                current = returnfunnyBool(ClientPrefs.useHitSounds);
-			case 'Camera Movement On Note Press':
-				current = returnfunnyBool(ClientPrefs.cameraMovOnNotePress);
+                current = '${ClientPrefs.useHitSounds}';
+			case 'Camera Movement On Note':
+				current = '${ClientPrefs.cameraMovOnNotePress}';
+			case 'Change Difficulty':
+				#if android
+				current = "Press A for more options";
+				#else
+				current = "Press ENTER for more options";
+				#end
+			case 'Practice Mode':
+				current = '${PlayState.practiceMode}';
+			case 'Botplay':
+				current = '${PlayState.cpuControlled}';
 			case "Back":
 				current = "go back to the main menu";
         }
@@ -420,24 +442,37 @@ class NewPauseSubState extends MusicBeatSubstate
 				FlxG.fullscreen = newState;
             case "Use Hit Sounds":
                 ClientPrefs.useHitSounds = newState;
-			case "Camera Movement On Note Press":
+			case "Camera Movement On Note":
 				ClientPrefs.cameraMovOnNotePress = newState;
+			case 'Practice Mode':
+				PlayState.practiceMode = newState;
+				PlayState.usedPractice = true;
+				practiceText.visible = newState;
+			case 'Botplay':
+				PlayState.cpuControlled = newState;
+				PlayState.usedPractice = true;
+				botplayText.visible = PlayState.cpuControlled;
         }
         curOptionState.text = returnOptionStr();
     }
 
-	function returnfunnyBool(condtion:Bool):String
-    {
-        var current:String = "";
-        switch(condtion)
-        {
-            case true:
-                current = "true";
-            case false:
-                current = "false";
-        }
-        return current;
-    }
+	function optionsSelectHandler(selected:String)
+	{
+		switch(selected)
+		{
+			case 'Change Difficulty':
+				onSettings = false;
+				curOptionState.visible = false;
+				menuItems = difficultyChoices;
+				regenMenu();
+			case 'Back':
+				onSettings = false;
+				curOptionState.visible = false;
+				statsState(true);
+				menuItems = menuItemsOG;
+				regenMenu();
+		}
+	}
 
 	override function destroy()
 	{

@@ -2901,21 +2901,52 @@ class PlayState extends MusicBeatState
 
 	private function keyShit():Void
 	{
+		var up:Dynamic = "";
+		var right:Dynamic = "";
+		var down:Dynamic = "";
+		var left:Dynamic = "";
+
+		var upP:Dynamic = "";
+		var rightP:Dynamic = "";
+		var downP:Dynamic = "";
+		var leftP:Dynamic = "";
+
+		var upR:Dynamic = "";
+		var rightR:Dynamic = "";
+		var downR:Dynamic = "";
+		var leftR:Dynamic = "";
 		// HOLDING
-		var up = controls.NOTE_UP;
-		var right = controls.NOTE_RIGHT;
-		var down = controls.NOTE_DOWN;
-		var left = controls.NOTE_LEFT;
+		#if (html5 || desktop)
+		up = controls.NOTE_UP;
+		right = controls.NOTE_RIGHT;
+		down = controls.NOTE_DOWN;
+		left = controls.NOTE_LEFT;
 	
-		var upP = controls.NOTE_UP_P;
-		var rightP = controls.NOTE_RIGHT_P;
-		var downP = controls.NOTE_DOWN_P;
-		var leftP = controls.NOTE_LEFT_P;
+		upP = controls.NOTE_UP_P;
+		rightP = controls.NOTE_RIGHT_P;
+		downP = controls.NOTE_DOWN_P;
+		leftP = controls.NOTE_LEFT_P;
 	
-		var upR = controls.NOTE_UP_R;
-		var rightR = controls.NOTE_RIGHT_R;
-		var downR = controls.NOTE_DOWN_R;
-		var leftR = controls.NOTE_LEFT_R;
+		upR = controls.NOTE_UP_R;
+		rightR = controls.NOTE_RIGHT_R;
+		downR = controls.NOTE_DOWN_R;
+		leftR = controls.NOTE_LEFT_R;
+		#elseif android
+		up = controls.UI_UP;
+		right = controls.UI_RIGHT;
+		down = controls.UI_DOWN;
+		left = controls.UI_LEFT;
+	
+		upP = controls.UI_UP_P;
+		rightP = controls.UI_RIGHT_P;
+		downP = controls.UI_DOWN_P;
+		leftP = controls.UI_LEFT_P;
+	
+		upR = controls.UI_UP_R;
+		rightR = controls.UI_RIGHT_R;
+		downR = controls.UI_DOWN_R;
+		leftR = controls.UI_LEFT_R;
+		#end
 	
 		var controlArray:Array<Bool> = [leftP, downP, upP, rightP];
 		var controlReleaseArray:Array<Bool> = [leftR, downR, upR, rightR];

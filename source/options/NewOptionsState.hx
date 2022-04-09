@@ -70,7 +70,7 @@ class NewOptionsState extends MusicBeatState
     override function create()
     {
         setOptions();
-
+        
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		add(bg);
 
@@ -379,7 +379,7 @@ class NewOptionsState extends MusicBeatState
             case 'Optimization Type':
                 jaja = "Optimization for the game, this will be improved on the next version lol, but the type explains by itself";
             case 'Camera Movement On Note Press':
-                jaja = "If enabled, the camera moves or snaps in the direction of the arrow, was a little bit tricky to add it but i guess it works";
+                jaja = "If enabled, the camera moves or snaps in the direction of the arrow, i guess it works";
         }
         hintText.text = jaja;
     }
@@ -424,17 +424,7 @@ class NewOptionsState extends MusicBeatState
             case "Use Hit Sounds":
                 current = returnfunnyBool(ClientPrefs.useHitSounds);
             case 'Optimization Type':
-                switch(ClientPrefs.optimizationType)
-                {
-                    case NONE:
-                        current = "None";
-                    case BASIC:
-                        current = "Basic";
-                    case ADVANCED:
-                        current = "Advanced";
-                    case EXTREME:
-                        current = "Extreme";
-                }
+                current = '${ClientPrefs.optimizationType.getName()}';
             case 'Camera Movement On Note Press':
                 current = returnfunnyBool(ClientPrefs.cameraMovOnNotePress);
         }

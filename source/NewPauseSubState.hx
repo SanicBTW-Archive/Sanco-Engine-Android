@@ -22,7 +22,14 @@ class NewPauseSubState extends MusicBeatSubstate
 	//var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Chart editor', 'Character editor', 'Change Difficulty', 'Toggle Practice Mode', 'Botplay', 'Settings', 'Exit to menu'];
 	var menuItemsOG:Array<String> = ['Resume', 'Restart Song', 'Settings', 'Exit to menu'];
 	var difficultyChoices = [];
-	var changeableSettings = ['Use Hit Sounds', 'Fullscreen', 'Back'];
+	var changeableSettings = [
+		'Use Hit Sounds', 
+		'Fullscreen', 
+		'Camera Movement On Note', 
+		'Change Difficulty', 
+		'Practice Mode', 
+		'Botplay',  
+		'Back'];
 	var curSelected:Int = 0;
 	var curStateSelc:Int = 0;
 	var curOptionState:FlxText;
@@ -40,6 +47,7 @@ class NewPauseSubState extends MusicBeatSubstate
 	var comboTxt:FlxText;
 	var highestComboTxt:FlxText;
 	var onSettings:Bool = false;
+	var statsBG:FlxSprite;
 
     public function new(x:Float, y:Float)
     {
@@ -75,39 +83,39 @@ class NewPauseSubState extends MusicBeatSubstate
 			grpMenuShit.add(songText);
 		}
 
-		var StatsBG:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 145, FlxColor.BLACK);
-		StatsBG.alpha = 0;
-		StatsBG.scrollFactor.set();
-		add(StatsBG);
+		statsBG = new FlxSprite().makeGraphic(FlxG.width, 145, FlxColor.BLACK);
+		statsBG.alpha = 0;
+		statsBG.scrollFactor.set();
+		add(statsBG);
 		//#endregion
 
-		var columnOne = StatsBG.x + 10;
-		var columnTwo = StatsBG.x + 300;
+		var columnOne = statsBG.x + 10;
+		var columnTwo = statsBG.x + 300;
 
 		//#region stats and info stuff
 		//column 1
-		levelInfo = new FlxText(columnOne, StatsBG.y - 50, 0, "", 32);
+		levelInfo = new FlxText(columnOne, statsBG.y - 50, 0, "", 32);
 		levelInfo.text += PlayState.displaySongName; //change it to the dynamic values class
 		levelInfo.scrollFactor.set();
 		levelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		levelInfo.updateHitbox();
 		add(levelInfo);
 
-		levelDifficulty = new FlxText(columnOne, StatsBG.y - 50, 0, "", 32);
+		levelDifficulty = new FlxText(columnOne, statsBG.y - 50, 0, "", 32);
 		levelDifficulty.text += CoolUtil.difficultyString();
 		levelDifficulty.scrollFactor.set();
 		levelDifficulty.setFormat(Paths.font('vcr.ttf'), 32);
 		levelDifficulty.updateHitbox();
 		add(levelDifficulty);
 
-		blueballedTxt = new FlxText(columnOne, StatsBG.y - 50, 0, "", 32);
+		blueballedTxt = new FlxText(columnOne, statsBG.y - 50, 0, "", 32);
 		blueballedTxt.text = "Blueballed: " + PlayState.deathCounter;
 		blueballedTxt.scrollFactor.set();
 		blueballedTxt.setFormat(Paths.font('vcr.ttf'), 32);
 		blueballedTxt.updateHitbox();
 		add(blueballedTxt);
 
-		scoreTxt = new FlxText(columnOne, StatsBG.y - 50, 0, "", 32);
+		scoreTxt = new FlxText(columnOne, statsBG.y - 50, 0, "", 32);
 		scoreTxt.text = "Score: " + PlayState.songScore;
 		scoreTxt.scrollFactor.set();
 		scoreTxt.setFormat(Paths.font('vcr.ttf'), 32);
@@ -116,7 +124,7 @@ class NewPauseSubState extends MusicBeatSubstate
 		add(scoreTxt);
 
 		//column 2
-		comboTxt = new FlxText(columnTwo, StatsBG.y - 50, 0, "", 32);
+		comboTxt = new FlxText(columnTwo, statsBG.y - 50, 0, "", 32);
 		comboTxt.text = "Combo: " + PlayState.combo;
 		comboTxt.scrollFactor.set();
 		comboTxt.setFormat(Paths.font('vcr.ttf'), 32);
@@ -124,7 +132,7 @@ class NewPauseSubState extends MusicBeatSubstate
 		comboTxt.visible = ClientPrefs.hideHud;
 		add(comboTxt);
 
-		highestComboTxt = new FlxText(columnTwo, StatsBG.y - 50, 0, "", 32);
+		highestComboTxt = new FlxText(columnTwo, statsBG.y - 50, 0, "", 32);
 		highestComboTxt.text = "Highest Combo: " + PlayState.highestCombo;
 		highestComboTxt.scrollFactor.set();
 		highestComboTxt.setFormat(Paths.font('vcr.ttf'), 32);
@@ -132,7 +140,7 @@ class NewPauseSubState extends MusicBeatSubstate
 		highestComboTxt.visible = ClientPrefs.hideHud;
 		add(highestComboTxt);
 
-		missesTxt = new FlxText(columnTwo, StatsBG.y - 50, 0, "", 32);
+		missesTxt = new FlxText(columnTwo, statsBG.y - 50, 0, "", 32);
 		missesTxt.text = "Misses: " + PlayState.songMisses;
 		missesTxt.scrollFactor.set();
 		missesTxt.setFormat(Paths.font('vcr.ttf'), 32);
@@ -142,7 +150,7 @@ class NewPauseSubState extends MusicBeatSubstate
 
 		//bg
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
-		FlxTween.tween(StatsBG, {alpha: 0.8}, 0.4, {ease: FlxEase.quartInOut});
+		FlxTween.tween(statsBG, {alpha: 0.8}, 0.4, {ease: FlxEase.quartInOut});
 		//column one
 		FlxTween.tween(levelInfo, {alpha: 1, y: rowCalc(1, levelInfo.y)}, 0.4, {ease: FlxEase.quartInOut});
 		FlxTween.tween(levelDifficulty, {alpha: 1, y:  rowCalc(2, levelDifficulty.y)}, 0.4, {ease: FlxEase.quartInOut});
@@ -154,8 +162,9 @@ class NewPauseSubState extends MusicBeatSubstate
 		FlxTween.tween(missesTxt, {alpha: 1, y: rowCalc(3, missesTxt.y)}, 0.4, {ease: FlxEase.quartInOut});
 		//#endregion
 
-		curOptionState = new FlxText(FlxG.width * 0.7, 5, 0, "dulce te quiero", 32);
-        curOptionState.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
+		curOptionState = new FlxText(0, 5, 0, "dulce te quiero", 32);
+		//curOptionState = new FlxText(0, 350, 0, "dulce te quiero", 32);
+        curOptionState.setFormat(Paths.font("vcr.ttf"), 40, FlxColor.WHITE, CENTER);
         curOptionState.scrollFactor.set();
 		curOptionState.visible = false;
 
@@ -171,7 +180,7 @@ class NewPauseSubState extends MusicBeatSubstate
 	override function update(elapsed:Float)
 	{
 		if(FlxG.keys.justPressed.H){
-			//for debugging and shit
+
 		}
 		if (pauseMusic.volume < 0.5)
 			pauseMusic.volume += 0.01 * elapsed;
@@ -229,6 +238,7 @@ class NewPauseSubState extends MusicBeatSubstate
 			if (item.targetY == 0)
 			{
 				item.alpha = 1;
+				//curOptionState.x = item.length * 53;
 			}
 		}
 	}
@@ -274,6 +284,7 @@ class NewPauseSubState extends MusicBeatSubstate
 			case 'Settings':
 				onSettings = true;
 				curOptionState.visible = true;
+				statsState(false);
 				menuItems = changeableSettings;
 				regenMenu();
 			case "Exit to menu":
@@ -306,8 +317,10 @@ class NewPauseSubState extends MusicBeatSubstate
 				FlxG.switchState(new CharacterEditorState());
 			*/
 			case 'Back':
+				//even if its coming from the difficulty menu, its not gonna affect anything, maybe a failsafe might do the thing
 				onSettings = false;
 				curOptionState.visible = false;
+				statsState(true);
 				menuItems = menuItemsOG;
 				regenMenu();
 		}
@@ -389,8 +402,12 @@ class NewPauseSubState extends MusicBeatSubstate
 				current = returnfunnyBool(FlxG.fullscreen);
             case "Use Hit Sounds":
                 current = returnfunnyBool(ClientPrefs.useHitSounds);
+			case 'Camera Movement On Note Press':
+				current = returnfunnyBool(ClientPrefs.cameraMovOnNotePress);
+			case "Back":
+				current = "go back to the main menu";
         }
-        return current;
+        return '< $current >';
     }
 
 	function save(newState:Dynamic)
@@ -403,6 +420,8 @@ class NewPauseSubState extends MusicBeatSubstate
 				FlxG.fullscreen = newState;
             case "Use Hit Sounds":
                 ClientPrefs.useHitSounds = newState;
+			case "Camera Movement On Note Press":
+				ClientPrefs.cameraMovOnNotePress = newState;
         }
         curOptionState.text = returnOptionStr();
     }
@@ -425,5 +444,19 @@ class NewPauseSubState extends MusicBeatSubstate
 		pauseMusic.destroy();
 	
 		super.destroy();
+	}
+
+	//totally fucking dum
+	function statsState(state:Bool) {
+		statsBG.visible = state;
+		levelInfo.visible = state;
+		levelDifficulty.visible = state;
+		blueballedTxt.visible = state;
+		if(ClientPrefs.hideHud == true){
+			scoreTxt.visible = state;
+			comboTxt.visible = state;
+			highestComboTxt.visible = state;
+			missesTxt.visible = state;
+		}
 	}
 }

@@ -1,0 +1,119 @@
+{
+	"song": {
+		"speed": 3.1,
+		"stage": "sonicbackground",
+		"player1": "bf",
+		"player2": "sonic",
+		"player3": null,
+		"events": [
+			[
+				0,
+				[
+					[
+						"Image Flash",
+						"no-villains",
+						"3"
+					]
+				]
+			],
+			[
+				63300,
+				[
+					[
+						"Change Character",
+						"1",
+						"sonic_mad"
+					]
+				]
+			],
+			[
+				65700,
+				[
+					[
+						"Change Character",
+						"1",
+						"sonic"
+					]
+				]
+			],
+			[
+				86400,
+				[
+					[
+						"Change Character",
+						"1",
+						"sonic_mad"
+					]
+				]
+			],
+			[
+				105600,
+				[
+					[
+						"Change Character",
+						"1",
+						"sonic_forced"
+					]
+				]
+			],
+			[
+				124792.5,
+				[
+					[
+						"Change Character",
+						"1",
+						"sonic_mad"
+					]
+				]
+			],
+			[
+				124800,
+				[
+					[
+						"Add Camera Zoom",
+						"0.025",
+						"0.10"
+					]
+				]
+			],
+			[
+				133200,
+				[
+					[
+						"Add Camera Zoom",
+						"",
+						""
+					]
+				]
+			],
+			[
+				134400,
+				[
+					[
+						"Add Camera Zoom",
+						"0.025",
+						"0.10"
+					]
+				]
+			],
+			[
+				142800,
+				[
+					[
+						"Add Camera Zoom",
+						"",
+						""
+					]
+				]
+			]
+		],
+		"notes": [],
+		"splashSkin": null,
+		"validScore": false,
+		"gfVersion": "gf",
+		"bpm": 200,
+		"arrowSkin": null,
+		"needsVoices": true,
+		"song": "El Dulce Challenge"
+	}
+}

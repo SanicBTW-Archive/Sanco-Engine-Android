@@ -22,7 +22,7 @@ class StorageVariables
     public static var CharImgPath:String = Path.join([CharactersPath, 'images']);
 
     //files
-    public static var HSLFPath:String = Path.join([HitSoundsPath, 'hitsoundsList.txt']);  //for custom hit sounds and shit, will make it easier soon
+    public static var HSLFPath:String = Path.join([HitSoundsPath, 'hitsoundsList.txt']);  //for custom hit sounds and shit
 
     public static function CheckStuff() 
     {
@@ -34,6 +34,9 @@ class StorageVariables
         if(!FileSystem.exists(CharactersPath)){FileSystem.createDirectory(CharactersPath);}
         if(!FileSystem.exists(CharDataPath)){FileSystem.createDirectory(CharDataPath);}
         if(!FileSystem.exists(CharImgPath)){FileSystem.createDirectory(CharImgPath);}
+
+        //now gives an exception if the file is not found
+        if(!FileSystem.exists(HSLFPath)){File.saveContent(HSLFPath, "osumania");}
     }
     #end
 }

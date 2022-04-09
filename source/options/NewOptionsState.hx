@@ -47,9 +47,10 @@ class NewOptionsState extends MusicBeatState
         #end
     ];
     var engineOptions:Array<String> = [
+        /* still in development, not tested
         #if sys
         "Internal Storage Options", 
-        #end
+        #end*/
         "Use Hit Sounds",
         'Optimization Type',
         'Camera Movement On Note Press'
@@ -70,7 +71,7 @@ class NewOptionsState extends MusicBeatState
     override function create()
     {
         setOptions();
-
+        
         var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		add(bg);
 
@@ -79,7 +80,7 @@ class NewOptionsState extends MusicBeatState
 
         for(i in 0...avOptions.length)
         {
-            var avOptText:Alphabet = new Alphabet(0,(70 * i) + 30, avOptions[i], false, false);
+            var avOptText:Alphabet = new Alphabet(0,(70 * i) + 30, avOptions[i], true, false, 0.05, 0.9);
             avOptText.isMenuItem = true;
             avOptText.targetY = i;
             avOptText.forceX = 0;
@@ -369,15 +370,17 @@ class NewOptionsState extends MusicBeatState
                 jaja = "Press ENTER for more";
                 #end
             case "Use Hit Sounds":
-                #if android
+                #if (sys && android)
                 jaja = "If there is a hit sound chosen it will play every time you hit a note | Press A for more";
-                #else
+                #elseif (sys && desktop)
                 jaja = 'If there is a hit sound chosen it will play every time you hit a note | Press ENTER for more';
+                #elseif !sys
+                jaja = "If there is a hit sound chosen it will play every time you hit a note";
                 #end
             case 'Optimization Type':
                 jaja = "Optimization for the game, this will be improved on the next version lol, but the type explains by itself";
             case 'Camera Movement On Note Press':
-                jaja = "If enabled, the camera moves or snaps in the direction of the arrow, was a little bit tricky to add it but i guess it works";
+                jaja = "If enabled, the camera moves or snaps in the direction of the arrow, i guess it works";
         }
         hintText.text = jaja;
     }
@@ -390,51 +393,41 @@ class NewOptionsState extends MusicBeatState
         switch(option)
         {
             case "Low Quality":
-                current = returnfunnyBool(ClientPrefs.lowQuality);
+                current = '${ClientPrefs.lowQuality}';
             case "Anti-Aliasing":
-                current = returnfunnyBool(ClientPrefs.globalAntialiasing);
+                current = '${ClientPrefs.globalAntialiasing}';
             case "Persistent Cached Data":
-                current = returnfunnyBool(ClientPrefs.imagesPersist);
+                current = '${ClientPrefs.imagesPersist}';
             case "Framerate":
                 current = '${ClientPrefs.framerate}FPS';
             case "Downscroll":
-                current = returnfunnyBool(ClientPrefs.downScroll);
+                current = '${ClientPrefs.downScroll}';
             case "Middlescroll":
-                current = returnfunnyBool(ClientPrefs.middleScroll);
+                current = '${ClientPrefs.middleScroll}';
             case "Ghost Tapping":
-                current = returnfunnyBool(ClientPrefs.ghostTapping);
+                current = '${ClientPrefs.ghostTapping}';
             case "Note Delay":
                 current = '${ClientPrefs.noteOffset}ms';
             case "Note Splashes":
-                current = returnfunnyBool(ClientPrefs.noteSplashes);
+                current = '${ClientPrefs.noteSplashes}';
             case "Hide HUD":
-                current = returnfunnyBool(ClientPrefs.hideHud);
+                current = '${ClientPrefs.hideHud}';
             case "Hide Song Length":
-                current = returnfunnyBool(ClientPrefs.hideTime);
+                current = '${ClientPrefs.hideTime}';
             case "Flashing Lights":
-                current = returnfunnyBool(ClientPrefs.flashing);
+                current = '${ClientPrefs.flashing}';
             case "Camera Zooms":
-                current = returnfunnyBool(ClientPrefs.camZooms);
+                current = '${ClientPrefs.camZooms}';
             case "FPS Counter":
-                current = returnfunnyBool(ClientPrefs.showFPS);
+                current = '${ClientPrefs.showFPS}';
             case "Fullscreen":
-                current = returnfunnyBool(FlxG.fullscreen);
+                current = '${FlxG.fullscreen}';
             case "Use Hit Sounds":
-                current = returnfunnyBool(ClientPrefs.useHitSounds);
+                current = '${ClientPrefs.useHitSounds}';
             case 'Optimization Type':
-                switch(ClientPrefs.optimizationType)
-                {
-                    case NONE:
-                        current = "None";
-                    case BASIC:
-                        current = "Basic";
-                    case ADVANCED:
-                        current = "Advanced";
-                    case EXTREME:
-                        current = "Extreme";
-                }
+                current = '${ClientPrefs.optimizationType.getName()}';
             case 'Camera Movement On Note Press':
-                current = returnfunnyBool(ClientPrefs.cameraMovOnNotePress);
+                current = '${ClientPrefs.cameraMovOnNotePress}';
         }
         return current;
     }
@@ -474,19 +467,6 @@ class NewOptionsState extends MusicBeatState
             addOption(engineOptions[i], avOptions, ENGINE_OPTIONS, categories);
         }
     }
-
-    function returnfunnyBool(condtion:Bool):String
-    {
-        var current:String = "";
-        switch(condtion)
-        {
-            case true:
-                current = "true";
-            case false:
-                current = "false";
-        }
-        return current;
-    }
     //#endregion
 
     function openExternalState()
@@ -497,9 +477,10 @@ class NewOptionsState extends MusicBeatState
             case "Internal Storage Options":
                 MusicBeatState.switchState(new InternalStorageOptionsState());
             case "Use Hit Sounds":
+                #if sys
                 if(ClientPrefs.useHitSounds == true){
                     MusicBeatState.switchState(new HitSoundState());
-                }
+                }#end
 
             case "Key Binds":
                 openSubState(new OptionsState.ControlsSubstate());

@@ -125,8 +125,11 @@ class PlayState extends MusicBeatState
 	private var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 
 	private var camZooming:Bool = false;
+	private var curSong:String = "";
 	private var gfSpeed:Int = 1;
 	private var health:Float = 1;
+	public static var combo:Int = 0;
+	public static var highestCombo:Int = 0;
 
 	private var healthBarBG:AttachedSprite;
 	public var healthBar:FlxBar;
@@ -186,9 +189,9 @@ class PlayState extends MusicBeatState
 	var wiggleShit:WiggleEffect = new WiggleEffect();
 	var bgGhouls:BGSprite;
 
-	public var songScore:Int = 0;
-	public var songHits:Int = 0;
-	public var songMisses:Int = 0;
+	public static var songScore:Int = 0;
+	public static var songHits:Int = 0;
+	public static var songMisses:Int = 0;
 	public var ghostMisses:Int = 0;
 	public var scoreTxt:FlxText;
 	var timeTxt:FlxText;
@@ -232,6 +235,7 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
+		resetStats();
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
@@ -923,7 +927,7 @@ class PlayState extends MusicBeatState
 			luaArray.push(new FunkinLua(luaFile));
 		#end
 		
-		var daSong:String = DynamicValues.songName.toLowerCase();
+		var daSong:String = curSong.toLowerCase();
 		if (isStoryMode && !seenCutscene)
 		{
 			switch (daSong)
@@ -1359,7 +1363,7 @@ class PlayState extends MusicBeatState
 		var songData = SONG;
 		Conductor.changeBPM(songData.bpm);
 
-		DynamicValues.songName = songData.song;
+		curSong = songData.song;
 
 		if (SONG.needsVoices) {
 			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
@@ -1868,10 +1872,13 @@ class PlayState extends MusicBeatState
 		super.update(elapsed); //TEST
 
 		if(ratingString == '?') {
-			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingString + ' | Combo: ' + DynamicValues.combo + ' | Highest Combo: ' + DynamicValues.highestCombo;
+			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingString + ' | Combo: ' + combo + ' | Highest Combo: ' + highestCombo;
 		} else {
-			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingString + ' (' + Math.floor(ratingPercent * 100) + '%) | Combo: ' + DynamicValues.combo + ' | Highest Combo: ' + DynamicValues.highestCombo;
+			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingString + ' (' + Math.floor(ratingPercent * 100) + '%) | Combo: ' + combo + ' | Highest Combo: ' + highestCombo;
 		}
+
+		if(combo > highestCombo)
+			highestCombo = combo;
 
 		if(cpuControlled) {
 			botplaySine += 180 * elapsed;
@@ -1891,7 +1898,7 @@ class PlayState extends MusicBeatState
 					FlxG.sound.music.pause();
 					vocals.pause();
 				}
-				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+				openSubState(new NewPauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
 			}
 		}
@@ -1994,8 +2001,8 @@ class PlayState extends MusicBeatState
 
 		FlxG.watch.addQuick("beatShit", curBeat);
 		FlxG.watch.addQuick("stepShit", curStep);
-		FlxG.watch.addQuick("Combo", DynamicValues.combo);
-		FlxG.watch.addQuick("Highest Combo", DynamicValues.highestCombo);
+		FlxG.watch.addQuick("Combo", combo);
+		FlxG.watch.addQuick("Highest Combo", highestCombo);
 
 		// better streaming of shit
 
@@ -2733,7 +2740,7 @@ class PlayState extends MusicBeatState
 
 		vocals.volume = 1;
 
-		var placement:String = Std.string(DynamicValues.combo);
+		var placement:String = Std.string(combo);
 
 		var coolText:FlxText = new FlxText(0, 0, 0, placement, 32);
 		coolText.screenCenter();
@@ -2827,13 +2834,14 @@ class PlayState extends MusicBeatState
 
 		var seperatedScore:Array<Int> = [];
 
-		seperatedScore.push(Math.floor(DynamicValues.combo / 100));
-		seperatedScore.push(Math.floor((DynamicValues.combo - (seperatedScore[0] * 100)) / 10));
-		seperatedScore.push(DynamicValues.combo % 10);
+		seperatedScore.push(Math.floor(combo / 100));
+		seperatedScore.push(Math.floor((combo - (seperatedScore[0] * 100)) / 10));
+		seperatedScore.push(combo % 10);
 
 		var daLoop:Int = 0;
 		for (i in seperatedScore)
 		{
+			/*
 			var numScore:FlxSprite;
 
 			numScore = new FlxSprite().loadGraphic(Paths.image(pixelShitPart1 + 'num' + Std.int(i) + pixelShitPart2));
@@ -2866,7 +2874,7 @@ class PlayState extends MusicBeatState
 					numScore.destroy();
 				},
 				startDelay: Conductor.crochet * 0.002
-			});
+			});	*/
 
 			daLoop++;
 		}
@@ -3007,9 +3015,9 @@ class PlayState extends MusicBeatState
 		health -= 0.04;
 		songMisses++;
 		vocals.volume = 0;
-		if(DynamicValues.combo > DynamicValues.highestCombo)
-			DynamicValues.highestCombo = DynamicValues.combo;
-		DynamicValues.combo = 0;
+		if(combo > highestCombo)
+			highestCombo = combo;
+		combo = 0;
 		RecalculateRating();
 
 		var animToPlay:String = '';
@@ -3042,9 +3050,9 @@ class PlayState extends MusicBeatState
 		{
 			health -= 0.04;
 
-			if(DynamicValues.combo > DynamicValues.highestCombo)
-				DynamicValues.highestCombo = DynamicValues.combo;
-			DynamicValues.combo = 0;
+			if(combo > highestCombo)
+				highestCombo = combo;
+			combo = 0;
 
 			if(!practiceMode) songScore -= 10;
 			if(!endingSong) {
@@ -3193,8 +3201,8 @@ class PlayState extends MusicBeatState
 			if (!note.isSustainNote)
 			{
 				popUpScore(note);
-				DynamicValues.combo += 1;
-				if(DynamicValues.combo > 9999) DynamicValues.combo = 9999; //will fix it soon, gives an error when reaches 1000
+				combo += 1;
+				//if(combo > 999) combo = 9999; //will fix it soon, gives an error when reaches 1000
 			}
 			health += 0.023; //???? have to check this or something lol
 
@@ -3275,8 +3283,16 @@ class PlayState extends MusicBeatState
 				notes.remove(note, true);
 				note.destroy();
 				//seems to lag in desktop targets
+				if(ClientPrefs.useHitSounds)
+					FlxG.sound.play(Paths.sound("osumania"), 1, false);
+				/* FileSystem features have been disabled for this Release
+				#if (sys && android)
 				if(ClientPrefs.useHitSounds && ClientPrefs.currentHitSound != null && ClientPrefs.hitSoundPath != null)
 					FlxG.sound.stream(ClientPrefs.hitSoundPath, 1, false, null, true);
+				#else
+				if(ClientPrefs.useHitSounds)
+					FlxG.sound.play(Paths.sound("osumania"), 1, false);
+				#end*/
 			}
 		}
 	}
@@ -3725,4 +3741,14 @@ class PlayState extends MusicBeatState
 
 	var curLight:Int = 0;
 	var curLightEvent:Int = 0;
+
+	function resetStats()
+	{
+		trace("resetting stats");
+		combo = 0;
+		songScore = 0;
+		songHits = 0;
+		songMisses = 0;
+		highestCombo = 0;
+	}
 }

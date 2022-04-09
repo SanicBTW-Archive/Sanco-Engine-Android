@@ -17,7 +17,8 @@ using StringTools;
 
 class Paths
 {
-	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
+	inline public static var SOUND_EXT = "ogg";
+	//inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
 
 	#if MODS_ALLOWED
 		#if (haxe >= "4.0.0")

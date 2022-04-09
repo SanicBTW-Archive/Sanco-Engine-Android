@@ -459,9 +459,11 @@ class Controls extends FlxActionSet
 					action.remove(input);*/
 
 				var x = Tinputs.length;
+				#if (haxe > "4.1.5")
 				while (x-- > 0)
 					if (Tinputs[x] == input)
 						action.remove(input);
+				#end
 			}
 		}
 	}

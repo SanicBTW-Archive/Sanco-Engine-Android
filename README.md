@@ -9,3 +9,6 @@ Wiki will be finished once I have enough time to focus on that lol
 haxelib install android6permissions
 haxelib git linc_luajit https://github.com/kviks/linc_luajit
 haxelib git AndroidTools https://github.com/jigsaw-4277821/AndroidTools
+
+
+# I swear to god I'm gonna make a new branch based off Kade Engine

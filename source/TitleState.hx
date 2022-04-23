@@ -101,7 +101,7 @@ class TitleState extends MusicBeatState
 				StoryMenuState.weekUnlocked[0] = true;
 		}
 
-		FlxG.mouse.visible = false;
+		FlxG.mouse.visible = true;
 		#if FREEPLAY
 		MusicBeatState.switchState(new FreeplayState());
 		#elseif CHARTING

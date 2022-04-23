@@ -29,7 +29,7 @@ class NewOptionsState extends MusicBeatState
         #end
     ];
     var gameplayOptions:Array<String> = [
-        #if mobile
+        #if mobileC
         'Mobile Controls',
         #else
         "Key Binds",

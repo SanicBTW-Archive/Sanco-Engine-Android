@@ -172,14 +172,19 @@ class ControlsState extends MusicBeatSubstate
 			arrowanimate(touch);
 
 			//change Selection
-			if(touch.overlaps(leftArrow) && touch.justPressed || controls.UI_LEFT_P)
+			if(touch.overlaps(leftArrow) && touch.justPressed)
 				changeSelection(-1);
-			else if (touch.overlaps(rightArrow) && touch.justPressed || controls.UI_RIGHT_P)
+			else if (touch.overlaps(rightArrow) && touch.justPressed)
 				changeSelection(1);
 
 			//custom pad 
 			trackbutton(touch);
 		}
+
+		if(controls.UI_LEFT_P || FlxG.mouse.justPressed && FlxG.mouse.overlaps(leftArrow))
+			changeSelection(-1);
+		else if(controls.UI_RIGHT_P || FlxG.mouse.justPressed && FlxG.mouse.overlaps(rightArrow))
+			changeSelection(1);
 	}
 
 	function changeSelection(change:Int = 0,?forceChange:Int)

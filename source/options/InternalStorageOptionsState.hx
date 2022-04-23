@@ -1,7 +1,9 @@
 package options;
 
 import options.NewOptionsState;
-import ui.Mobilecontrols;
+#if mobileC
+import mobile.Mobilecontrols;
+#end
 import flixel.util.FlxTimer;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSound;

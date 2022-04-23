@@ -10,8 +10,10 @@ import flixel.input.actions.FlxActionSet;
 import flixel.input.gamepad.FlxGamepadButton;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
-import ui.Hitbox;
-import ui.FlxVirtualPad;
+#if mobileC
+import mobile.Hitbox;
+import mobile.FlxVirtualPad;
+#end
 import flixel.ui.FlxButton;
 import flixel.group.FlxGroup;
 
@@ -383,6 +385,7 @@ class Controls extends FlxActionSet
 	}
 	#end
 
+	#if mobileC
 	public var trackedinputs:Array<FlxActionInput> = [];
 
 	public function addbutton(action:FlxActionDigital, button:FlxButton, state:FlxInputState) {
@@ -445,7 +448,7 @@ class Controls extends FlxActionSet
 			case NONE:
 		}
 	}
-	
+	#end
 
 	public function removeFlxInput(Tinputs) {
 		for (action in this.digitalActions)

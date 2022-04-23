@@ -1,6 +1,6 @@
 package;
 
-import ui.FlxVirtualPad;
+import mobile.FlxVirtualPad;
 import flixel.FlxG;
 import flixel.util.FlxSave;
 import flixel.math.FlxPoint;

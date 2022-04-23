@@ -28,7 +28,9 @@ import haxe.Json;
 import Character;
 import flixel.system.debug.interaction.tools.Pointer.GraphicCursorCross;
 import lime.system.Clipboard;
-import ui.FlxVirtualPad;
+#if mobileC
+import mobile.FlxVirtualPad;
+#end
 import flixel.system.FlxSound;
 #if MODS_ALLOWED
 import sys.FileSystem;
@@ -41,7 +43,9 @@ using StringTools;
  */
 class CharacterEditorState extends MusicBeatState
 {
+	#if mobileC
 	var _pad:FlxVirtualPad;
+	#end
 
 	var char:Character;
 	var textAnim:FlxText;
@@ -190,9 +194,11 @@ class CharacterEditorState extends MusicBeatState
 		FlxG.mouse.visible = true;
 		reloadCharacterOptions();
 
+		#if mobileC
 		_pad = new FlxVirtualPad(FULL, NONE);
     	_pad.alpha = 0.75;
     	this.add(_pad);
+		#end
 
 		super.create();
 	}
@@ -920,12 +926,12 @@ class CharacterEditorState extends MusicBeatState
 			}
 
 			if(char.animationsArray.length > 0) {
-				if (FlxG.keys.justPressed.A || _pad.buttonLeft.justPressed)
+				if (FlxG.keys.justPressed.A #if mobileC || _pad.buttonLeft.justPressed #end)
 				{
 					curAnim -= 1;
 				}
 
-				if (FlxG.keys.justPressed.D || _pad.buttonRight.justPressed)
+				if (FlxG.keys.justPressed.D #if mobileC || _pad.buttonRight.justPressed #end)
 				{
 					curAnim += 1;
 				}
@@ -936,7 +942,7 @@ class CharacterEditorState extends MusicBeatState
 				if (curAnim >= char.animationsArray.length)
 					curAnim = 0;
 
-				if (FlxG.keys.justPressed.A || FlxG.keys.justPressed.D || FlxG.keys.justPressed.UP || _pad.buttonLeft.justPressed || _pad.buttonRight.justPressed || _pad.buttonUp.justPressed)
+				if (FlxG.keys.justPressed.A || FlxG.keys.justPressed.D || FlxG.keys.justPressed.UP #if mobileC || _pad.buttonLeft.justPressed || _pad.buttonRight.justPressed || _pad.buttonUp.justPressed #end)
 				{
 					char.playAnim(char.animationsArray[curAnim].anim, true);
 					genBoyOffsets();

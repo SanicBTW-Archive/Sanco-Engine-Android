@@ -1,6 +1,8 @@
 package options;
 
-import ui.Mobilecontrols;
+#if mobileC
+import mobile.Mobilecontrols;
+#end
 import flixel.util.FlxTimer;
 import flixel.system.FlxAssets.FlxSoundAsset;
 import flixel.system.FlxSound;
@@ -485,8 +487,10 @@ class NewOptionsState extends MusicBeatState
             case "Key Binds":
                 openSubState(new OptionsState.ControlsSubstate());
             
+            #if mobileC
             case "Mobile Controls":
-                MusicBeatState.switchState(new CustomControlsState());
+                MusicBeatState.switchState(new mobile.ControlsState());
+            #end
         }
     }
 }

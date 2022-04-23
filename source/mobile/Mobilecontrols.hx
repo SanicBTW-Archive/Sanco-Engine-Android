@@ -1,12 +1,11 @@
-package ui;
+#if mobileC
+package mobile;
 
 import flixel.FlxG;
 import flixel.group.FlxSpriteGroup;
 
-import ui.FlxVirtualPad;
-import ui.Hitbox;
-
-import Config;
+import mobile.FlxVirtualPad;
+import mobile.Hitbox;
 
 class Mobilecontrols extends FlxSpriteGroup
 {
@@ -20,7 +19,7 @@ class Mobilecontrols extends FlxSpriteGroup
 	public function new() 
 	{
 		super();
-		
+
 		config = new Config();
 
 		// load control mode num from Config.hx
@@ -47,14 +46,17 @@ class Mobilecontrols extends FlxSpriteGroup
 		switch (vpadMode)
 		{
 			case 1:
-				_virtualPad = new FlxVirtualPad(FULL, NONE);
+				_virtualPad = new FlxVirtualPad(FULL, // A
+					NONE);
 			case 2:
-				_virtualPad = new FlxVirtualPad(FULL, NONE);
+				_virtualPad = new FlxVirtualPad(FULL, // A
+					NONE);
 				_virtualPad = config.loadcustom(_virtualPad);
 			default: // 0
-				_virtualPad = new FlxVirtualPad(RIGHT_FULL, NONE);
+				_virtualPad = new FlxVirtualPad(RIGHT_FULL, // A
+					NONE);
 		}
-		
+
 		_virtualPad.alpha = 0.75;
 		add(_virtualPad);	
 	}
@@ -82,3 +84,4 @@ enum ControlsGroup {
 	VIRTUALPAD_CUSTOM;
 	HITBOX;
 }
+#end

@@ -36,7 +36,7 @@ import openfl.utils.ByteArray;
 import openfl.utils.Assets as OpenFlAssets;
 
 #if android
-import ui.FlxVirtualPad;
+import mobile.FlxVirtualPad;
 #end
 
 #if MODS_ALLOWED

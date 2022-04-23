@@ -5,7 +5,7 @@ import flixel.FlxG;
 import flixel.FlxSubState;
 #if mobileC
 import flixel.FlxCamera;
-import ui.FlxVirtualPad;
+import mobile.FlxVirtualPad;
 import flixel.input.actions.FlxActionInput;
 #end
 

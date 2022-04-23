@@ -21,10 +21,10 @@ import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import flixel.graphics.FlxGraphic;
 import Controls;
-
-import options.CustomControlsState;
-import ui.FlxVirtualPad;
-
+#if mobileC
+import mobile.ControlsState;
+import mobile.FlxVirtualPad;
+#end
 using StringTools;
 
 // TO DO: Redo the menu creation system for not being as dumb
@@ -62,7 +62,9 @@ class OptionsState extends MusicBeatState
 		}
 		changeSelection();
 
+		#if mobileC
 		addVirtualPad(FULL, A_B);
+		#end
 
 		super.create();
 	}
@@ -100,8 +102,10 @@ class OptionsState extends MusicBeatState
 				case 'Notes':
 					openSubState(new NotesSubstate());
 
+				#if mobileC
 				case 'Mobile Controls':
-					MusicBeatState.switchState(new options.CustomControlsState());
+					MusicBeatState.switchState(new mobile.ControlsState());
+				#end
 
 				case 'Hit Sounds':
 					MusicBeatState.switchState(new options.HitSoundState());

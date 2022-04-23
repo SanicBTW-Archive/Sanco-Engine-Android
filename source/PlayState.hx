@@ -43,7 +43,7 @@ import openfl.media.Video;
 import Achievements;
 import openfl.utils.Assets as OpenFlAssets;
 #if mobileC
-import ui.Mobilecontrols;
+import mobile.Mobilecontrols;
 #end
 
 using StringTools;

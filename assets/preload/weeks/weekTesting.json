@@ -1,0 +1,21 @@
+{
+	"songs": [
+		["triple-trouble", "bf", [165, 0, 77]],
+		["el-dulce-challenge", "bf", [165, 0, 77]]
+	],
+
+	"weekCharacters": [
+		"",
+		"bf",
+		"gf"
+	],
+	"weekBackground": "stage",
+
+	"storyName": "testin",
+	"weekBefore": "week6",
+	"weekName": "Week Testing",
+	"startUnlocked": true,
+
+	"hideStoryMode": false,
+	"hideFreeplay": false
+}

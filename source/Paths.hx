@@ -19,7 +19,7 @@ using StringTools;
 
 class Paths
 {
-	inline public static var SOUND_EXT = #if web "mp3" #else "ogg" #end;
+	inline public static var SOUND_EXT = "ogg";
 	
 	inline public static var VIDEO_EXT = #if android "html" #else "mp4" #end;//android can't run mp4
 

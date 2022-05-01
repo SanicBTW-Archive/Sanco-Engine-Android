@@ -263,6 +263,13 @@ class PlayState extends MusicBeatState
 	// Less laggy controls
 	private var keysArray:Array<Dynamic>;
 
+	//engin vars lol
+	public var highestCombo:Int = 0;
+	var campointX:Float = 0;
+	var campointY:Float = 0;
+	var bfturn:Bool = false;
+	var camMov:Int = 15;
+
 	override public function create()
 	{
 		#if MODS_ALLOWED
@@ -2203,10 +2210,13 @@ class PlayState extends MusicBeatState
 		super.update(elapsed);
 
 		if(ratingName == '?') {
-			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingName;
+			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingName + ' | Combo: ' + combo + ' | Highest Combo: ' + highestCombo;
 		} else {
-			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingName + ' (' + Highscore.floorDecimal(ratingPercent * 100, 2) + '%)' + ' - ' + ratingFC;//peeps wanted no integer rating
+			scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingName + ' (' + Highscore.floorDecimal(ratingPercent * 100, 2) + '%)' + ' - ' + ratingFC + ' | Combo: ' + combo + ' | Highest Combo: ' + highestCombo;//peeps wanted no integer rating
 		}
+
+		if(combo > highestCombo)
+			highestCombo = combo;
 
 		if(botplayTxt.visible) {
 			botplaySine += 180 * elapsed;
@@ -2995,11 +3005,17 @@ class PlayState extends MusicBeatState
 		{
 			moveCamera(true);
 			callOnLuas('onMoveCamera', ['dad']);
+			campointX = camFollow.x;
+			campointY = camFollow.y;
+			bfturn = false;
 		}
 		else
 		{
 			moveCamera(false);
 			callOnLuas('onMoveCamera', ['boyfriend']);
+			campointX = camFollow.x;
+			campointY = camFollow.y;
+			bfturn = true;
 		}
 	}
 
@@ -3658,6 +3674,8 @@ class PlayState extends MusicBeatState
 				note.destroy();
 			}
 		});
+		if(combo > highestCombo)
+			highestCombo = combo;
 		combo = 0;
 
 		health -= daNote.missHealth * healthLoss;
@@ -3710,6 +3728,8 @@ class PlayState extends MusicBeatState
 			{
 				gf.playAnim('sad');
 			}
+			if(combo > highestCombo)
+				highestCombo = combo;
 			combo = 0;
 
 			if(!practiceMode) songScore -= 10;
@@ -3760,6 +3780,22 @@ class PlayState extends MusicBeatState
 
 			var char:Character = dad;
 			var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))] + altAnim;
+			switch(animToPlay)
+				{
+					//&& ClientPrefs.cameraMovOnNotePress
+					case "singLEFT":
+						if(!bfturn)
+							snapCamFollowToPos(campointX - camMov, campointY);
+					case "singDOWN":
+						if(!bfturn)
+							snapCamFollowToPos(campointX, campointY + camMov);	
+					case "singUP":
+						if(!bfturn)
+							snapCamFollowToPos(campointX, campointY - camMov);
+					case "singRIGHT":
+						if(!bfturn)
+							snapCamFollowToPos(campointX + camMov, campointY);
+				}
 			if(note.gfNote) {
 				char = gf;
 			}
@@ -3831,6 +3867,23 @@ class PlayState extends MusicBeatState
 				if(note.noteType == 'Alt Animation') daAlt = '-alt';
 	
 				var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))];
+				FlxG.watch.addQuick(animToPlay, animToPlay);
+				switch(animToPlay)
+				{
+					//&& ClientPrefs.cameraMovOnNotePress
+					case "singLEFT":
+						if(bfturn)
+							snapCamFollowToPos(campointX - camMov, campointY);
+					case "singDOWN":
+						if(bfturn)
+							snapCamFollowToPos(campointX, campointY + camMov);	
+					case "singUP":
+						if(bfturn)
+							snapCamFollowToPos(campointX, campointY - camMov);
+					case "singRIGHT":
+						if(bfturn)
+							snapCamFollowToPos(campointX + camMov, campointY);
+				}
 
 				//if (note.isSustainNote){ wouldn't this be fun : P. i think it would be swell
 					

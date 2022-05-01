@@ -3729,7 +3729,7 @@ class PlayState extends MusicBeatState
 	}
 	function ghostMiss(statement:Bool = false, direction:Int = 0, ?ghostMiss:Bool = false) {
 		if (statement) {
-			noteMissPress(direction, ghostMiss);
+			noteMissPress(direction);
 			callOnLuas('noteMissPress', [direction]);
 		}
 	}
@@ -3737,56 +3737,50 @@ class PlayState extends MusicBeatState
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
 		//Dupe note remove
 		notes.forEachAlive(function(note:Note) {
-			if (daNote != note && daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 10) {
+			if (daNote != note && daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1) {
 				note.kill();
 				notes.remove(note, true);
 				note.destroy();
 			}
 		});
-
-		health -= daNote.missHealth * healthLoss;
-		songMisses++;
-		vocals.volume = 0;
-		totalPlayed++;
-		if(!practiceMode) songScore -= 10;
 		if(combo > highestCombo)
 			highestCombo = combo;
 		combo = 0;
-		RecalculateRating();
 
+		health -= daNote.missHealth * healthLoss;
 		if(instakillOnMiss)
 		{
 			vocals.volume = 0;
 			doDeathCheck(true);
 		}
 
-		var animToPlay:String = '';
-		switch (Math.abs(daNote.noteData) % 4)
-		{
-			case 0:
-				animToPlay = 'singLEFTmiss';
-			case 1:
-				animToPlay = 'singDOWNmiss';
-			case 2:
-				animToPlay = 'singUPmiss';
-			case 3:
-				animToPlay = 'singRIGHTmiss';
-		}
+		//For testing purposes
+		//trace(daNote.missHealth);
+		songMisses++;
+		vocals.volume = 0;
+		if(!practiceMode) songScore -= 10;
+		
+		totalPlayed++;
+		RecalculateRating();
 
 		var char:Character = boyfriend;
 		if(daNote.gfNote) {
 			char = gf;
 		}
+
 		if(char.hasMissAnimations)
 		{
 			var daAlt = '';
-			if(daNote.noteType == 'Alt Animation') daAlt = '-alt';	
-			char.playAnim(animToPlay + daAlt, true);
+			if(daNote.noteType == 'Alt Animation') daAlt = '-alt';
+
+			var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + 'miss' + daAlt;
+			char.playAnim(animToPlay, true);
 		}
+
 		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
 	}
 
-	function noteMissPress(direction:Int = 1, ?ghostMiss:Bool = false):Void //You pressed a key when there was no notes to press for this key
+	function noteMissPress(direction:Int = 1):Void //You pressed a key when there was no notes to press for this key
 	{
 		if (!boyfriend.stunned)
 		{
@@ -3797,6 +3791,12 @@ class PlayState extends MusicBeatState
 				doDeathCheck(true);
 			}
 
+			if(ClientPrefs.ghostTapping) return;
+
+			if (combo > 5 && gf.animOffsets.exists('sad'))
+			{
+				gf.playAnim('sad');
+			}
 			if(combo > highestCombo)
 				highestCombo = combo;
 			combo = 0;
@@ -3813,24 +3813,15 @@ class PlayState extends MusicBeatState
 			// FlxG.log.add('played imss note');
 
 			/*boyfriend.stunned = true;
+
 			// get stunned for 1/60 of a second, makes you able to
 			new FlxTimer().start(1 / 60, function(tmr:FlxTimer)
 			{
 				boyfriend.stunned = false;
 			});*/
-			if(boyfriend.hasMissAnimations)
-			{
-				switch (direction)
-				{
-					case 0:
-						boyfriend.playAnim('singLEFTmiss', true);
-					case 1:
-						boyfriend.playAnim('singDOWNmiss', true);
-					case 2:
-						boyfriend.playAnim('singUPmiss', true);
-					case 3:
-						boyfriend.playAnim('singRIGHTmiss', true);
-				}
+
+			if(boyfriend.hasMissAnimations) {
+				boyfriend.playAnim(singAnimations[Std.int(Math.abs(direction))] + 'miss', true);
 			}
 			vocals.volume = 0;
 		}
@@ -3841,53 +3832,44 @@ class PlayState extends MusicBeatState
 		if (Paths.formatToSongPath(SONG.song) != 'tutorial')
 			camZooming = true;
 
-		switch(note.noteType){
-			case "Hurt Note":
-				return;
-		}
-		var isAlt:Bool = false;
-
-		if(note.noteType == "Hey!" && dad.animOffsets.exists('hey')) {
+		if(note.noteType == 'Hey!' && dad.animOffsets.exists('hey')) {
 			dad.playAnim('hey', true);
 			dad.specialAnim = true;
 			dad.heyTimer = 0.6;
 		} else if(!note.noAnimation) {
 			var altAnim:String = "";
 
-			if (SONG.notes[Math.floor(curStep / 16)] != null)
+			var curSection:Int = Math.floor(curStep / 16);
+			if (SONG.notes[curSection] != null)
 			{
-				if (SONG.notes[Math.floor(curStep / 16)].altAnim || note.noteType == "Alt Animation") {
+				if (SONG.notes[curSection].altAnim || note.noteType == 'Alt Animation') {
 					altAnim = '-alt';
-					isAlt = true;
 				}
 			}
 
 			var char:Character = dad;
-			var animToPlay:String = '';
-			//&& ClientPrefs.cameraMovOnNotePress
-			switch (Math.abs(note.noteData))
-			{
-				case 0:
-					if(!bfturn)
-						snapCamFollowToPos(campointX - camMov, campointY);
-					animToPlay = 'singLEFT';
-				case 1:
-					if(!bfturn)
-						snapCamFollowToPos(campointX, campointY + camMov);
-					animToPlay = 'singDOWN';
-				case 2:
-					if(!bfturn)
-						snapCamFollowToPos(campointX, campointY - camMov);
-					animToPlay = 'singUP';
-				case 3:
-					if(!bfturn)
-						snapCamFollowToPos(campointX + camMov, campointY);
-					animToPlay = 'singRIGHT';
-			}
+			var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))] + altAnim;
+			switch(animToPlay)
+				{
+					//&& ClientPrefs.cameraMovOnNotePress
+					case "singLEFT":
+						if(!bfturn)
+							snapCamFollowToPos(campointX - camMov, campointY);
+					case "singDOWN":
+						if(!bfturn)
+							snapCamFollowToPos(campointX, campointY + camMov);	
+					case "singUP":
+						if(!bfturn)
+							snapCamFollowToPos(campointX, campointY - camMov);
+					case "singRIGHT":
+						if(!bfturn)
+							snapCamFollowToPos(campointX + camMov, campointY);
+				}
 			if(note.gfNote) {
 				char = gf;
 			}
-			char.playAnim(animToPlay + altAnim, true);
+
+			char.playAnim(animToPlay, true);
 			char.holdTimer = 0;
 		}
 
@@ -3899,8 +3881,8 @@ class PlayState extends MusicBeatState
 			time += 0.15;
 		}
 		StrumPlayAnim(true, Std.int(Math.abs(note.noteData)) % 4, time);
-		note.ignoreNote = true;
 		note.hitByOpponent = true;
+
 		callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
 
 		if (!note.isSustainNote)
@@ -3922,42 +3904,25 @@ class PlayState extends MusicBeatState
 				if(!note.noteSplashDisabled && !note.isSustainNote) {
 					spawnNoteSplashOnNote(note);
 				}
-				switch(note.noteType) {
-					case 'Hurt Note':
-						if(cpuControlled) return;
 
-						if(!boyfriend.stunned)
-						{
-							noteMiss(note);
-							if(!endingSong)
-							{
-								--songMisses;
-								RecalculateRating();
-								if(!note.isSustainNote) {
-									health -= 0.26; //0.26 + 0.04 = -0.3 (-15%) of HP if you hit a hurt note
-									spawnNoteSplashOnNote(note);
-								}
-								else health -= 0.06; //0.06 + 0.04 = -0.1 (-5%) of HP if you hit a hurt sustain note
-		
-								if(boyfriend.animation.getByName('hurt') != null) {
-									boyfriend.playAnim('hurt', true);
-									boyfriend.specialAnim = true;
-								}
-							}
-		
-							note.wasGoodHit = true;
-							vocals.volume = 0;
-		
-							if (!note.isSustainNote)
-							{
-								note.kill();
-								notes.remove(note, true);
-								note.destroy();
-							}
+				switch(note.noteType) {
+					case 'Hurt Note': //Hurt note
+						if(boyfriend.animation.getByName('hurt') != null) {
+							boyfriend.playAnim('hurt', true);
+							boyfriend.specialAnim = true;
 						}
-						return;
 				}
+				
+				note.wasGoodHit = true;
+				if (!note.isSustainNote)
+				{
+					note.kill();
+					notes.remove(note, true);
+					note.destroy();
+				}
+				return;
 			}
+
 			if (!note.isSustainNote)
 			{
 				combo += 1;
@@ -3970,43 +3935,54 @@ class PlayState extends MusicBeatState
 				var daAlt = '';
 				if(note.noteType == 'Alt Animation') daAlt = '-alt';
 	
-				var animToPlay:String = '';
-				// && ClientPrefs.cameraMovOnNotePress
-				switch (Std.int(Math.abs(note.noteData)))
+				var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))];
+				FlxG.watch.addQuick(animToPlay, animToPlay);
+				switch(animToPlay)
 				{
-					case 0:
+					//&& ClientPrefs.cameraMovOnNotePress
+					case "singLEFT":
 						if(bfturn)
 							snapCamFollowToPos(campointX - camMov, campointY);
-						animToPlay = 'singLEFT';
-					case 1:
+					case "singDOWN":
 						if(bfturn)
-							snapCamFollowToPos(campointX, campointY + camMov);
-						animToPlay = 'singDOWN';
-					case 2:
+							snapCamFollowToPos(campointX, campointY + camMov);	
+					case "singUP":
 						if(bfturn)
 							snapCamFollowToPos(campointX, campointY - camMov);
-						animToPlay = 'singUP';
-					case 3:
+					case "singRIGHT":
 						if(bfturn)
 							snapCamFollowToPos(campointX + camMov, campointY);
-						animToPlay = 'singRIGHT';
 				}
+
+				//if (note.isSustainNote){ wouldn't this be fun : P. i think it would be swell
 					
-				if(note.gfNote) {
-					gf.playAnim(animToPlay + daAlt, true);
-					gf.holdTimer = 0;
-				} else {
-					boyfriend.playAnim(animToPlay + daAlt, true);
-					boyfriend.holdTimer = 0;
-				}
-			
-				if(note.noteType == "Hey!") {
+					//if(note.gfNote) {
+					//  var anim = animToPlay +"-hold" + daAlt;
+					//	if(gf.animation.getByName(anim) == null)anim = animToPlay + daAlt;
+					//	gf.playAnim(anim, true);
+					//	gf.holdTimer = 0;
+					//} else {
+					//  var anim = animToPlay +"-hold" + daAlt;
+					//	if(boyfriend.animation.getByName(anim) == null)anim = animToPlay + daAlt;
+					//	boyfriend.playAnim(anim, true);
+					//	boyfriend.holdTimer = 0;
+					//}
+				//}else{
+					if(note.gfNote) {
+						gf.playAnim(animToPlay + daAlt, true);
+						gf.holdTimer = 0;
+					} else {
+						boyfriend.playAnim(animToPlay + daAlt, true);
+						boyfriend.holdTimer = 0;
+					}
+				//}
+				if(note.noteType == 'Hey!') {
 					if(boyfriend.animOffsets.exists('hey')) {
 						boyfriend.playAnim('hey', true);
 						boyfriend.specialAnim = true;
 						boyfriend.heyTimer = 0.6;
 					}
-				
+	
 					if(gf.animOffsets.exists('cheer')) {
 						gf.playAnim('cheer', true);
 						gf.specialAnim = true;
@@ -4043,22 +4019,9 @@ class PlayState extends MusicBeatState
 				note.kill();
 				notes.remove(note, true);
 				note.destroy();
-				//seems to lag in desktop targets
-				/*
-				if(ClientPrefs.useHitSounds)
-					FlxG.sound.play(Paths.sound("osumania"), 1, false);*/
-				/* FileSystem features have been disabled for this Release
-				#if (sys && android)
-				if(ClientPrefs.useHitSounds && ClientPrefs.currentHitSound != null && ClientPrefs.hitSoundPath != null)
-					FlxG.sound.stream(ClientPrefs.hitSoundPath, 1, false, null, true);
-				#else
-				if(ClientPrefs.useHitSounds)
-					FlxG.sound.play(Paths.sound("osumania"), 1, false);
-				#end*/
 			}
 		}
 	}
-
 
 	function spawnNoteSplashOnNote(note:Note) {
 		if(ClientPrefs.noteSplashes && note != null) {

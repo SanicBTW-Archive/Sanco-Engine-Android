@@ -11,8 +11,10 @@ import openfl.Lib;
 import haxe.CallStack.StackItem;
 import haxe.CallStack;
 import haxe.io.Path;
+#if sys
 import sys.FileSystem;
 import sys.io.File;
+#end
 import flash.system.System;
 
 /**
@@ -108,7 +110,9 @@ class SUtil {
 				case FilePos(s, file, line, column):
 					errMsg += file + " (line " + line + ")\n";
 				default:
+					#if sys
 					Sys.println(stackItem);
+					#end
 			}
 		}
 
@@ -122,9 +126,12 @@ class SUtil {
 		File.saveContent(SUtil.getPath() + path, errMsg + "\n");
 		#end
 
+
+		#if sys
 		Sys.println(errMsg);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 		Sys.println("Making a simple alert ...");
+		#end
 
 		SUtil.applicationAlert("Uncaught Error :(, The Call Stack: ", errMsg);
 		System.exit(0);

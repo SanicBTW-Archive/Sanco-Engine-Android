@@ -1,5 +1,8 @@
 package;
 
+#if desktop
+import Discord.DiscordClient;
+#end
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -24,6 +27,10 @@ class AchievementsMenuState extends MusicBeatState
 	private var descText:FlxText;
 
 	override function create() {
+		#if desktop
+		DiscordClient.changePresence("Achievements Menu", null);
+		#end
+
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuBGBlue'));
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
 		menuBG.updateHitbox();
@@ -35,21 +42,22 @@ class AchievementsMenuState extends MusicBeatState
 		add(grpOptions);
 
 		for (i in 0...Achievements.achievementsStuff.length) {
-			if(!Achievements.achievementsStuff[i][2] || Achievements.achievementsUnlocked[i][1]) {
+			if(!Achievements.achievementsStuff[i][3] || Achievements.achievementsMap.exists(Achievements.achievementsStuff[i][2])) {
 				options.push(Achievements.achievementsStuff[i]);
 				achievementIndex.push(i);
 			}
 		}
 
 		for (i in 0...options.length) {
-			var optionText:Alphabet = new Alphabet(0, (100 * i) + 210, Achievements.achievementsUnlocked[achievementIndex[i]][1] ? Achievements.achievementsStuff[achievementIndex[i]][0] : '?', false, false);
+			var achieveName:String = Achievements.achievementsStuff[achievementIndex[i]][2];
+			var optionText:Alphabet = new Alphabet(0, (100 * i) + 210, Achievements.isAchievementUnlocked(achieveName) ? Achievements.achievementsStuff[achievementIndex[i]][0] : '?', false, false);
 			optionText.isMenuItem = true;
 			optionText.x += 280;
 			optionText.xAdd = 200;
 			optionText.targetY = i;
 			grpOptions.add(optionText);
 
-			var icon:AttachedAchievement = new AttachedAchievement(optionText.x - 105, optionText.y, achievementIndex[i]);
+			var icon:AttachedAchievement = new AttachedAchievement(optionText.x - 105, optionText.y, achieveName);
 			icon.sprTracker = optionText;
 			achievementArray.push(icon);
 			add(icon);
@@ -62,8 +70,8 @@ class AchievementsMenuState extends MusicBeatState
 		add(descText);
 		changeSelection();
 
-		#if mobileC
-		addVirtualPad(UP_DOWN, A);
+        #if android
+		addVirtualPad(UP_DOWN, B);
 		#end
 
 		super.create();
@@ -79,9 +87,9 @@ class AchievementsMenuState extends MusicBeatState
 			changeSelection(1);
 		}
 
-		if (controls.ACCEPT) {
+		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			FlxG.switchState(new MainMenuState());
+			MusicBeatState.switchState(new MainMenuState());
 		}
 	}
 

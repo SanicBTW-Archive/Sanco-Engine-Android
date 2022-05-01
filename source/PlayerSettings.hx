@@ -5,7 +5,7 @@ import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.util.FlxSignal;
 
-// import mobile.DeviceManager;
+// import ui.DeviceManager;
 // import props.Player;
 class PlayerSettings
 {

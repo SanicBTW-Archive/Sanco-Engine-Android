@@ -40,13 +40,20 @@ class ClientPrefs {
 	];
 
 	public static var comboOffset:Array<Int> = [0, 0, 0, 0];
-	public static var keSustains:Bool = false; //i was bored, okay?
+	public static var keSustains:Bool = true; //i was bored, okay?, onkly for testing
 	
 	public static var ratingOffset:Int = 0;
 	public static var sickWindow:Int = 45;
 	public static var goodWindow:Int = 90;
 	public static var badWindow:Int = 135;
 	public static var safeFrames:Float = 10;
+
+	//engine
+	public static var currentHitSound:String = "";
+	public static var hitSoundPath:String = ""; //sorry
+	public static var useHitSounds:Bool = true;
+	public static var cameraMovOnNotePress:Bool = true;
+	public static var classicMiddlescroll:Bool = true;
 
 	//Every key has two binds, add your key bind down here and then add your control on options/ControlsSubState.hx and Controls.hx
 	public static var keyBinds:Map<String, Array<FlxKey>> = [
@@ -112,6 +119,12 @@ class ClientPrefs {
 		FlxG.save.data.safeFrames = safeFrames;
 		FlxG.save.data.gameplaySettings = gameplaySettings;
 		FlxG.save.data.controllerMode = controllerMode;
+
+		FlxG.save.data.useHitSounds = useHitSounds;
+		FlxG.save.data.currentHitSound = currentHitSound;
+		FlxG.save.data.hitSoundPath = hitSoundPath;
+		FlxG.save.data.cameraMovOnNotePress = cameraMovOnNotePress;
+		FlxG.save.data.classicMiddlescroll = classicMiddlescroll;
 	
 		FlxG.save.flush();
 
@@ -233,6 +246,22 @@ class ClientPrefs {
 		if (FlxG.save.data.mute != null)
 		{
 			FlxG.sound.muted = FlxG.save.data.mute;
+		}
+
+		if(FlxG.save.data.useHitSounds != null){
+			useHitSounds = FlxG.save.data.useHitSounds;
+		}
+		if(FlxG.save.data.currentHitSound != null){
+			currentHitSound = FlxG.save.data.currentHitSound;
+		}
+		if(FlxG.save.data.hitSoundPath != null){
+			hitSoundPath = FlxG.save.data.hitSoundPath;
+		}
+		if(FlxG.save.data.cameraMovOnNotePress != null){
+			cameraMovOnNotePress = FlxG.save.data.cameraMovOnNotePress;
+		}
+		if(FlxG.save.data.classicMiddlescroll != null){
+			classicMiddlescroll = FlxG.save.data.classicMiddlescroll;
 		}
 
 		var save:FlxSave = new FlxSave();

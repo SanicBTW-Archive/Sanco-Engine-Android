@@ -1509,7 +1509,7 @@ class PlayState extends MusicBeatState
 			for (i in 0...opponentStrums.length) {
 				setOnLuas('defaultOpponentStrumX' + i, opponentStrums.members[i].x);
 				setOnLuas('defaultOpponentStrumY' + i, opponentStrums.members[i].y);
-				//if(ClientPrefs.middleScroll) opponentStrums.members[i].visible = false;
+				if(ClientPrefs.middleScroll && ClientPrefs.classicMiddlescroll) opponentStrums.members[i].visible = false;
 			}
 
 			startedCountdown = true;
@@ -1633,6 +1633,8 @@ class PlayState extends MusicBeatState
 					note.alpha = note.multAlpha;
 					if(ClientPrefs.middleScroll && !note.mustPress) {
 						note.alpha *= 0.5;
+					} else if(ClientPrefs.middleScroll && !note.mustPress && ClientPrefs.classicMiddlescroll){
+						note.alpha = 0;
 					}
 				});
 				callOnLuas('onCountdownTick', [swagCounter]);
@@ -1895,6 +1897,7 @@ class PlayState extends MusicBeatState
 			// FlxG.log.add(i);
 			var targetAlpha:Float = 1;
 			if (player < 1 && ClientPrefs.middleScroll) targetAlpha = 0.35;
+			if (player < 1 && ClientPrefs.middleScroll && ClientPrefs.classicMiddlescroll) targetAlpha = 0;
 
 			var babyArrow:StrumNote = new StrumNote(ClientPrefs.middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X, strumLine.y, i, player);
 			if (!isStoryMode)
@@ -3851,18 +3854,17 @@ class PlayState extends MusicBeatState
 			var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))] + altAnim;
 			switch(animToPlay)
 				{
-					//&& ClientPrefs.cameraMovOnNotePress
 					case "singLEFT":
-						if(!bfturn)
+						if(!bfturn && ClientPrefs.cameraMovOnNotePress)
 							snapCamFollowToPos(campointX - camMov, campointY);
 					case "singDOWN":
-						if(!bfturn)
+						if(!bfturn && ClientPrefs.cameraMovOnNotePress)
 							snapCamFollowToPos(campointX, campointY + camMov);	
 					case "singUP":
-						if(!bfturn)
+						if(!bfturn && ClientPrefs.cameraMovOnNotePress)
 							snapCamFollowToPos(campointX, campointY - camMov);
 					case "singRIGHT":
-						if(!bfturn)
+						if(!bfturn && ClientPrefs.cameraMovOnNotePress)
 							snapCamFollowToPos(campointX + camMov, campointY);
 				}
 			if(note.gfNote) {
@@ -3939,18 +3941,17 @@ class PlayState extends MusicBeatState
 				FlxG.watch.addQuick(animToPlay, animToPlay);
 				switch(animToPlay)
 				{
-					//&& ClientPrefs.cameraMovOnNotePress
 					case "singLEFT":
-						if(bfturn)
+						if(bfturn && ClientPrefs.cameraMovOnNotePress)
 							snapCamFollowToPos(campointX - camMov, campointY);
 					case "singDOWN":
-						if(bfturn)
+						if(bfturn && ClientPrefs.cameraMovOnNotePress)
 							snapCamFollowToPos(campointX, campointY + camMov);	
 					case "singUP":
-						if(bfturn)
+						if(bfturn && ClientPrefs.cameraMovOnNotePress)
 							snapCamFollowToPos(campointX, campointY - camMov);
 					case "singRIGHT":
-						if(bfturn)
+						if(bfturn && ClientPrefs.cameraMovOnNotePress)
 							snapCamFollowToPos(campointX + camMov, campointY);
 				}
 

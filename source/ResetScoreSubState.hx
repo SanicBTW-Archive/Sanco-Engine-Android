@@ -2,6 +2,9 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.util.FlxColor;
+#if android
+import flixel.FlxCamera;
+#end
 
 using StringTools;
 
@@ -28,14 +31,10 @@ class ResetScoreSubState extends MusicBeatSubstate
 		super();
 
 		var name:String = song;
-		if(week != -1) {
-			name = 'Week ' + WeekData.getWeekNumber(week);
-			var leName:String = WeekData.weekResetName[week];
-			if(leName != null) {
-				name = leName;
-			}
+		if(week > -1) {
+			name = WeekData.weeksLoaded.get(WeekData.weeksList[week]).weekName;
 		}
-		name += ' (' + CoolUtil.difficultyStuff[difficulty][0] + ')?';
+		name += ' (' + CoolUtil.difficulties[difficulty] + ')?';
 
 		bg = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
@@ -73,8 +72,9 @@ class ResetScoreSubState extends MusicBeatSubstate
 		add(noText);
 		updateOptions();
 
-		#if mobileC
-		addVirtualPad(FULL, A_B);
+                #if android
+		addVirtualPad(LEFT_RIGHT, A_B);
+		addPadCamera();
 		#end
 	}
 
@@ -96,17 +96,17 @@ class ResetScoreSubState extends MusicBeatSubstate
 		}
 		if(controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'), 1);
-			close();
+			MusicBeatState.switchState(FlxG.state);
 		} else if(controls.ACCEPT) {
 			if(onYes) {
 				if(week == -1) {
 					Highscore.resetSong(song, difficulty);
 				} else {
-					Highscore.resetWeek(week, difficulty);
+					Highscore.resetWeek(WeekData.weeksList[week], difficulty);
 				}
 			}
 			FlxG.sound.play(Paths.sound('cancelMenu'), 1);
-			close();
+			MusicBeatState.switchState(FlxG.state);
 		}
 		super.update(elapsed);
 	}

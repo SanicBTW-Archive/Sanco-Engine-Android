@@ -2,10 +2,13 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Sanco Engine" file="SancoEngine" packageName="com.sanicbtw.sancoengine" package="com.sanicbtw.sancoengine" main="Main" version="0.2.7" company="sanicbtw" />
+	<app title="Sanco Engine" file="SancoEngine" packageName="com.sanicbtw.sancoengine" package="com.sanicbtw.sancoengine" main="Main" version="0.2.7" company="SanicBTW" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
+
+	<!-- NOTE TO SELF: DISABLE THIS IF ISSUES ARE FOUND -->
+	<haxedef name="LINC_LUA_RELATIVE_DYNAMIC_LIB"/> <!-- stable luas PUT AFTER FIRST LINE WITH APP NAME AND ETC -->
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -29,40 +32,38 @@
 	<!--Mobile-specific-->
 	<window if="mobile" orientation="landscape" fullscreen="true" width="1280" height="720" resizable="false"/>
 
-	<define name="mobileC" if="mobile" />
-	<assets path="assets/shared/images/hitbox"/>
-
 	<!--Switch-specific-->
-	<window if="switch" orientation="landscape" fullscreen="true" width="1280" height="720" resizable="true" />
+	<window if="switch" orientation="landscape" fullscreen="true" width="0" height="0" resizable="true" />
 
 	<!-- _____________________________ Path Settings ____________________________ -->
 
 	<set name="BUILD_DIR" value="export/debug" if="debug" />
 	<set name="BUILD_DIR" value="export/release" unless="debug" />
-	<set name="BUILD_DIR" value="export/32bit" if="32bit" />
+	<set name="BUILD_DIR" value="export/32bit" if="32bits" />
 
 	<classpath name="source" />
 
 	<assets path="assets/preload" rename="assets" exclude="*.mp3"/>
-	<!--
-	<assets path="assets/preload" rename="assets" exclude="*.ogg" if="web"/>
-	<assets path="assets/preload" rename="assets" exclude="*.mp3"  unless="web"/>-->
 	
 	<!-- PSYCH ENGINE CUSTOMIZATION -->
-	<define name="MODS_ALLOWED" if="desktop || android" />
-	<define name="LUA_ALLOWED" if="desktop" />
-	<define name="ONLY_WINDOWS" if="desktop" />
+	<define name="MODS_ALLOWED" if="windows"/>
+	<define name="LUA_ALLOWED" if="tempfix"/>
 	<define name="ACHIEVEMENTS_ALLOWED" />
+	<define name="VIDEOS_ALLOWED" if="web || windows" unless="32bits"/>
+	<define name="PSYCH_WATERMARKS"/> <!-- DELETE THIS TO REMOVE WATERMARKS ON TITLE SCREEN -->
+	    <!--define name="MOBILE_CONTROLS_ALLOWED" if="mobile"/> Fuck you stupid controls code -->
+
+	<!-- DONT ENABLE THIS -->
+	<define name="CHECK_FOR_UPDATES" if="desktop officialBuild"/>
 
 	<!-- <define name="PRELOAD_ALL" /> -->
 	<define name="PRELOAD_ALL" unless="web" />
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
 	
+	<library name="videos"        preload="true" />
 	<section if="PRELOAD_ALL">
 		<library name="songs"         preload="true" />
 		<library name="shared"        preload="true" />
-		<library name="tutorial"      preload="true" />
-		<library name="week1"         preload="true" />
 		<library name="week2"         preload="true" />
 		<library name="week3"         preload="true" />
 		<library name="week4"         preload="true" />
@@ -73,8 +74,6 @@
 	<section if="NO_PRELOAD_ALL">
 		<library name="songs"         preload="false" />
 		<library name="shared"        preload="false" />
-		<library name="tutorial"      preload="false" />
-		<library name="week1"         preload="false" />
 		<library name="week2"         preload="false" />
 		<library name="week3"         preload="false" />
 		<library name="week4"         preload="false" />
@@ -82,37 +81,21 @@
 		<library name="week6"         preload="false" />
 	</section>
 	
-	<assets path="assets/songs"			library="songs" exclude="*.mp3"/>
-	<assets path="assets/shared"		library="shared" exclude="*.mp3"/>
-	<assets path="assets/tutorial"		library="tutorial" exclude="*.mp3"/>
-	<assets path="assets/week1"			library="week1" exclude="*.mp3"/>
-	<assets path="assets/week2"			library="week2" exclude="*.mp3"/>
-	<assets path="assets/week3"			library="week3" exclude="*.mp3"/>
-	<assets path="assets/week4"			library="week4" exclude="*.mp3"/>
-	<assets path="assets/week5"			library="week5" exclude="*.mp3"/>
-	<assets path="assets/week6"			library="week6" exclude="*.mp3"/>
-	<!--
-	<assets path="assets/songs"         library="songs"         exclude="*.ogg" if="web"/>
-	<assets path="assets/songs"         library="songs"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/shared"        library="shared"        exclude="*.ogg" if="web"/>
-	<assets path="assets/shared"        library="shared"        exclude="*.mp3" unless="web"/>
-	<assets path="assets/tutorial"      library="tutorial"      exclude="*.ogg" if="web"/>
-	<assets path="assets/tutorial"      library="tutorial"      exclude="*.mp3" unless="web"/>
-	<assets path="assets/week1"         library="week1"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week1"         library="week1"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week2"         library="week2"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week2"         library="week2"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week3"         library="week3"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week3"         library="week3"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week4"         library="week4"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week4"         library="week4"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week5"         library="week5"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week5"         library="week5"         exclude="*.mp3" unless="web"/>
-	<assets path="assets/week6"         library="week6"         exclude="*.ogg" if="web"/>
-	<assets path="assets/week6"         library="week6"         exclude="*.mp3" unless="web"/>-->
+	<assets path="plugins/"             rename=''               if="VIDEOS_ALLOWED windows" />
+	<assets path="dlls/"                rename=''               if="VIDEOS_ALLOWED windows" />
+	<assets path="assets/videos"        library="videos"        if="VIDEOS_ALLOWED"/>
+	<assets path="assets/songs"         library="songs"         exclude="*.mp3"/>
+	<assets path="assets/shared"        library="shared"        exclude="*.mp3"/>
+	<assets path="assets/week2"         library="week2"         exclude="*.mp3"/>
+	<assets path="assets/week3"         library="week3"         exclude="*.mp3"/>
+	<assets path="assets/week4"         library="week4"         exclude="*.mp3"/>
+	<assets path="assets/week5"         library="week5"         exclude="*.mp3"/>
+	<assets path="assets/week6"         library="week6"         exclude="*.mp3"/>
 	
+	<assets path='example_mods' rename='mods' embed='false' if="MODS_ALLOWED"/>
 	<assets path='art/readme.txt' rename='do NOT readme.txt' />
-	<!-- <template path='mods' /> -->	
+	<!-- <template path='mods' /> -->
+	
 	<!-- assets path="CHANGELOG.md" rename='changelog.txt' -->
 
 	<!-- NOTE FOR FUTURE SELF SINCE FONTS ARE ALWAYS FUCKY 
@@ -134,16 +117,22 @@
 	<haxelib name="flixel-ui" />
 	<haxelib name="linc_luajit" if="LUA_ALLOWED"/>
 	<haxelib name="faxe" if='switch'/>
-	<!--<haxelib name="discord_rpc" if="desktop"/>-->
+	<!--<haxelib name="polymod"/> -->
+	<haxelib name="discord_rpc" if="desktop"/>
+    <haxelib name="extension-webview" if="tempfix"/>
+    <haxelib name="extension-androidtools" if="android"/>
+
+    <config:android permission="android.permission.READ_EXTERNAL_STORAGE" if="android"/>
+    <config:android permission="android.permission.WRITE_EXTERNAL_STORAGE" if="android"/>
+
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->
+
 
 	<!-- <haxelib name="markdown" /> -->
 	<!-- <haxelib name="HtmlParser" /> -->
 
 	<!--In case you want to use nape with flixel-->
 	<!--<haxelib name="nape-haxe4" />-->
-	<haxelib name="android6permissions"/>
-	<haxelib name="AndroidTools"/>
 
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
@@ -178,7 +167,12 @@
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
 	<!-- _________________________________ Custom _______________________________ -->
+	<!-- Akways enable Null Object Reference check -->
+	<haxedef name="HXCPP_CHECK_POINTER" if="release" />
+	<haxedef name="HXCPP_STACK_LINE" if="release" />
 
+
+	
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	
 	<icon path="art/icon16.png" size='16'/>

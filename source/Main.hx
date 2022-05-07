@@ -1,6 +1,5 @@
 package;
 
-import lime.system.System;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
@@ -9,7 +8,12 @@ import openfl.Lib;
 import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
-
+#if android //only android will use those
+import sys.FileSystem;
+import lime.app.Application;
+import lime.system.System;
+import android.*;
+#end
 class Main extends Sprite
 {
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
@@ -21,8 +25,6 @@ class Main extends Sprite
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 	public static var fpsVar:FPS;
 
-	// You can pretty much ignore everything from here on - your code should go in your states.
-
 	public static function main():Void
 	{
 		Lib.current.addChild(new Main());
@@ -30,7 +32,9 @@ class Main extends Sprite
 
 	public function new()
 	{
+
 		super();
+		SUtil.gameCrashCheck();
 
 		if (stage != null)
 		{
@@ -41,6 +45,8 @@ class Main extends Sprite
 			addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 	}
+
+          
 
 	private function init(?E:Event):Void
 	{
@@ -68,8 +74,10 @@ class Main extends Sprite
 
 		#if !debug
 		initialState = TitleState;
-		#end
+		#end     
 
+		ClientPrefs.loadDefaultKeys();
+		SUtil.doTheCheck();
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
 
 		fpsVar = new FPS(10, 3, 0xFFFFFF);
@@ -84,3 +92,4 @@ class Main extends Sprite
 		#end
 	}
 }
+

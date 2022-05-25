@@ -176,10 +176,20 @@ class FreeplayState extends MusicBeatState
 		add(textBG);
 
 		#if PRELOAD_ALL
-		var leText:String = "Press SPACE / X to listen to the Song / Press CTRL / C to open the Gameplay Changers Menu / Press RESET / Y to Reset your Score and Accuracy.";
+
+		#if android
+		var leText:String = "Press X to listen to the Song / Press C to open the Gameplay Changers Menu / Press Y to Reset your Score and Accuracy.";
+		#else
+		var leText:String = "Press SPACE to listen to the Song / Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
+		#end
 		var size:Int = 16;
 		#else
-		var leText:String = "Press CTRL / C to open the Gameplay Changers Menu / Press RESET / Y to Reset your Score and Accuracy.";
+		
+		#if android
+		var leText:String = "Press C to open the Gameplay Changers Menu / Press Y to Reset your Score and Accuracy.";
+		#else
+		var leText:String = "Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
+		#end
 		var size:Int = 18;
 		#end
 		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
@@ -187,7 +197,7 @@ class FreeplayState extends MusicBeatState
 		text.scrollFactor.set();
 		add(text);
 
-                #if android
+        #if android
 		addVirtualPad(FULL, A_B_C_X_Y);
 		#end
 
@@ -316,7 +326,7 @@ class FreeplayState extends MusicBeatState
 		{
 			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
 			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
-			/*#if MODS_ALLOWED
+			#if MODS_ALLOWED //to avoid crash
 			if(!sys.FileSystem.exists(Paths.modsJson(songLowercase + '/' + poop)) && !sys.FileSystem.exists(Paths.json(songLowercase + '/' + poop))) {
 			#else
 			if(!OpenFlAssets.exists(Paths.json(songLowercase + '/' + poop))) {
@@ -324,7 +334,7 @@ class FreeplayState extends MusicBeatState
 				poop = songLowercase;
 				curDifficulty = 1;
 				trace('Couldnt find file');
-			}*/
+			}
 			trace(poop);
 
 			PlayState.SONG = Song.loadFromJson(poop, songLowercase);

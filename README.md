@@ -1,3 +1,4 @@
+# Not being developed anymore
 # Based off [RandomXDP Psych Engine 0.5.1 Android Port](https://github.com/Randomxdp/Psych-Engine-0.5.1-Android-Port)
 ### This was originally a branch in the VS Cirno Android Port and now its a repo for future ports
 Massive update haha, moved to 0.5.1 source code, this input seems wayy better, however I will try to port my old stuff to this new version
